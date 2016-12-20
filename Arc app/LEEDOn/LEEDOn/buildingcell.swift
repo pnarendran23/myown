@@ -11,16 +11,13 @@ import UIKit
 class buildingcell: UITableViewCell {
     @IBOutlet weak var namelbl: UILabel!
     @IBOutlet weak var leedidlbl: UILabel!
-    @IBOutlet weak var lastupdatedlbl: UILabel!
 
+    @IBOutlet weak var statuslbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        var frame = CGRect()
-        frame.origin.y += 4;
-        frame.origin.x += 5;
-        frame.size.height -= 2 * 2;
-        frame.size.width -= 5 * 2;
-        self.frame = frame
+       self.layer.cornerRadius = 5
+        self.layer.masksToBounds = true
         // Initialization code
     }
 
@@ -32,10 +29,17 @@ class buildingcell: UITableViewCell {
         let someFrame = CGRect(x: 4, y: 0, width: width-10, height: self.frame.height)
         self.frame = someFrame
     }*/
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set (newFrame) {
+            let inset: CGFloat = 10
+            var frame = newFrame
+            frame.origin.x += inset
+            frame.size.width -= 2 * inset
+            super.frame = frame
+        }
     }
     
 }

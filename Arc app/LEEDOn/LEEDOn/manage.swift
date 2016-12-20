@@ -14,9 +14,9 @@ class manage: UIViewController,UITableViewDelegate,UITableViewDataSource, UITabB
 var categoryarr = NSArray()
     override func viewDidLoad() {
         super.viewDidLoad()
-        var dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+        let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
         tabbar.selectedItem = self.tabbar.items![3]
-        assetname.text = dict["name"] as! String
+        assetname.text = dict["name"] as? String
         categoryarr = ["Project","Team","Certifications","Billing","Settings"]
         // Do any additional setup after loading the view.
     }
@@ -46,8 +46,8 @@ var categoryarr = NSArray()
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell")!
-        cell.textLabel?.text = categoryarr.objectAtIndex(indexPath.row) as! String
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
+        cell.textLabel?.text = categoryarr.objectAtIndex(indexPath.row) as? String
         return cell
     }
     
@@ -57,6 +57,12 @@ var categoryarr = NSArray()
             self.performSegueWithIdentifier("gotoproject", sender: nil)
         }else if(indexPath.row == 1){
             self.performSegueWithIdentifier("gototeam", sender: nil)
+        }else if(indexPath.row == 2){
+            self.performSegueWithIdentifier("gotocertifications", sender: nil)
+        }else if(indexPath.row == 3){
+            self.performSegueWithIdentifier("gotobilling", sender: nil)
+        }else if(indexPath.row == 4){
+            self.performSegueWithIdentifier("gotosettings", sender: nil)
         }
     }
 

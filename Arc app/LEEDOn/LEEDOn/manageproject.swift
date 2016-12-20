@@ -11,6 +11,7 @@ import UIKit
 class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate, UITextFieldDelegate, UIPickerViewDelegate,UIPickerViewDataSource, UITabBarDelegate {
     @IBOutlet weak var assetname: UILabel!
 
+    @IBOutlet weak var spinner: UIView!
     @IBOutlet weak var tabbar: UITabBar!
     @IBOutlet weak var tableview: UITableView!
     var titlearr = NSArray()
@@ -28,6 +29,9 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
     var dict = NSDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.spinner.layer.cornerRadius = 5
+        self.spinner.hidden = true
+        self.view.userInteractionEnabled = true
         dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
         print(dict)
         assetname.text = dict["name"] as! String
@@ -36,6 +40,10 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         pursedcertarr = ["WELL","Sustainable SITES", "PEER","Parksmart","GRESB","EDGE","Green Star","DGNB","BREEAM","Zero Waste","ENERGY STAR","Beam","CASBEE","Green Mark","Pearl","Other"]
         titlearr = ["Name","Project ID","Unit Type","Space type","Address","City","State","Country","Private","Owner type","Owner organization","Owner Email","Owner country","Previously LEED Certified?","Other certification programs pursued","Contains residential units?","Is project affiliated with a higher education institute?","Is project affiliated with a LEED Lab?","Year built","Floors above grounds","Intend to precertify?","Gross floor area(square foot)","Target certification date","Operating hours","Occupancy"]
         tableview.registerNib(UINib.init(nibName: "manageprojectcell", bundle: nil), forCellReuseIdentifier: "managecell")
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = false
+            self.view.userInteractionEnabled = false
+        })
         getstates(credentials().subscription_key)
         // Do any additional setup after loading the view.
     }
@@ -63,12 +71,21 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -84,6 +101,8 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     self.state =  tempstring!
                     tempstring = jsonDictionary["countries"]![currentcountry!]! as? String
                     self.country = tempstring!
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
                     self.tableview.reloadData()
                     })
                     
@@ -91,6 +110,10 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     // self.buildingactions(subscription_key, leedid: leedid)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
+                    })
                 }
             }
             
@@ -98,6 +121,27 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         task.resume()
         
     }
+    
+    func showalert(message:String, title:String, action:String){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let callActionHandler = { (action:UIAlertAction!) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.spinner.hidden = true
+                self.view.userInteractionEnabled = true
+                self.navigationController?.popViewControllerAnimated(true)
+                
+            })
+            
+        }
+        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        alertController.addAction(defaultAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        
+    }
+
 
     //https://api.usgbc.org/dev/leed/country/states/
 
@@ -772,7 +816,10 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         //{"name":"Test Auth","street":"2101 L Street NW","city":"Test city","state":"DC","country":"US","year_constructed":null,"gross_area":10000,"operating_hours":null,"occupancy":null,"confidential":false,"organization":null,"ownerType":null,"IsLovRecert":false,"PrevCertProdId":null,"OtherCertProg":null,"IsResidential":false,"noOfResUnits":null,"AffiliatedHigherEduIns":false,"nameOfSchool":null,"noOfFloors":null,"intentToPrecertify":false,"targetCertDate":null,"populationDayTime":null,"populationNightTime":null,"manageEntityName":null,"manageEntityAdd1":null,"managEntityAdd2":null,"manageEntityCity":null,"manageEntityState":null,"manageEntityCountry":null,"unitType":"IP"}
         
         
-        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = false
+            self.view.userInteractionEnabled = false
+        })
         
         print(data_dict)
         var payload = NSMutableString()
@@ -809,12 +856,20 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -824,6 +879,8 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     //self.tableview.reloadData()
                     // self.buildingactions(subscription_key, leedid: leedid)
                     dispatch_async(dispatch_get_main_queue(), {
+                            self.spinner.hidden = true
+                            self.view.userInteractionEnabled = true
                         self.updateproject()
                         
                     })
@@ -849,12 +906,20 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
         var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -865,10 +930,18 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "building_details")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "row")
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
+                    })
                     //self.tableview.reloadData()
                     // self.buildingactions(subscription_key, leedid: leedid)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
+                    })
                 }
             }
             

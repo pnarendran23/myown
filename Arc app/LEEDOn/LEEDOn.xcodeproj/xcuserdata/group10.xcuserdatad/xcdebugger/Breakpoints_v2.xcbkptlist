@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "504"
+            endingLineNumber = "504"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "505"
+            endingLineNumber = "505"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "507"
+            endingLineNumber = "507"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "509"
+            endingLineNumber = "509"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -73,13 +73,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "511"
+            endingLineNumber = "511"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,13 +89,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "513"
+            endingLineNumber = "513"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -105,61 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "saverole(role:type:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "LEEDOn.teamrole.(saverole (Swift.String, type : Swift.String) -&gt; ()).(closure #1)"
-                  moduleName = "LEEDOn"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/LEEDOn/LEEDOn/teamrole.swift"
-                  timestampString = "502898274.344434"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "419">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "LEEDOn.teamrole.(saverole (Swift.String, type : Swift.String) -&gt; ()).(closure #1)"
-                  moduleName = "LEEDOn"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/LEEDOn/LEEDOn/teamrole.swift"
-                  timestampString = "502898274.347323"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "608">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -169,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "519"
+            endingLineNumber = "519"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -185,13 +137,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "520"
+            endingLineNumber = "520"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,46 +153,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "660"
+            endingLineNumber = "660"
+            landmarkName = "getuploadsdata(subscription_key:leedid:actionID:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "LEEDOn.teamrole.(saverole (Swift.String, type : Swift.String) -&gt; ()).(closure #1)"
-                  moduleName = "LEEDOn"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/LEEDOn/LEEDOn/teamrole.swift"
-                  timestampString = "502898274.356371"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "2591">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "LEEDOn.teamrole.(saverole (Swift.String, type : Swift.String) -&gt; ()).(closure #1).(closure #1)"
-                  moduleName = "LEEDOn"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/LEEDOn/LEEDOn/teamrole.swift"
-                  timestampString = "502898274.357686"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "88"
-                  endingLineNumber = "88"
-                  offsetFromSymbolStart = "12">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -249,13 +169,125 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LEEDOn/teamrole.swift"
-            timestampString = "502900675.309743"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "saverole(role:type:)"
+            startingLineNumber = "711"
+            endingLineNumber = "711"
+            landmarkName = "getcreditformsuploadsdata(subscription_key:leedid:actionID:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "795"
+            endingLineNumber = "795"
+            landmarkName = "assignnewmember(subscription_key:leedid:actionID:email:firstname:lastname:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "849"
+            endingLineNumber = "849"
+            landmarkName = "buildingactions(subscription_key:leedid:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503911135.897055"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "983"
+            endingLineNumber = "983"
+            landmarkName = "valuechanged(sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503911135.897055"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "995"
+            endingLineNumber = "995"
+            landmarkName = "showalert(message:title:action:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503909755.936332"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
+            landmarkName = "getteammembers(subscription_key:leedid:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEEDOn/prerequisites.swift"
+            timestampString = "503910305.769063"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "468"
+            endingLineNumber = "468"
+            landmarkName = "navigate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

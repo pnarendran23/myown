@@ -29,11 +29,11 @@ class totalanalysis: UIViewController, UITabBarDelegate, UITableViewDelegate,UIT
         super.viewDidLoad()
 self.tabbar.selectedItem = self.tabbar.items![2]
         tableview.registerNib(UINib.init(nibName: "totalanalysiscell", bundle: nil), forCellReuseIdentifier: "totalcell")
-        var dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
-        assetname.text = dict["name"] as! String
+        let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+        assetname.text = dict["name"] as? String
         print("data",dict)
         domain_url = credentials().domain_url
-        var mustring = NSMutableString()
+        let mustring = NSMutableString()
         mustring.appendString(dict["street"] as! String)
         mustring.appendString(",\n")
         mustring.appendString(dict["state"] as! String)
@@ -55,9 +55,13 @@ self.tabbar.selectedItem = self.tabbar.items![2]
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -73,27 +77,27 @@ self.tabbar.selectedItem = self.tabbar.items![2]
                     if(jsonDictionary["energy_avg"] is NSNull){
                         self.localavgarr.addObject(0)
                     }else{
-                        self.localavgarr.addObject(jsonDictionary["energy_avg"] as! String)
+                        self.localavgarr.addObject(jsonDictionary["energy_avg"] as! Int)
                     }
                     if(jsonDictionary["water_avg"] is NSNull){
                         self.localavgarr.addObject(0)
                     }else{
-                        self.localavgarr.addObject(jsonDictionary["water_avg"] as! String)
+                        self.localavgarr.addObject(jsonDictionary["water_avg"] as! Int)
                     }
                     if(jsonDictionary["waste_avg"] is NSNull){
                         self.localavgarr.addObject(0)
                     }else{
-                        self.localavgarr.addObject(jsonDictionary["waste_avg"] as! String)
+                        self.localavgarr.addObject(jsonDictionary["waste_avg"] as! Int)
                     }
                     if(jsonDictionary["transport_avg"] is NSNull){
                         self.localavgarr.addObject(0)
                     }else{
-                        self.localavgarr.addObject(jsonDictionary["transport_avg"] as! String)
+                        self.localavgarr.addObject(jsonDictionary["transport_avg"] as! Int)
                     }
                     if(jsonDictionary["human_experience_avg"] is NSNull){
                         self.localavgarr.addObject(0)
                     }else{
-                        self.localavgarr.addObject(jsonDictionary["human_experience_avg"] as! String)
+                        self.localavgarr.addObject(jsonDictionary["human_experience_avg"] as! Int)
                     }
                     
                    self.getglobalavg(subscription_key,leedid: leedid)
@@ -110,6 +114,27 @@ self.tabbar.selectedItem = self.tabbar.items![2]
     }
     
     
+    func showalert(message:String, title:String, action:String){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let callActionHandler = { (action:UIAlertAction!) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.view.userInteractionEnabled = true
+                self.navigationController?.popViewControllerAnimated(true)
+                
+            })
+            
+        }
+        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        alertController.addAction(defaultAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        
+    }
+
+    
     
     func getglobalavg(subscription_key:String,leedid:Int){
         let url = NSURL.init(string:String(format: "%@comparables/",domain_url))
@@ -123,6 +148,10 @@ self.tabbar.selectedItem = self.tabbar.items![2]
         var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -202,6 +231,10 @@ self.tabbar.selectedItem = self.tabbar.items![2]
         var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -321,6 +354,9 @@ self.tabbar.selectedItem = self.tabbar.items![2]
         let cell = tableView.dequeueReusableCellWithIdentifier("totalcell") as! totalanalysiscell
         cell.globalavg.text = String(format: "Global average score = %d",globalavgarr.objectAtIndex(indexPath.section) as! Int)
         cell.localavg.text = String(format: "Local average score = %d",localavgarr.objectAtIndex(indexPath.section) as! Int)
+        cell.typeimg.frame = CGRect(x:cell.typeimg.frame.origin.x,y:cell.typeimg.frame.origin.y,width:cell.typeimg.frame.size.height,height:cell.typeimg.frame.size.height)
+                cell.typeplaque.frame = CGRect(x:cell.typeplaque.frame.origin.x,y:cell.typeplaque.frame.origin.y,width:cell.typeplaque.frame.size.height,height:cell.typeplaque.frame.size.height)
+        
         if(indexPath.section == 0){
             cell.typename.text = "ENERGY"
             cell.typeimg.image = UIImage.init(named: "ic_lomobile_navitem_energy")
@@ -372,6 +408,8 @@ self.tabbar.selectedItem = self.tabbar.items![2]
             self.performSegueWithIdentifier("gotoplaque", sender: nil)
         }else if(item.title == "Credits/Actions"){
             self.performSegueWithIdentifier("gotoactions", sender: nil)
+        }else if(item.title == "Manage" ){
+            self.performSegueWithIdentifier("gotomanage", sender: nil)
         }
     }
     

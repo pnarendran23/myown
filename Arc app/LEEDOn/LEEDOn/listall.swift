@@ -12,13 +12,14 @@ class listall: UITableViewController, UITabBarDelegate {
     @IBOutlet var tablview: UITableView!
 var dataarr = NSMutableArray()
     var selected = 0
+    var id = 0
     var selectedarr = [String:AnyObject]()
     @IBAction func addnewreading(sender: AnyObject) {
         print("Add new reading")
     }
     
     override func viewWillAppear(animated: Bool) {
-        tablview.reloadData()        
+        tablview.reloadData()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,8 +69,11 @@ var dataarr = NSMutableArray()
             vc.addreading = 0
         }else if(segue.identifier == "gotoaddreading"){
             var vc = segue.destinationViewController as! readingvc
+            if(dataarr.count>0){
             vc.dataarr = dataarr.objectAtIndex(0) as! [String:AnyObject]
-                vc.addreading = 1
+            }
+            vc.id = id
+            vc.addreading = 1
         }
 
     }

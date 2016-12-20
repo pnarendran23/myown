@@ -119,6 +119,9 @@ NSUserDefaults *prefs;
     }else if([item.title isEqualToString:@"Analytics"]){
         [self performSegueWithIdentifier:@"gotoanalysis" sender:nil];
     }
+    else if([item.title isEqualToString:@"Manage"]){
+        [self performSegueWithIdentifier:@"gotomanage" sender:nil];
+    }
 }
 
 

@@ -19,16 +19,18 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     var pre_requisitesactionsarr = NSMutableArray()
     var data_input = NSMutableArray()
     var base_scores = NSMutableArray()
+       
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        var segmented_titles = ["All actions","Pre-requisites","Data input","Base scores"]
+        let segmented_titles = ["All actions","Pre-requisites","Data input","Base scores"]
         
         for  i in 0  ..< segmented_titles.count {
-        segmentedctrl.setTitle(segmented_titles[i] as? String, forSegmentAtIndex: i)
+            segmentedctrl.setTitle(segmented_titles[i], forSegmentAtIndex: i)
         }
         
-        var font = UIFont.boldSystemFontOfSize(9.0)
-        var attributes = NSDictionary.init(object: font, forKey: NSFontAttributeName)        
+        let font = UIFont.boldSystemFontOfSize(9.0)
+        let attributes = NSDictionary.init(object: font, forKey: NSFontAttributeName)
         segmentedctrl.setTitleTextAttributes(attributes as [NSObject : AnyObject], forState: UIControlState.Normal )
         
         
@@ -46,20 +48,20 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         print("Action count ",currentarr)
         
         for i in 0 ..< currentarr.count {
-            var tempdict = currentarr[i] as! [String:AnyObject]
+            let tempdict = currentarr[i] as! [String:AnyObject]
             if(tempdict["Mandatory"] as! String == "X"){
                 pre_requisitesactionsarr.addObject(tempdict)
             }
         }
         for i in 0 ..< currentarr.count {
-            var tempdict = currentarr[i] as! [String:AnyObject]
-            if(tempdict["CreditcategoryDescrption"] as! String == "Performance"){
+            let tempdict = currentarr[i] as! [String:AnyObject]
+            if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || (tempdict["CreditcategoryDescrption"] as! String == "Performance Category")){
                 data_input.addObject(tempdict)
             }
         }
         for i in 0 ..< currentarr.count {
-            var tempdict = currentarr[i] as! [String:AnyObject]
-            if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
+            let tempdict = currentarr[i] as! [String:AnyObject]
+            if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
                 base_scores.addObject(tempdict)
             }
         }
@@ -71,12 +73,14 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         
         // Do any additional setup after loading the view.
     }
-
+    
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
         if(item.title == "Plaque"){
             goback("hello")
         }else if(item.title == "Analytics"){
             self.performSegueWithIdentifier("gotoanalysis", sender: nil)
+        }else if(item.title == "Manage"){
+            self.performSegueWithIdentifier("gotomanage", sender: nil)
         }
     }
     
@@ -97,8 +101,8 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     }
     
     @IBAction func filterme(sender: AnyObject) {
-        var segmentedControl = sender as! UISegmentedControl
-        var selectedsegment = segmentedControl.selectedSegmentIndex
+        let segmentedControl = sender as! UISegmentedControl
+        let selectedsegment = segmentedControl.selectedSegmentIndex
         if(selectedsegment == 0 ){
             currentarr = allactionsarr
             tableview.reloadData()
@@ -111,19 +115,19 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         }else{
             currentarr = base_scores
             tableview.reloadData()
-        }        
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell1", forIndexPath: indexPath) as! customcellTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell1", forIndexPath: indexPath) as! customcellTableViewCell
         //CreditDescription, AssignedTo // first_name
         var linkTextWithColor = ""
         var text = ""
-        var arr = currentarr.objectAtIndex(indexPath.section) as! [String:AnyObject]
+        let arr = currentarr.objectAtIndex(indexPath.section) as! [String:AnyObject]
         if let creditDescription = arr["CreditDescription"] as? String{
             text  = creditDescription + " assigned to"
             if let assignedto = arr["AssignedTo"] as? [String:AnyObject]{
-                var temp = assignedto
+                let temp = assignedto
                 if let firstname = temp["first_name"] as? String{
                     text += " " + firstname.capitalizedString
                     
@@ -144,13 +148,42 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         
         if let creditstatus = arr["CreditStatus"] as? String{
             cell.creditstatus.text = String(format: "%@",creditstatus.capitalizedString)
+            if(creditstatus == "Ready for Review"){
+                cell.creditstatusimg.image = UIImage.init(named: "tick")
+            }else{
+                cell.creditstatusimg.image = UIImage.init(named: "circle")
+            }
+            
             if(cell.creditstatus.text == ""){
                 cell.creditstatus.text = "Not available"
             }
         }
         
         
-        
+        if(arr["CreditcategoryDescrption"] as! String == "Indoor Environmental Quality"){
+            cell.shortcredit.image = UIImage.init(named: "iq-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Materials and Resources"){
+            cell.shortcredit.image = UIImage.init(named: "mr-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Energy and Atmosphere"){
+            cell.shortcredit.image = UIImage.init(named: "ea-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Water Efficiency"){
+            cell.shortcredit.image = UIImage.init(named: "we-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Sustainable Sites"){
+            cell.shortcredit.image = UIImage.init(named: "ss-border")
+        }else{
+            if((arr["CreditDescription"] as! String).lowercaseString == "energy"){
+                cell.shortcredit.image = UIImage.init(named: "energy-border")
+            }else if((arr["CreditDescription"] as! String).lowercaseString == "water"){
+                cell.shortcredit.image = UIImage.init(named: "water-border")
+            }else if((arr["CreditDescription"] as! String).lowercaseString == "waste"){
+                cell.shortcredit.image = UIImage.init(named: "waste-border")
+            }
+            else if((arr["CreditDescription"] as! String).lowercaseString == "transportation"){
+                cell.shortcredit.image = UIImage.init(named: "transport-border")
+            }else{
+                cell.shortcredit.image = UIImage.init(named: "human-border")
+            }
+        }
         
         
         return cell
@@ -158,11 +191,11 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     
     func checkcredit_type(tempdict:[String:AnyObject]) -> String {
         var temp = ""
-        if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
-            temp = "Base scores"
-        }
-        else if(tempdict["CreditcategoryDescrption"] as! String == "Performance"){
+        if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
             temp = "Data input"
+        }
+        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
+            temp = "Base scores"
         }else if(tempdict["Mandatory"] as! String == "X"){
             temp = "Pre-requisites"
         }
@@ -173,28 +206,29 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     @IBAction func goback(sender: AnyObject) {
         self.performSegueWithIdentifier("gotodashboard", sender: nil)
     }
-
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var arr = currentarr.objectAtIndex(indexPath.section) as! [String:AnyObject]
+        let arr = currentarr.objectAtIndex(indexPath.section) as! [String:AnyObject]
         print("The category is", checkcredit_type(arr))
         if(checkcredit_type(arr) == "Pre-requisites" || checkcredit_type(arr) == "Base scores"){
-            var data = NSKeyedArchiver.archivedDataWithRootObject(currentarr)
+            let data = NSKeyedArchiver.archivedDataWithRootObject(currentarr)
             NSUserDefaults.standardUserDefaults().setObject(data, forKey: "currentcategory")
             
             NSUserDefaults.standardUserDefaults().setInteger(indexPath.section, forKey: "selected_action")
             self.performSegueWithIdentifier("prerequisites", sender: nil)
         }else if(checkcredit_type(arr) == "Data input"){
-            var data = NSKeyedArchiver.archivedDataWithRootObject(currentarr)
+            let data = NSKeyedArchiver.archivedDataWithRootObject(currentarr)
             NSUserDefaults.standardUserDefaults().setObject(data, forKey: "currentcategory")
             
             NSUserDefaults.standardUserDefaults().setInteger(indexPath.section, forKey: "selected_action")
             if((arr["CreditDescription"] as! String).lowercaseString == "energy" || (arr["CreditDescription"] as! String).lowercaseString == "water"){
-            self.performSegueWithIdentifier("datainput", sender: nil)
+                self.performSegueWithIdentifier("datainput", sender: nil)
             }else if((arr["CreditDescription"] as! String).lowercaseString == "waste" || (arr["CreditDescription"] as! String).lowercaseString == "transportation" || (arr["CreditDescription"] as! String).lowercaseString == "human experience"){
-            self.performSegueWithIdentifier("gotowaste", sender: nil)
+                self.performSegueWithIdentifier("gotowaste", sender: nil)
             }
         }
     }
+
     
     /*
     // MARK: - Navigation

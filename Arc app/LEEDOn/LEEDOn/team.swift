@@ -12,6 +12,8 @@ class team: UITableViewController {
 var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
     var leedid = 0
     var teamarr = NSArray()
+    var currentrole = ""
+    var refresh = 0
     var rolesarr = NSMutableArray()
     var selectedemail = ""
     override func viewDidLoad() {
@@ -26,10 +28,21 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
     }
     
     override func viewWillAppear(animated: Bool) {
+        if(refresh == 1){
         leedid = NSUserDefaults.standardUserDefaults().integerForKey("leed_id")
         self.getroles(leedid)
+        }
     }
     
+    
+    override func viewDidAppear(animated: Bool) {
+        let indexPath = self.tableView.indexPathForSelectedRow
+        if(indexPath != nil){
+            self.tableView.deselectRowAtIndexPath(indexPath!, animated:true)
+        }
+        
+        
+    }
     
     @IBAction func add(sender: AnyObject) {
         let alertController = UIAlertController(title: "Add New user", message: "", preferredStyle: UIAlertControllerStyle.Alert)
@@ -38,7 +51,7 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
             alert -> Void in
             
             let firstTextField = alertController.textFields![0] as UITextField
-            self.adduser(firstTextField.text! as! String)
+            self.adduser(firstTextField.text! )
             
         })
         
@@ -60,31 +73,35 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
     
     
     func adduser(mailID:String){
-        var payload = NSMutableString()
+        let payload = NSMutableString()
         payload.appendString("{")
         payload.appendString("\"user_email\":\"\(mailID)\",")
         payload.appendString("\"Reltyp\":\"ZRPO81\"")
         payload.appendString("}")
-        var str = payload as! String
+        let str = payload as String
         print(str)
         
         
         let url = NSURL.init(string:String(format: "%@assets/LEED:%d/teams/",credentials().domain_url, leedid))
         print(url?.absoluteURL)
-        var subscription_key = credentials().subscription_key
-        var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+        let subscription_key = credentials().subscription_key
+        let token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         
         let request = NSMutableURLRequest.init(URL: url!)
         request.HTTPMethod = "POST"
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        var httpbody = str
+        let httpbody = str
         request.HTTPBody = httpbody.dataUsingEncoding(NSUTF8StringEncoding)
         
-        var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -130,9 +147,13 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
         request.addValue(credentials().subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -146,9 +167,9 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
                     print(jsonDictionary)
                     self.rolesarr = (jsonDictionary["EtZstrRole"] as! NSArray).mutableCopy() as! NSMutableArray
-                    var temparr = NSMutableArray()
+                    let temparr = NSMutableArray()
                     for i in 0..<self.rolesarr.count{
-                        var dict = self.rolesarr.objectAtIndex(i) as! NSDictionary
+                        let dict = self.rolesarr.objectAtIndex(i) as! NSDictionary
                         if((dict["Rtitl"] as! String) .containsString("ARC")){
                             temparr.addObject(dict)
                         }
@@ -170,9 +191,10 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "gotoexploreview"){
-            var vc = segue.destinationViewController as! teamrole
+            let vc = segue.destinationViewController as! teamrole
             vc.rolesarr = rolesarr
             vc.email = selectedemail
+            vc.currentrole = currentrole
         }
     }
 
@@ -187,9 +209,13 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
         request.addValue(credentials().subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        var task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
@@ -203,9 +229,9 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
                     print(jsonDictionary)
                     self.teamarr = jsonDictionary["EtTeamMembers"] as! NSArray
-                    var temparr = NSMutableArray()
+                    let temparr = NSMutableArray()
                     for i in 0..<self.teamarr.count{
-                        var dict = self.teamarr.objectAtIndex(i) as! NSDictionary
+                        let dict = self.teamarr.objectAtIndex(i) as! NSDictionary
                         if((dict["Roledescription"] as! String) .containsString("ARC") || (dict["Roledescription"] as! String) .containsString("PROJECT ADMIN")){
                             temparr.addObject(dict)
                         }
@@ -225,6 +251,26 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
         task.resume()
 
     }
+    
+    func showalert(message:String, title:String, action:String){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let callActionHandler = { (action:UIAlertAction!) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {                
+                self.view.userInteractionEnabled = true
+                self.navigationController?.popViewControllerAnimated(true)
+                
+            })
+            
+        }
+        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        alertController.addAction(defaultAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -250,7 +296,7 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("cell")
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell")
         
         if(indexPath.row == 2){
             cell?.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
@@ -258,7 +304,7 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
             cell?.accessoryType = UITableViewCellAccessoryType.None
         }
         var dict = teamarr.objectAtIndex(indexPath.section) as! [String:AnyObject]
-        var name = String(format:"%@ %@",dict["Firstname"] as! String,dict["Lastname"] as! String)
+        let name = String(format:"%@ %@",dict["Firstname"] as! String,dict["Lastname"] as! String)
         
         if(indexPath.row == 0){
             cell?.userInteractionEnabled = false
@@ -267,7 +313,7 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
         }else if(indexPath.row == 1){
             cell?.userInteractionEnabled = false
             cell?.textLabel?.text = "Email"
-            cell?.detailTextLabel?.text = dict["email"] as! String
+            cell?.detailTextLabel?.text = dict["email"] as? String
         }
         else if(indexPath.row == 2){
             cell?.userInteractionEnabled = true
@@ -283,8 +329,9 @@ var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! Stri
     
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var dict = teamarr.objectAtIndex(indexPath.section) as! NSDictionary
+        let dict = teamarr.objectAtIndex(indexPath.section) as! NSDictionary
         selectedemail = dict["email"] as! String
+        currentrole = dict["Roledescription"] as! String
         self.performSegueWithIdentifier("gotoexploreview", sender: nil)
     }
     

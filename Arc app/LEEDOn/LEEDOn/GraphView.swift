@@ -158,7 +158,6 @@ import UIKit
         linePath.moveToPoint(CGPoint(x:margin,
             y:height - bottomBorder))
         
-        
         linePath.addLineToPoint(CGPoint(x:width - margin,
             y:height - bottomBorder))
         let text = CATextLayer()
@@ -167,7 +166,6 @@ import UIKit
         text.string = "0"
         text.fontSize = 12
         text.foregroundColor = UIColor.whiteColor().CGColor
-        //self.layer.addSublayer(text)
         
         
         let color = UIColor(white: 1.0, alpha: 0.3)

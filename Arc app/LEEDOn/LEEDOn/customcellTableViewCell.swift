@@ -11,6 +11,8 @@ import UIKit
 class customcellTableViewCell: UITableViewCell {    
     @IBOutlet weak var namelbl: UILabel!
 
+    @IBOutlet weak var creditstatusimg: UIImageView!
+    @IBOutlet weak var shortcredit: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.layer.cornerRadius = 5

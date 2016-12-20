@@ -11,12 +11,17 @@ import UIKit
 class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate,UITabBarDelegate, UIPickerViewDelegate,UIPickerViewDataSource {
     @IBOutlet weak var actiontitle: UILabel!
     var uploadsdata = NSArray()
+    var leedid = NSUserDefaults.standardUserDefaults().integerForKey("leed_id")
     var filescount = 1
+    var statusarr = ["Attempted","Ready for review"]
+    var statusupdate = 0
     var task = NSURLSessionTask()
     @IBOutlet weak var next: UIButton!
     var teammembers = NSArray()
     @IBOutlet weak var prev: UIButton!
+    @IBOutlet weak var spinner: UIView!
     
+    @IBOutlet weak var shortcredit: UIImageView!
     @IBOutlet weak var assetname: UILabel!
     var domain_url = ""
     @IBOutlet weak var creditstatusimg: UIImageView!
@@ -34,7 +39,9 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     var currentindex = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.spinner.layer.cornerRadius = 5
+        self.spinner.hidden = true
+        self.view.userInteractionEnabled = true
         if !UIAccessibilityIsReduceTransparencyEnabled() {
             self.assigncontainer.backgroundColor = UIColor.clearColor()
             
@@ -76,30 +83,58 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         if(self.creditstatus.text == ""){
             self.creditstatus.text = "Not available"
         }
-        var c = credentials()
+        let c = credentials()
         domain_url = c.domain_url
-        var dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
-        assetname.text = dict["name"] as! String
+        let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+        assetname.text = dict["name"] as? String
         self.affirmationsclick(self.activityfeedbutton)
         self.affirmationview1.layer.cornerRadius = 5
         self.affirmationview2.layer.cornerRadius = 5
-        //self.getuploadsdata(c.subscription_key, leedid: 1000136954, actionID: currentarr["CreditId"] as! String)
-        // Do any additional setup after loading the view.
+        ivupload1.tag = 101
+        ivupload2.tag = 102
+        ivattached2.tag = 103
+        
+        ivupload1.addTarget(self, action: #selector(prerequisites.valuechanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        ivupload2.addTarget(self, action: #selector(prerequisites.valuechanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        ivattached2.addTarget(self, action: #selector(prerequisites.valuechanged(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        var tap = UITapGestureRecognizer.init(target: self, action: #selector(datainput.statusupdate(_:)))
+        self.creditstatus.userInteractionEnabled = true
+        self.creditstatus.addGestureRecognizer(tap)
+        
+        navigate()
     }
+    
+    func statusupdate(sender:UILabel){
+        self.teammembers = statusarr
+        dispatch_async(dispatch_get_main_queue(), {
+            self.assigncontainer.hidden = false
+            self.spinner.hidden = true
+            self.statusupdate = 1
+            self.view.userInteractionEnabled = true
+            self.pleasekindly.text = "Please kindly select the below status for the action"
+            self.assignokbtn.setTitle("Save", forState: UIControlState.Normal)
+            self.picker.reloadAllComponents()
+        })
+    }
+    
     
     func checkcredit_type(tempdict:[String:AnyObject]) -> String {
         var temp = ""
-        if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
-            temp = "Base scores"
-        }
-        else if(tempdict["CreditcategoryDescrption"] as! String == "Performance"){
+        
+        if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
             temp = "Data input"
+        }
+        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
+            temp = "Base scores"
         }else if(tempdict["Mandatory"] as! String == "X"){
             temp = "Pre-requisites"
         }
         
         return temp
     }
+    
+    
+    
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return teammembers.count
@@ -110,7 +145,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return teammembers[row]["Useralias"] as! String
+        if(statusupdate == 1){
+            return teammembers[row] as? String
+        }
+        return teammembers[row]["Useralias"] as? String
     }
 
 
@@ -276,10 +314,16 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     
 
     func edited(){
-        print("edited")
-        assignokbtn.enabled = false
-        
-        getteammembers(credentials().subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
+            print("edited")
+            dispatch_async(dispatch_get_main_queue(), {
+                self.assignokbtn.enabled = false
+                self.statusupdate = 0
+                self.spinner.hidden = false
+                self.view.userInteractionEnabled = false
+                self.pleasekindly.text = "Please kindly the team member to assign this action"
+                self.assignokbtn.setTitle("Assign", forState: UIControlState.Normal)
+                self.getteammembers(credentials().subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
+            })
     }
 
     func uploaded(){
@@ -293,8 +337,12 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         assignokbtn.enabled = true
+        if(statusupdate == 0){
         print(teammembers[row]["Useralias"])
+        }
     }
+    
+    
     
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -331,12 +379,20 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -347,6 +403,8 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     self.teammembers = team_membersarray
                     dispatch_async(dispatch_get_main_queue(), {
                         self.assigncontainer.hidden = false
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
                         self.picker.reloadAllComponents()
                     })
                     
@@ -354,6 +412,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     // self.buildingactions(subscription_key, leedid: leedid)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
                 }
             }
             
@@ -401,6 +463,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     
     @IBOutlet weak var ivupload1: UISwitch!
     func navigate(){
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = true
+            self.view.userInteractionEnabled = true
+        })
         self.assigncontainer.hidden = true
         currentindex = NSUserDefaults.standardUserDefaults().integerForKey("selected_action")
         NSUserDefaults.standardUserDefaults().synchronize()
@@ -412,20 +478,50 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         if(self.creditstatus.text == ""){
             self.creditstatus.text = "Not available"
         }
+            if let creditstatus = currentarr["CreditStatus"] as? String{
+                self.creditstatus.text = String(format: "%@",creditstatus.capitalizedString)
+                if(creditstatus == "Ready for Review"){
+                    creditstatusimg.image = UIImage.init(named: "tick")
+                }else{
+                    creditstatusimg.image = UIImage.init(named: "circle")
+                }
+            }
         
-        if(currentarr["IvReqFileupload"] as! String == ""){
-            ivupload1.setOn(false, animated: false)
-            ivupload2.setOn(false, animated: false)
-        }else{
-            ivupload1.setOn(true, animated: false)
-            ivupload2.setOn(true, animated: false)
+        
+        
+        if(currentarr["CreditcategoryDescrption"] as! String == "Indoor Environmental Quality"){
+            shortcredit.image = UIImage.init(named: "iq-border")
+        }else if(currentarr["CreditcategoryDescrption"] as! String == "Materials and Resources"){
+            shortcredit.image = UIImage.init(named: "mr-border")
+        }else if(currentarr["CreditcategoryDescrption"] as! String == "Energy and Atmosphere"){
+            shortcredit.image = UIImage.init(named: "ea-border")
+        }else if(currentarr["CreditcategoryDescrption"] as! String == "Water Efficiency"){
+            shortcredit.image = UIImage.init(named: "we-border")
+        }else if(currentarr["CreditcategoryDescrption"] as! String == "Sustainable Sites"){
+            shortcredit.image = UIImage.init(named: "ss-border")
         }
         
-        if(currentarr["IvAttchPolicy"] as! String == ""){
-            ivattached2.setOn(false, animated: false)
+        if(currentarr["IvReqFileupload"] is String){
+            if(currentarr["IvReqFileupload"] as! String == ""){
+            ivupload1.setOn(false, animated: false)
+            ivupload2.setOn(false, animated: false)
+            }else if(currentarr["IvReqFileupload"] as! String == "X"){
+                ivupload1.setOn(true, animated: false)
+                ivupload2.setOn(true, animated: false)
+            }
         }else{
-            ivattached2.setOn(true, animated: false)
-            
+            ivupload1.setOn(currentarr["IvReqFileupload"] as! Bool, animated: false)
+            ivupload2.setOn(currentarr["IvReqFileupload"] as! Bool, animated: false)
+        }
+        
+        if(currentarr["IvAttchPolicy"] is String){
+            if(currentarr["IvAttchPolicy"] as! String == ""){
+                ivattached2.setOn(false, animated: false)
+            }else if(currentarr["IvAttchPolicy"] as! String == "X"){
+                ivattached2.setOn(true, animated: false)
+            }
+        }else{
+            ivattached2.setOn(currentarr["IvAttchPolicy"] as! Bool, animated: false)
         }
         
         var c = credentials()
@@ -539,12 +635,20 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -552,11 +656,16 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
                     self.uploadsdata = jsonDictionary["EtFile"] as! NSArray
                     print(jsonDictionary)
-                    //
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
                    // self.buildingactions(subscription_key, leedid: leedid)
                     self.getcreditformsuploadsdata(subscription_key, leedid: leedid, actionID: actionID)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
                 }
             }
             
@@ -577,12 +686,20 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -590,10 +707,16 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
                     self.uploadsdata = jsonDictionary["EtFile"] as! NSArray
                     print(jsonDictionary)
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
                     //self.tableview.reloadData()
                     // self.buildingactions(subscription_key, leedid: leedid)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
                 }
             }
             
@@ -606,6 +729,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
         if(item.title == "Plaque"){
             self.performSegueWithIdentifier("gotoplaque", sender: nil)
+        }else if(item.title == "Analytics"){
+            self.performSegueWithIdentifier("gotoanalysis", sender: nil)
+        }else if(item.title == "Manage"){
+            self.performSegueWithIdentifier("gotomanage", sender: nil)
         }
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -640,12 +767,20 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
             }else{
                 print(data)
                 var jsonDictionary : NSDictionary
@@ -656,12 +791,18 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                         self.currentarr["PersonAssigned"] = String(format: "%@ %@",firstname,lastname)
                         self.currentcategory.replaceObjectAtIndex(self.currentindex, withObject: self.currentarr)
                         self.assigncontainer.hidden = true
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
                         self.buildingactions(subscription_key, leedid: leedid)
                     })
                     //self.tableview.reloadData()
                     // self.buildingactions(subscription_key, leedid: leedid)
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
                 }
             }
             
@@ -678,29 +819,45 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
                 return
             }
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
             }else{
-                print(data)
+                
                 var jsonDictionary : NSDictionary
                 do {
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                    print(jsonDictionary)
+                    print("Building xcv",jsonDictionary)
                     dispatch_async(dispatch_get_main_queue(), {
                     var datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
                     NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "actions_data")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
                     NSUserDefaults.standardUserDefaults().synchronize()
+                    self.navigate()
                     self.tableview.reloadData()
+                        return
                     })
                 } catch {
                     print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
                 }
             }
             
@@ -709,9 +866,217 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     }
     
     @IBAction func okassignthemember(sender: AnyObject) {
-        
+        if(statusupdate == 1){
+            self.view.userInteractionEnabled = false
+            self.spinner.hidden = false
+            savestatusupdate(currentarr["CreditId"] as! String, subscription_key: credentials().subscription_key)
+            
+        }else{
+            self.view.userInteractionEnabled = false
+            self.spinner.hidden = false
         assignnewmember(credentials().subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), actionID: currentarr["CreditId"] as! String, email:teammembers[picker.selectedRowInComponent(0)]["Useralias"] as! String,firstname:teammembers[picker.selectedRowInComponent(0)]["Firstname"] as! String,lastname: teammembers[picker.selectedRowInComponent(0)]["Lastname"] as! String)
+        }
     }
+    
+    func affirmationupdate(actionID:String, leedid: Int, subscription_key:String){
+        //
+        var url = NSURL()
+        var s = String(format:"%d",leedid)
+        if(actionID.containsString(s)){
+            url = NSURL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@/",domain_url, leedid, actionID))!
+        }
+        else{
+            url = NSURL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@-%d/",domain_url, leedid, actionID,leedid))!
+        }
+        print(url.absoluteString)
+        
+        let request = NSMutableURLRequest.init(URL: url)
+        request.HTTPMethod = "PUT"
+        request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
+        request.addValue("application/json", forHTTPHeaderField:"Content-type" )
+        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        var httpbody = String()
+        if(self.actiontitle.text!.containsString("Policy")){
+            httpbody = String(format: "{\"IvAttchPolicy\": %@, \"IvReqFileupload\": %@}",self.ivattached2.on,ivupload2.on)
+        }else{
+            httpbody = String(format: "{\"IvAttchPolicy\": %@, \"IvReqFileupload\": %@}",self.ivattached2.on,ivupload1.on)
+        }
+        request.HTTPBody = httpbody.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+                return
+            }
+            
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+            }else{
+                print(data)
+                var jsonDictionary : NSDictionary
+                do {
+                    if(self.actiontitle.text!.containsString("Policy")){
+                        if(self.ivattached2.on == true){
+                        self.currentarr["IvAttchPolicy"] = "X"
+                        }else{
+                        self.currentarr["IvAttchPolicy"] = ""
+                        }
+                        
+                        if(self.ivupload2.on == true){
+                        self.currentarr["IvReqFileupload"] = "X"
+                        }else{
+                        self.currentarr["IvReqFileupload"] = ""
+                        }
+                    }else{
+                        if(self.ivattached2.on == true){
+                            self.currentarr["IvAttchPolicy"] = "X"
+                        }else{
+                            self.currentarr["IvAttchPolicy"] = ""
+                        }
+                        
+                        if(self.ivupload1.on == true){
+                            self.currentarr["IvReqFileupload"] = "X"
+                        }else{
+                            self.currentarr["IvReqFileupload"] = ""
+                        }
+                    }
+                    self.currentcategory.replaceObjectAtIndex(NSUserDefaults.standardUserDefaults().integerForKey("selected_action"), withObject: self.currentarr)                    
+                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
+                    print(jsonDictionary)
+                        self.buildingactions(subscription_key, leedid: leedid)
+                    //self.tableview.reloadData()
+                    //
+                } catch {
+                    print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
+                }
+            }
+            
+        }
+        task.resume()
+        
+    }
+
+    
+    
+    
+    func selectedaction(){
+        
+    }
+    
+    func valuechanged(sender:UISwitch){
+        if(sender.tag == 101 || sender.tag == 102 || sender.tag == 103){
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = false
+            self.view.userInteractionEnabled = false
+        })
+        
+        affirmationupdate(currentarr["CreditId"] as! String, leedid: leedid, subscription_key: credentials().subscription_key)
+        }
+    }
+
+    func showalert(message:String, title:String, action:String){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let callActionHandler = { (action:UIAlertAction!) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+                self.spinner.hidden = true
+                self.view.userInteractionEnabled = true
+                self.navigationController?.popViewControllerAnimated(true)
+                
+            })
+            
+        }
+        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        alertController.addAction(defaultAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        
+    }
+    
+    
+    func savestatusupdate(actionID:String, subscription_key:String){
+        //
+        var url = NSURL()
+        var s = String(format:"%d",leedid)
+        if(actionID.containsString(s)){
+            url = NSURL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@/",domain_url, leedid, actionID))!
+        }
+        else{
+            url = NSURL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@-%d/",domain_url, leedid, actionID,leedid))!
+        }
+        print(url.absoluteString)
+        
+        let request = NSMutableURLRequest.init(URL: url)
+        request.HTTPMethod = "PUT"
+        request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
+        request.addValue("application/json", forHTTPHeaderField:"Content-type" )
+        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        var httpbody = String()
+        var string = self.statusarr[self.picker.selectedRowInComponent(0)] as! String
+        if(string == "Ready for review"){
+            httpbody = String(format: "{\"is_readyForReview\": %@}",true)
+        }else{
+            httpbody = String(format: "{\"is_readyForReview\": %@}",false)
+        }
+        request.HTTPBody = httpbody.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        self.task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+                return
+            }
+            
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+            }else{
+                print(data)
+                var jsonDictionary : NSDictionary
+                do {
+                   
+                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
+                    print(jsonDictionary)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.creditstatus.text = string
+                        self.currentarr["CreditStatus"] = string
+                        self.currentcategory.replaceObjectAtIndex(NSUserDefaults.standardUserDefaults().integerForKey("selected_action"), withObject: self.currentarr)
+                    self.buildingactions(subscription_key, leedid: self.leedid)
+                    })
+                } catch {
+                    print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
+                }
+            }
+            
+        }
+        task.resume()
+    }
+
     
 
 }

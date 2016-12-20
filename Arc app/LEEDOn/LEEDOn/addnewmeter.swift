@@ -66,9 +66,9 @@ class addnewmeter: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource 
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if(pickerView == metertypepicker){
-            return currentmetertype[row] as! String
+            return currentmetertype[row] as? String
         }else{
-        return currentunit[row] as! String
+        return currentunit[row] as? String
         }
     }
     

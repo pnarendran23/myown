@@ -16,7 +16,7 @@
 @end
 
 @implementation racetrack
-
+NSMutableDictionary *buildingdict;
 #pragma mark - Life Cycle
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -92,18 +92,9 @@
     transport=[[prefs objectForKey:@"transport"]intValue ];
     human=[[prefs objectForKey:@"human"] intValue];
     NSLog(@"%d %d %d %d %d",human,transport,waste,water,energy);
-    human = 12;
-    transport = 4;
-    waste = 5;
-    water = 30;
-    energy = 20;
-    mhuman = 15;
-    mtransport = 10;
-    mwaste = 8;
-    mwater = 33;
-    menergy = 25;
     NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
     dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults]objectForKey:@"performance_data"]];
+    buildingdict =  [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults]objectForKey:@"building_details"]];
     NSDictionary *tempdict = [[NSDictionary alloc] init];
     tempdict = dict[@"scores"];
     NSLog(@"Tempdic %@",tempdict);
@@ -166,7 +157,18 @@
         menergy = 0;
     }
     
-    
+    /*human = 12;
+    transport = 4;
+    waste = 5;
+    water = 30;
+    energy = 20;
+    mhuman = 15;
+    mtransport = 10;
+    mwaste = 8;
+    mwater = 33;
+    menergy = 25;*/
+    int total = 0;
+    total = human+waste+base+transport+energy+water;
     dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults]objectForKey:@"comparable_data"]];
     tempdict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults]objectForKey:@"local_comparable_data"]];
     
@@ -179,7 +181,21 @@
         if(row==0){
         CALayer * puckforipad = [CALayer layer];
         puckforipad.frame    = CGRectMake(341.98, 368.57, 87, 87);
-        puckforipad.contents = (id)[UIImage imageNamed:@"puck"].CGImage;
+            if ([buildingdict[@"certification"] isEqualToString: @"" ] || [buildingdict[@"certification"] isEqualToString: @"Denied" ] || [buildingdict[@"certification"]isEqualToString: @"None" ]){
+        puckforipad.contents = (id)[UIImage imageNamed:@"nonleed"].CGImage;
+            }else{
+                if(total>=40 && total<=49){
+                    puckforipad.contents = (id)[UIImage imageNamed:@"certified"].CGImage;
+                }else if(total>=50 && total<=59){
+                    puckforipad.contents = (id)[UIImage imageNamed:@"silver"].CGImage;
+                }else if(total>=60 && total<=75){
+                    puckforipad.contents = (id)[UIImage imageNamed:@"gold"].CGImage;
+                }else if(total>=50 && total<=59){
+                    puckforipad.contents = (id)[UIImage imageNamed:@"platinum"].CGImage;
+                }else{
+                    puckforipad.contents = (id)[UIImage imageNamed:@"puck"].CGImage;
+                }
+            }
         [self.layer addSublayer:puckforipad];
         self.layers[@"puckforipad"] = puckforipad;
         
@@ -1221,7 +1237,23 @@
         if((int)[prefs integerForKey:@"row"]==0){
         CALayer * puckforiphone = [CALayer layer];
         puckforiphone.frame    = CGRectMake(105.84, 98.86, 87, 87);
-        puckforiphone.contents = (id)[UIImage imageNamed:@"puck"].CGImage;
+            
+            if ([buildingdict[@"certification"] isEqualToString: @"" ] || [buildingdict[@"certification"] isEqualToString: @"Denied" ] || [buildingdict[@"certification"]isEqualToString: @"None" ]){
+                puckforiphone.contents = (id)[UIImage imageNamed:@"nonleed"].CGImage;
+            }else{
+                if(total>=40 && total<=49){
+                    puckforiphone.contents = (id)[UIImage imageNamed:@"certified"].CGImage;
+                }else if(total>=50 && total<=59){
+                    puckforiphone.contents = (id)[UIImage imageNamed:@"silver"].CGImage;
+                }else if(total>=60 && total<=75){
+                    puckforiphone.contents = (id)[UIImage imageNamed:@"gold"].CGImage;
+                }else if(total>=50 && total<=59){
+                    puckforiphone.contents = (id)[UIImage imageNamed:@"platinum"].CGImage;
+                }else{
+                    puckforiphone.contents = (id)[UIImage imageNamed:@"puck"].CGImage;
+                }
+            }
+            
         [plaquegroupforiphone addSublayer:puckforiphone];
         self.layers[@"puckforiphone"] = puckforiphone;
         CATextLayer * puckscoreforiphone = [CATextLayer layer];
