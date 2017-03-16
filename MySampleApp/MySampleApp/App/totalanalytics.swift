@@ -361,6 +361,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             //print(taskerror)
                             dispatch_async(dispatch_get_main_queue(), {
                                 self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                                self.tableview.alpha = 1.0
                                 return
                             })
                         } else {
