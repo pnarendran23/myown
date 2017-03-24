@@ -18,7 +18,7 @@ var categoryarr = NSArray()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titlefont()
-        tableview.registerNib(UINib.init(nibName: "morecell", bundle: nil), forCellReuseIdentifier: "morecell")
+        tableview.registerNib(UINib.init(nibName: "managecell", bundle: nil), forCellReuseIdentifier: "managecell")
         backbtn.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
         let notificationsarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("notifications") as! NSData) as! NSArray
         if(notificationsarr.count > 0 ){
@@ -97,10 +97,35 @@ var categoryarr = NSArray()
         return categoryarr.count
     }
     
+    
+    func imageWithImage(image: UIImage, scaledToSize newSize: CGSize) -> UIImage {
+        UIGraphicsBeginImageContext(newSize)
+        image.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("morecell")! as! morecell
-        cell.title.text = categoryarr.objectAtIndex(indexPath.row) as? String
-        cell.badge.hidden = true
+        let cell = tableView.dequeueReusableCellWithIdentifier("managecell")! as! managecell
+        //cell.title.text = categoryarr.objectAtIndex(indexPath.row) as? String
+        cell.lbl.text = categoryarr.objectAtIndex(indexPath.row) as? String
+        if(indexPath.row == 0){
+            cell.img.image = self.imageWithImage(UIImage(named:"project.png")!, scaledToSize: CGSize(width:30, height: 30))
+            
+        }else if(indexPath.row == 1){
+            cell.img.image = self.imageWithImage(UIImage(named:"user.png")!, scaledToSize: CGSize(width:30, height: 30))
+        }else if(indexPath.row == 2){
+            cell.img.image = UIImage.init(named: "star")
+            cell.img.image = self.imageWithImage(UIImage(named:"star.png")!, scaledToSize: CGSize(width:30, height: 30))
+        }else if(indexPath.row == 3){
+            cell.img.image = UIImage.init(named: "creditcard")
+            cell.img.image = self.imageWithImage(UIImage(named:"creditcard.png")!, scaledToSize: CGSize(width:30, height: 30))
+        }else if(indexPath.row == 4){
+            cell.img.image = UIImage.init(named: "gear")
+            cell.img.image = self.imageWithImage(UIImage(named:"gear.png")!, scaledToSize: CGSize(width:30, height: 30))
+        }
+        //cell.badge.hidden = true
         return cell
     }
     

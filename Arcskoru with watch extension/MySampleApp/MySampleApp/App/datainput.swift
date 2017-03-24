@@ -177,10 +177,6 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
         currentarr = currentcategory[currentindex] as! [String:AnyObject]
         category.text = checkcredit_type(currentarr)
         self.actiontitle.text = currentarr["CreditDescription"] as? String
-        self.creditstatus.text = currentarr["CreditStatus"] as? String
-        if(self.creditstatus.text == ""){
-            self.creditstatus.text = "Not available"
-        }
         let c = credentials()
         domain_url = c.domain_url
         let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
@@ -353,8 +349,13 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -650,6 +651,10 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
         print("uploaded")
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
+    }
     
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -714,9 +719,9 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 if(grid == 1){
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
                 }else{
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 }
                 let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = dict["name"] as? String
@@ -764,6 +769,9 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
         category.text = checkcredit_type(currentarr)
         self.actiontitle.text = currentarr["CreditDescription"] as? String
         self.creditstatus.text = String(format: "%@ v",(currentarr["CreditStatus"] as? String)!)
+        if(self.creditstatus.text == ""){
+            self.creditstatus.text = "Not available"
+        }
         self.affirmationsclick(self.activityfeedbutton)
         if(self.creditstatus.text == ""){
             self.creditstatus.text = "Not available"
@@ -884,8 +892,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -944,6 +958,7 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                     NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "data2")
                         dispatch_async(dispatch_get_main_queue(),
                         {
+                            
                             //self.view.userInteractionEnabled = true
                             
                     })
@@ -1090,8 +1105,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1171,8 +1192,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1250,8 +1277,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1306,6 +1339,7 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
     func getmeterreadings(){//(subscription_key:String, leedid: Int, actionID: Int){
         if(meters.count == 0){
             self.maketoast("No meters found")
+            self.spinner.hidden = true
         }
         
         for (index,item) in meters.enumerate()
@@ -1340,8 +1374,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+        if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+            dispatch_async(dispatch_get_main_queue(), {
+                self.spinner.hidden = true
+                self.view.userInteractionEnabled = true
+                NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+            })
+        }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1550,13 +1590,13 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 return
             }
             
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
-            } else
+            }else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
@@ -1662,8 +1702,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1726,8 +1772,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1832,8 +1884,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1900,8 +1958,14 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1998,12 +2062,12 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")

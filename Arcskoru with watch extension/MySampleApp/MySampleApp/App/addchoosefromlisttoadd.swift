@@ -57,7 +57,9 @@ class addchoosefromlisttoadd: UIViewController, UITableViewDataSource , UITableV
         // Do any additional setup after loading the view.
     }
     @IBOutlet weak var tabbar: UITabBar!
-    
+    override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+    }
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
         if(item.title == "Score"){
             //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"plaque"])
@@ -178,7 +180,10 @@ class addchoosefromlisttoadd: UIViewController, UITableViewDataSource , UITableV
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return
@@ -231,7 +236,10 @@ class addchoosefromlisttoadd: UIViewController, UITableViewDataSource , UITableV
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return

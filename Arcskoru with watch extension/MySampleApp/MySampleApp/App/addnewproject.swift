@@ -95,41 +95,13 @@ class addnewproject: UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.titlefont()
         spinner.layer.cornerRadius = 5
         spinner.hidden = true
-           data_dict = [
-                "AffiliatedHigherEduIns":false,
-                "IsLovRecert":false,
-                "IsResidential":false,
-                "affiliatedWithLeedLab":false,
-                "building_status":"activated_payment_pending",
-                "city":"Pondicherry",
-                "confidential":false,
-                "country":"IN",
-                "default_human_experience":50,
-                "gross_area":"2322",
-                "manageEntityCountry":"US",
-                "name":"nbn",
-                "organization":"My org",
-                "override_valid":false,
-                "ownerType":"Test Owner",
-                "owner_email":"dhiranontrack@gmail.com",
-                "project_type":"building",
-                "publish":true,
-                "rating_system":"LEED V4 O+M: EB WP",
-                "spaceType":"Circulation space",
-                "state":"32",
-                "street":"29, V S Nagar, Teachers Qtrs St",
-                "survey_expire_date":"2017-02-24T05:27:24.677082Z",
-                "survey_with_dashboard":false,
-                "trial_version_status":false,
-                "unitType":"IP",
-                "updated_at":"2017-02-24T05:27:24.677604Z",
-                "zip_code":"605106"]
-        data_dict["plaque_public"] = true
-        data_dict["ldp_old"] = false
-        data_dict["affiliatedWithLeedLab"] = true
-        data_dict["AffiliatedHigherEduIns"] = true
-        data_dict["intentToPrecertify"] = true
-        data_dict["IsResidential"] = false
+           //data_dict = ["AffiliatedHigherEduIns":false,"IsLovRecert":false,"IsResidential":false,"affiliatedWithLeedLab":false,"building_status":"activated_payment_pending","city":"Pondicherry","confidential":false,"country":"IN","default_human_experience":50,"gross_area":"2322","manageEntityCountry":"US","name":"nbn","organization":"My org","override_valid":false,"ownerType":"Test Owner","owner_email":"dhiranontrack@gmail.com","project_type":"building","publish":true,"rating_system":"LEED V4 O+M: EB WP","spaceType":"Circulation space","state":"32","street":"29, V S Nagar, Teachers Qtrs St","survey_expire_date":"2017-02-24T05:27:24.677082Z","survey_with_dashboard":false,"trial_version_status":false,"unitType":"IP","updated_at":"2017-02-24T05:27:24.677604Z","zip_code":"605106"]
+        //data_dict["plaque_public"] = true
+        //data_dict["ldp_old"] = false
+        //data_dict["affiliatedWithLeedLab"] = true
+        //data_dict["AffiliatedHigherEduIns"] = true
+        //data_dict["intentToPrecertify"] = true
+        //data_dict["IsResidential"] = false
         
         
         tableview.registerNib(UINib.init(nibName: "manageprojcellwithswitch", bundle: nil), forCellReuseIdentifier: "manageprojcellwithswitch")
@@ -151,6 +123,7 @@ class addnewproject: UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
 
     override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         var countries = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("countries") as! NSData) as! NSDictionary
         
         var currentcountry = ""
@@ -931,7 +904,15 @@ class addnewproject: UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
             
             let httpStatus = response as? NSHTTPURLResponse
-            if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
+            
+            if (httpStatus!.statusCode == 401) {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
                 // check for http errors
                 print("statusCode should be 200, but is \(httpStatus!.statusCode)")
                 print("response = \(response)")
@@ -982,11 +963,17 @@ class addnewproject: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 return
             }
             
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
-                print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                print("response = \(response)")
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
             }else{
                 print(data)
@@ -1079,7 +1066,13 @@ class addnewproject: UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
             
             let httpStatus = response as? NSHTTPURLResponse
-            if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }else if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
                 // check for http errors
                 print("statusCode should be 200, but is \(httpStatus!.statusCode)")
                 print("response = \(response)")

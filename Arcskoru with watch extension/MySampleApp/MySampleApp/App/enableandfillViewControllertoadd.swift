@@ -170,6 +170,7 @@ class enableandfillViewControllertoadd: UIViewController, UITextFieldDelegate, U
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         self.navigationController?.delegate = self
     }
     
@@ -278,12 +279,12 @@ class enableandfillViewControllertoadd: UIViewController, UITextFieldDelegate, U
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                     print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -343,12 +344,12 @@ class enableandfillViewControllertoadd: UIViewController, UITextFieldDelegate, U
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                     print("statusCode should be 200, but is \(httpStatus.statusCode)")

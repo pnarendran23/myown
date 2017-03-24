@@ -43,10 +43,6 @@
     self.navigationController.navigationBar.backItem.title = @"Back";
     [self viewDidLoad];
     opened=NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(closeit)
-                                                 name:UIApplicationDidEnterBackgroundNotification
-                                               object:nil];
     width=[UIScreen mainScreen].bounds.size.width;
     height=[UIScreen mainScreen].bounds.size.height;
     [self.tableview setSeparatorColor:[UIColor lightGrayColor]];
@@ -70,9 +66,9 @@
     [self.navigationItem setTitle:[NSString stringWithFormat:@"%@",dict[@"name"]]];
     edit = 0;
     NSLog(@"add survey Nib name %@",[[self.navigationController.viewControllers lastObject]restorationIdentifier]);
-    subscription_key = @"e6aecd40e07c40718a0b3ed9a0cc609d";//"f94b34f0576f4a85b3c0c22eefb625b3";
-    domain_url = @"https://api.usgbc.org/stg/leed/";
-    survey_url = @"https://stg.app.arconline.io/app/project/";
+    subscription_key = @"f94b34f0576f4a85b3c0c22eefb625b3";//"e6aecd40e07c40718a0b3ed9a0cc609d";
+    domain_url = @"https://api.usgbc.org/dev/leed/";
+    survey_url = @"https://dev.app.arconline.io/app/project/";
     self.navigationController.delegate = self;
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(Add)];
     [self.navigationItem setRightBarButtonItem:item animated:YES];
@@ -474,10 +470,44 @@
 -(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
-        alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This will remove the selected route permanently. Are you sure ?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        
+        
+        
+        /*alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This will remove the selected route permanently. Are you sure ?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         ind=indexPath;
         alert.tag=1;
-        [alert show];
+        [alert show];*/
+        
+        UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"Warning" message:@"This will remove the selected route permanently. Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+        
+        
+        UIAlertAction* modify = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+        }];
+        
+        UIAlertAction* submit = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                int row=(int)[ind row];
+                [mainarr removeObjectAtIndex:row];
+                [jsonarray removeObjectAtIndex:row];
+                [prefs setObject:mainarr forKey:@"mainarray"];
+                [self.tableview reloadData];
+                if(mainarr.count==0){
+                    edit = 1;
+                    //[self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
+                    NSString *restorationID = [[self.navigationController.viewControllers lastObject]restorationIdentifier];
+                    NSString *previousrestorationID = [[self.navigationController.viewControllers objectAtIndex:[self.navigationController.viewControllers count]-2]restorationIdentifier];
+                    if([restorationID isEqualToString:@"listroutes"] && ![previousrestorationID isEqualToString:@"addnewroute"]){
+                        [self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
+                    }else{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+                }
+        }];
+        
+        [self presentViewController:alrt animated:YES completion:nil];
+        
+        
+        
         opened=YES;
     }];
     button.backgroundColor = [UIColor colorWithRed:0.858 green:0.211 blue:0.196 alpha:1];
@@ -519,87 +549,6 @@
     }
                      completion:^(BOOL finished){ }
      ];
-}
-
-- (void)alertView:(UIAlertView *)warning clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    opened=NO;
-    if(warning.tag==1){
-        if(buttonIndex==1){
-            int row=(int)[ind row];
-            [mainarr removeObjectAtIndex:row];
-            [jsonarray removeObjectAtIndex:row];
-            [prefs setObject:mainarr forKey:@"mainarray"];
-            [self.tableview reloadData];
-            if(mainarr.count==0){
-                edit = 1;
-                //[self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
-                NSString *restorationID = [[self.navigationController.viewControllers lastObject]restorationIdentifier];
-                NSString *previousrestorationID = [[self.navigationController.viewControllers objectAtIndex:[self.navigationController.viewControllers count]-2]restorationIdentifier];
-                if([restorationID isEqualToString:@"listroutes"] && ![previousrestorationID isEqualToString:@"addnewroute"]){
-                    [self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
-                }else{
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-            }
-        }
-    }
-    else if(warning.tag==2){
-        if(buttonIndex==0){
-            if((int)[prefs integerForKey:@"humanhide"]==0){
-                [self backtocategories:nil];
-            }
-            else{
-                
-                //[self performSegueWithIdentifier:@"gotohuman" sender:nil];
-                NSMutableArray *transportationarray=[[NSMutableArray arrayWithArray:[prefs objectForKey:@"transportationarray"]]mutableCopy];
-                NSMutableArray *a=[[NSMutableArray alloc] init];
-                NSString *str=[prefs objectForKey:@"transportbuildingid"];
-                
-                [a addObject:str];
-                [a addObject:mainarr];
-                [prefs setObject:mainarr forKey:@"mainarray"];
-                if((int)[prefs integerForKey:@"url"]!=1){
-                    int lid=[str intValue];
-                    int exists=0;
-                    for (int i=0; i<transportationarray.count; i++) {
-                        NSMutableArray *aa=[[[NSMutableArray alloc] initWithArray:[transportationarray objectAtIndex:i]] mutableCopy];
-                        if(aa.count!=0){
-                            int templid=[[aa objectAtIndex:0] intValue];
-                            if(lid==templid){
-                                [transportationarray replaceObjectAtIndex:i withObject:a];
-                                [prefs setObject:transportationarray forKey:@"transportationarray"];
-                                exists=1;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    
-                    if((transportationarray.count==0)||(exists!=1)){
-                        [transportationarray addObject:a];
-                        [prefs setObject:transportationarray forKey:@"transportationarray"];
-                    }
-                    
-                }
-
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"performsegue" object:nil userInfo:@{@"seguename":@"gotohuman"}];
-                
-            }
-        }
-        else{
-            edit = 1;
-            //[self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
-            NSString *restorationID = [[self.navigationController.viewControllers lastObject]restorationIdentifier];
-            NSString *previousrestorationID = [[self.navigationController.viewControllers objectAtIndex:[self.navigationController.viewControllers count]-2]restorationIdentifier];
-            if([restorationID isEqualToString:@"listroutes"] && ![previousrestorationID isEqualToString:@"addnewroute"]){
-                [self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
-            }else{
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        }
-        
-    }
 }
 
 
@@ -701,59 +650,126 @@
     NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         int code =(int)[(NSHTTPURLResponse *)response statusCode];
         [self.spinner setHidden:YES];
-        if (code == 200 || code == 201){
+        if (code == 401) {           // check for http errors
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.spinner.hidden = YES;
+                self.view.userInteractionEnabled = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"renewtoken" object:nil userInfo:nil];
+            });
+        }
+        else if (code == 200 || code == 201){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [prefs setInteger:0 forKey:@"transithide"];
-                alert = [[UIAlertView alloc] initWithTitle:@"Success"
-                                                   message:@"Thanks for submitting your route. Would you like to add another?"
-                                                  delegate:self
-                                         cancelButtonTitle:@"No"
-                                         otherButtonTitles:@"Yes", nil];
-                alert.tag=2;
-                [alert show];
+                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"Success" message:@"Thanks for submitting your route. Would you like to add another?" preferredStyle:UIAlertControllerStyleAlert];
+                
+                
+                UIAlertAction* modify = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    if((int)[prefs integerForKey:@"humanhide"]==0){
+                        [self backtocategories:nil];
+                    }
+                    else{
+                        
+                        //[self performSegueWithIdentifier:@"gotohuman" sender:nil];
+                        NSMutableArray *transportationarray=[[NSMutableArray arrayWithArray:[prefs objectForKey:@"transportationarray"]]mutableCopy];
+                        NSMutableArray *a=[[NSMutableArray alloc] init];
+                        NSString *str=[prefs objectForKey:@"transportbuildingid"];
+                        
+                        [a addObject:str];
+                        [a addObject:mainarr];
+                        [prefs setObject:mainarr forKey:@"mainarray"];
+                        if((int)[prefs integerForKey:@"url"]!=1){
+                            int lid=[str intValue];
+                            int exists=0;
+                            for (int i=0; i<transportationarray.count; i++) {
+                                NSMutableArray *aa=[[[NSMutableArray alloc] initWithArray:[transportationarray objectAtIndex:i]] mutableCopy];
+                                if(aa.count!=0){
+                                    int templid=[[aa objectAtIndex:0] intValue];
+                                    if(lid==templid){
+                                        [transportationarray replaceObjectAtIndex:i withObject:a];
+                                        [prefs setObject:transportationarray forKey:@"transportationarray"];
+                                        exists=1;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            
+                            if((transportationarray.count==0)||(exists!=1)){
+                                [transportationarray addObject:a];
+                                [prefs setObject:transportationarray forKey:@"transportationarray"];
+                            }
+                            
+                        }
+                        
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"performsegue" object:nil userInfo:@{@"seguename":@"gotohuman"}];
+                        
+                    }
+
+                }];
+                
+                UIAlertAction* submit = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    
+                        edit = 1;
+                        //[self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
+                        NSString *restorationID = [[self.navigationController.viewControllers lastObject]restorationIdentifier];
+                        NSString *previousrestorationID = [[self.navigationController.viewControllers objectAtIndex:[self.navigationController.viewControllers count]-2]restorationIdentifier];
+                        if([restorationID isEqualToString:@"listroutes"] && ![previousrestorationID isEqualToString:@"addnewroute"]){
+                            [self performSegueWithIdentifier:@"addmoreroutes" sender:nil];
+                        }else{
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }
+                    
+
+                }];
+                [alrt addAction:modify];
+                [alrt addAction:submit];
+                [self presentViewController:alrt animated:YES completion:nil];
+                
+                //alert = [[UIAlertView alloc] initWithTitle:@"Success"message:@"" delegate:self cancelButtonTitle:@"No"otherButtonTitles:@"Yes", nil];
+                //alert.tag=2;
+                //[alert show];
                 opened=YES;
             });
             
         }
         else if(code==0){
             dispatch_async(dispatch_get_main_queue(), ^{
-            alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please check your internet connection" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-            [alert show];
-            [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please check your internet connection" preferredStyle:UIAlertControllerStyleAlert];
+                [self presentViewController:alrt animated:YES completion:nil];
+                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
             });
+            
         }
         else{
             dispatch_async(dispatch_get_main_queue(), ^{
-            alert = [[UIAlertView alloc] initWithTitle:nil message:@"Transit Survey Submission Failed" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-            [alert show];
-            [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Transit Survey Submission Failed" preferredStyle:UIAlertControllerStyleAlert];
+                [self presentViewController:alrt animated:YES completion:nil];
+                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                
             });
         }
         
     }];
-    
     [postDataTask resume];
 }
 - (IBAction)backbarbtn:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)dismissAlert:(UIAlertView *)alert{
-    [alert dismissWithClickedButtonIndex:(int)nil animated:YES];
+-(void)dismissAlert:(UIAlertController *)alert{
+    [self dismissViewControllerAnimated:alert completion:nil];
 }
 
--(void)closeit{
-    if(opened==YES){
-    [alert dismissWithClickedButtonIndex:(int)nil animated:YES];
-    }
-}
 - (IBAction)assist:(id)sender {
-    alert = [[UIAlertView alloc] initWithTitle:@"Need help submitting routes?"
-                                                    message:@"Please select your route(s) and then submit. To edit or delete the route, just swipe left on the route"
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Got it"
-                                          otherButtonTitles:nil];
-    [alert show];
+    UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"Need help submitting routes?" message:@"Please select your route(s) and then submit. To edit or delete the route, just swipe left on the route" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* modify = [UIAlertAction actionWithTitle:@"Got it" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+    }];
+    
+    [alrt addAction:modify];
+    [self presentViewController:alrt animated:YES completion:nil];
+    [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+    
     opened=YES;
 }
 @end

@@ -297,7 +297,7 @@ var energymax = 0
                 
             }
             
-            if(dict["Average Transit CO2e"] is NSNull){
+            if(dict["Average Transit CO2e"] is NSNull || dict["Average Transit CO2e"] == nil){
                 arr.addObject("0")
             }else{
                 arr.addObject(String(format:"%.5f",dict["Average Transit CO2e"] as! Float * 365))

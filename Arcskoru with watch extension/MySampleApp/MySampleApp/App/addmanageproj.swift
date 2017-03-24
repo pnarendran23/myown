@@ -19,6 +19,7 @@ class addmanageproj: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     @IBOutlet weak var tabbar: UITabBar!
     override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         self.navigationController?.navigationBar.backItem?.title = "Manage project"
     }
     var data_dict = NSMutableDictionary()
@@ -688,7 +689,10 @@ class addmanageproj: UIViewController, UITableViewDataSource, UITableViewDelegat
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return
@@ -743,7 +747,10 @@ class addmanageproj: UIViewController, UITableViewDataSource, UITableViewDelegat
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return
@@ -847,7 +854,11 @@ class addmanageproj: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
+        //return 60
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.081 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.081 * UIScreen.mainScreen().bounds.size.width;
     }
     
     override func didReceiveMemoryWarning() {

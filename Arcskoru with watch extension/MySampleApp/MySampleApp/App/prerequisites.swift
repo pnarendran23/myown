@@ -154,6 +154,9 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     }
     
     override func viewDidAppear(animated: Bool) {
+        feedstable.scrollEnabled = true
+        feedstable.bounces = true
+        feedstable.frame = CGRectMake(feedstable.frame.origin.x, tableview.frame.origin.y + tableview.frame.size.height, feedstable.frame.size.width, feedstable.frame.size.height)
         if(fromnotification == 1){
             self.navigationController?.navigationBar.backItem?.title = "Notifications"
         }else{
@@ -229,8 +232,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -290,9 +299,9 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
             temp = "Data input"
         }
-        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
+        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
             temp = "Base scores"
-        }else if(tempdict["Mandatory"] as! String == "X"){
+        }else if(tempdict["Mandatory"] as! String == "X" || tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
             temp = "Pre-requisites"
         }
         
@@ -531,6 +540,7 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         }
         return 20
     }
+    
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
@@ -569,8 +579,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -630,7 +646,42 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
             NSUserDefaults.standardUserDefaults().setInteger(currentindex, forKey: "selected_action")
             currentarr = currentcategory[currentindex] as! [String:AnyObject]
             if(checkcredit_type(currentarr) == "Data input"){
-                self.performSegueWithIdentifier("datainput", sender: nil)
+                //self.performSegueWithIdentifier("datainput", sender: nil)
+                let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+                let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
+                var datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+                if((currentarr["CreditDescription"] as! String).lowercaseString == "water" || (currentarr["CreditDescription"] as! String).lowercaseString == "energy"){
+                    datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+                }else{
+                    datainput = mainstoryboard.instantiateViewControllerWithIdentifier("waste")
+                }
+                let rootViewController = self.navigationController
+                var controllers = (rootViewController!.viewControllers)
+                controllers.removeAll()
+                var v = UIViewController()
+                var grid = 0
+                grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
+                if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 1){
+                    v = mainstoryboard.instantiateViewControllerWithIdentifier("grid") as! UINavigationController
+                }else{
+                    v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController
+                }
+                var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                if(grid == 1){
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
+                }else{
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                }
+                let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+                listofassets.navigationItem.title = dict["name"] as? String
+                controllers.append(listofassets)
+                controllers.append(listofactions)
+                controllers.append(datainput)
+                //self.navigationController!.hidesBarsOnTap = false;
+                //self.navigationController!.hidesBarsOnSwipe = false;
+                //self.navigationController!.hidesBarsWhenVerticallyCompact = false;
+                self.navigationController?.setViewControllers(controllers, animated: false)
+                
             }else{
                 navigate()
             }
@@ -664,10 +715,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         category.text = checkcredit_type(currentarr)
         self.actiontitle.text = currentarr["CreditDescription"] as? String
         self.creditstatus.text = currentarr["CreditStatus"] as? String
-        self.affirmationsclick(self.activityfeedbutton)
         if(self.creditstatus.text == ""){
             self.creditstatus.text = "Not available"
         }
+        self.affirmationsclick(self.activityfeedbutton)
             if let creditstatus = currentarr["CreditStatus"] as? String{
                 self.creditstatus.text = String(format: "%@",creditstatus.capitalizedString)
                 if(creditstatus == "Ready for Review"){
@@ -676,9 +727,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     creditstatusimg.image = UIImage.init(named: "circle")
                 }
             }
+        if(self.creditstatus.text == ""){
+            self.creditstatus.text = "Not available"
+        }
         
-        
-        
+        self.actiontitle.hidden = false
         if(currentarr["CreditcategoryDescrption"] as! String == "Indoor Environmental Quality"){
             shortcredit.image = UIImage.init(named: "iq-border")
         }else if(currentarr["CreditcategoryDescrption"] as! String == "Materials and Resources"){
@@ -689,6 +742,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
             shortcredit.image = UIImage.init(named: "we-border")
         }else if(currentarr["CreditcategoryDescrption"] as! String == "Sustainable Sites"){
             shortcredit.image = UIImage.init(named: "ss-border")
+        }else if(currentarr["CreditcategoryDescrption"] as! String == "Innovation"){
+            self.category.text = "Innovation"
+            self.actiontitle.hidden = true
+            shortcredit.image = UIImage.init(named: "id-border")
         }
         
         if(currentarr["IvReqFileupload"] is String){
@@ -751,9 +808,9 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                 }
                 var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 if(grid == 1){
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
                 }else{
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") 
                 }
                 let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = dict["name"] as? String
@@ -870,8 +927,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -932,8 +995,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1041,8 +1110,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1107,8 +1182,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -1202,7 +1283,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
                     self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                     
@@ -1349,7 +1437,14 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
 
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
                     self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                     

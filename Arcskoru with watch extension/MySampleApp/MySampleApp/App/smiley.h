@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface smiley : UIViewController <UIAlertViewDelegate,UIApplicationDelegate>{
+@interface smiley : UIViewController <UIApplicationDelegate>{
     BOOL opened;
     NSUserDefaults *prefs;
     CAShapeLayer * smiling;
@@ -16,7 +16,6 @@
     NSUInteger indx;
     int submitteddonthide;
     int nope;
-    UIAlertView *alert;
     NSNumber *number;
     UIBezierPath *smilingPath;
     int position;

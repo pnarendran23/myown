@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface buttonarrayforhumansurvey : UIViewController<UIAlertViewDelegate,NSURLConnectionDelegate>
+@interface buttonarrayforhumansurvey : UIViewController<NSURLConnectionDelegate>
 {
     UIButton *Button;
     UIButton *Button1;
@@ -29,7 +29,6 @@
     UIButton *scanBarCodeButton;
     BOOL othertext;
     UIButton *cliked;
-    UIAlertView *alert;
     int it;
     BOOL submitteddonthide;
     NSURL *URL;

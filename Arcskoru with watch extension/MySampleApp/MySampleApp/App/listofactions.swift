@@ -89,6 +89,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         base_scores = NSMutableArray()
         for i in 0 ..< currentarr.count {
             let tempdict = currentarr[i] as! [String:AnyObject]
+            if(tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
+                pre_requisitesactionsarr.addObject(tempdict)
+            }
             if(tempdict["Mandatory"] as! String == "X" && tempdict["CreditcategoryDescrption"] as! String != "Performance" && tempdict["CreditcategoryDescrption"] as! String != "Performance Category"){
                 pre_requisitesactionsarr.addObject(tempdict)
             }
@@ -101,7 +104,7 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         }
         for i in 0 ..< currentarr.count {
             let tempdict = currentarr[i] as! [String:AnyObject]
-            if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
+            if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
                 base_scores.addObject(tempdict)
             }
         }
@@ -352,6 +355,10 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
             cell.shortcredit.image = UIImage.init(named: "we-border")
         }else if(arr["CreditcategoryDescrption"] as! String == "Sustainable Sites"){
             cell.shortcredit.image = UIImage.init(named: "ss-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Innovation"){
+            cell.shortcredit.image = UIImage.init(named: "id-border")
+        }else if(arr["CreditcategoryDescrption"] as! String == "Prerequiste"){
+            cell.shortcredit.image = self.imageWithImage(UIImage(named: "settings.png")!, scaledToSize: CGSizeMake(32, 32))
         }else{
             if((arr["CreditDescription"] as! String).lowercaseString == "energy"){
                 cell.shortcredit.image = UIImage.init(named: "energy-border")
@@ -376,9 +383,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
             temp = "Data input"
         }
-        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category")){
+        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
             temp = "Base scores"
-        }else if(tempdict["Mandatory"] as! String == "X"){
+        }else if(tempdict["Mandatory"] as! String == "X" || tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
             temp = "Pre-requisites"
         }
         
@@ -416,9 +423,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
             grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
             var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             if(grid == 1){
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
             }else{
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             }
             _ = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
             listofassets.navigationItem.title = "Projects"
@@ -451,9 +458,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
                 var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 if(grid == 1){
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
                 }else{
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 }
                 let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = "Projects"
@@ -481,9 +488,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
                 var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 if(grid == 1){
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
                 }else{
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") 
                 }
                 _ = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = "Projects"

@@ -25,6 +25,10 @@ class addnewmeter: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,
     var currentunit = NSArray()
     var currentmetertype = NSArray()
     var unitsarr = NSArray()
+    override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titlefont()
@@ -75,7 +79,10 @@ class addnewmeter: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return
@@ -267,7 +274,10 @@ class addnewmeter: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     
                 })
                 return

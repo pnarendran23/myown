@@ -19,6 +19,10 @@ var dataarr = NSMutableArray()
     @IBAction func addnewreading(sender: AnyObject) {
         print("Add new reading")
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+    }
     @IBAction func closeit(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }

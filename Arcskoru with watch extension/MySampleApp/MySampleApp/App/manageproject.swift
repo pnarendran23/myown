@@ -28,6 +28,11 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
     var yesorno = ["Yes","No"]
     var token = NSUserDefaults.standardUserDefaults().objectForKey("token") as? String
     var dict = NSDictionary()
+    
+    override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         listarr = ["","","","","","","","","","","","","","","","","","","","","","","","",""]
@@ -111,12 +116,12 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -957,12 +962,12 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1015,12 +1020,12 @@ class manageproject: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")

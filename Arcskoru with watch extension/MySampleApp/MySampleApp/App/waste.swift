@@ -66,7 +66,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     }
     
     func showSendMailErrorAlert() {
-        let alert  = UIAlertController.init(title: "Could not send email", message: "You device could not send e-mail. Please check e-mail configuration and try again", preferredStyle: .ActionSheet)
+        let alert  = UIAlertController.init(title: "Could not send email", message: "You device could not send e-mail. Please check e-mail configuration and try again", preferredStyle: .Alert)
         
         let cancel = UIAlertAction(title: "OK", style: .Cancel) { (action) -> Void in
             
@@ -121,11 +121,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
             request.invalidateAndCancel()
         }
         
+        
            var buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]
             self.navigationItem.title = buildingdetails["name"] as? String
             //self.navigationController?.navigationBar.backItem?.title = buildingdetails["name"] as? String
     }
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+   /* override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         if(UIDevice.currentDevice().orientation == .Portrait){
             if(sview != nil){
            // sview.contentSize = CGSizeMake(UIScreen.mainScreen().bounds.size.width,UIScreen.mainScreen().bounds.size.height)
@@ -138,7 +139,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.tableview.frame = CGRectMake(self.tableview.layer.frame.origin.x, 1.02 * (self.affview.layer.frame.origin.y + self.affview.layer.frame.size.height), self.tableview.layer.frame.size.width,  self.tableview.layer.frame.size.height)
         navigate()
         return [.Portrait]
-    }
+    }*/
     var fromnotification = NSUserDefaults.standardUserDefaults().integerForKey("fromnotification")
     
     override func viewDidLoad() {
@@ -337,12 +338,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -413,8 +414,14 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -483,12 +490,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -634,9 +641,9 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
             }
             var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             if(grid == 1){
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
             }else{
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             }
             let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
             listofassets.navigationItem.title = dict["name"] as? String
@@ -724,12 +731,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -866,12 +873,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1008,14 +1015,23 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         task.resume()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
+    }
+    
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.067 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.067 * UIScreen.mainScreen().bounds.size.width;
     }
     
     func getmeterdata() {
         if(self.meters.count == 0){
                 self.maketoast("No meters found")
+            self.spinner.hidden = true
         }
         for i in 0..<self.meters.count {
             let c = credentials()
@@ -1066,12 +1082,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1089,8 +1105,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     //self.graphPoints = jsonDictionary["results"] as! NSArray
                     self.currentmetersdict  = jsonDictionary as! [String:AnyObject]
                     self.meters = jsonDictionary["results"]?.mutableCopy() as! NSMutableArray
+                    
                     //self.view.userInteractionEnabled = true
+                    dispatch_async(dispatch_get_main_queue(), {
                     self.getmeterdata()
+                    })
+                    
                     // self.buildingactions(subscription_key, leedid: leedid)
                     
                 } catch {
@@ -1144,12 +1164,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1245,6 +1265,10 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                             self.addnew.layer.cornerRadius = rect.size.height/2.0
                             //self.addnew.titleLabel?.text = "Email survey"
                         }
+                        
+                        if(self.meters.count == 0){
+                            self.maketoast("No meters found")
+                        }
                 self.feedstable.frame = CGRect(x:0,y:view.frame.origin.y+view.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.frame.size.height)
                     })
                     
@@ -1264,6 +1288,10 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         }
         task.resume()
     }
+    
+    
+    
+    
     
     @IBOutlet weak var backbtn: UIButton!
     func showalert(message:String, title:String, action:String){
@@ -1383,12 +1411,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1547,11 +1575,23 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
                 let v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets")
                 let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
-                let datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+                var datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+                if(currentarr["CreditcategoryDescrption"] as! String == "Innovation"){
+                    datainput = mainstoryboard.instantiateViewControllerWithIdentifier("prerequisites")
+                }else{
+                    datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+                }
+                
                 var rootViewController = self.navigationController
                 var controllers = (rootViewController!.viewControllers)
                 controllers.removeAll()
-                let listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                var grid = 0
+                if(grid == 1){
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
+                }else{
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                }
                 let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = dict["name"] as? String
                 controllers.append(listofassets)
@@ -1596,7 +1636,13 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 var rootViewController = self.navigationController
                 var controllers = (rootViewController!.viewControllers)
                 controllers.removeAll()
-                let listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                var grid = 0
+                var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                if(grid == 1){
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
+                }else{
+                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+                }
                 let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
                 listofassets.navigationItem.title = dict["name"] as? String
                 controllers.append(listofassets)
@@ -1662,12 +1708,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1736,12 +1782,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1836,12 +1882,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -1947,12 +1993,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 return
             }
             
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
             
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 && httpStatus.statusCode != 201 {           // check for http errors

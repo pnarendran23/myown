@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var x = 0
     var validationneeded = 1
     var timer = NSTimer()
+    var humanexarray = NSMutableArray()
+    var transportationarray = NSMutableArray()
     var vc = UIViewController()
     var token = ""
     var launched = 0
@@ -32,6 +34,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if(NSUserDefaults.standardUserDefaults().objectForKey("token") != nil){
             token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         }
+        
+        if(NSUserDefaults.standardUserDefaults().objectForKey("humanexarray") != nil){
+            humanexarray = NSUserDefaults.standardUserDefaults().objectForKey("humanexarray")?.mutableCopy() as! NSMutableArray
+        }
+        if(NSUserDefaults.standardUserDefaults().objectForKey("transportationarray") != nil){
+            transportationarray = NSUserDefaults.standardUserDefaults().objectForKey("transportationarray")?.mutableCopy() as! NSMutableArray
+        }
+        
         launched = 1
         if let topicARNs = pushManager.topicARNs {
             pushManager.registerTopicARNs(topicARNs)
@@ -42,10 +52,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.performsegue(_:)), name:"performsegue", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.performrootsegue(_:)), name:"performrootsegue", object: nil)
-        
-        
            NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "instructionsrow")
         UIApplication.sharedApplication().statusBarStyle = .Default
+        
+        
+        if(NSUserDefaults.standardUserDefaults().objectForKey("username") != nil && NSUserDefaults.standardUserDefaults().objectForKey("password") != nil){
+            let subv = self.window!.subviews
+            for obj in subv {
+                obj.removeFromSuperview()
+            }
+            let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+            
+            var v = UIViewController()
+            var grid = 0
+            if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 1){
+                v = mainstoryboard.instantiateViewControllerWithIdentifier("grid") as! UINavigationController
+            }else{
+                v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController
+            }
+            v.navigationItem.title = "Projects"
+            self.window?.rootViewController = v
+        }
+        
       /*if(validationneeded == 1){
         var subViewArray = self.window!.subviews
         if(NSUserDefaults.standardUserDefaults().objectForKey("token") != nil && NSUserDefaults.standardUserDefaults().objectForKey("username") != nil && NSUserDefaults.standardUserDefaults().objectForKey("password") != nil && NSUserDefaults.standardUserDefaults().objectForKey("assetdata") != nil){
@@ -70,6 +98,106 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         validationneeded = 1
     }
     
+    
+    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        print(url)
+        
+        return true
+    }
+    
+    
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        
+        print(url)
+        
+        let queryItems = NSURLComponents(string: url.absoluteString!)?.queryItems
+        let param1 = queryItems?.filter({$0.name == "key"}).first
+        if(param1?.value != nil){
+        var key = param1!.value! as String
+        var leedid = ""
+        print(param1?.value)
+        let arr = (url.absoluteString?.componentsSeparatedByString("project/"))! as [String]
+        if(arr.count == 2){
+            leedid = arr[1] as! String
+            var temparr =  leedid.componentsSeparatedByString("/") as! NSArray
+            if(temparr.count > 1){
+                leedid = temparr[0] as! String
+                leedid = "1000138806"
+                key = "a2Re4fm53J1YTLlGSeIaG89U"
+                if(NSUserDefaults.standardUserDefaults().objectForKey("username") != nil){
+                    //Already logged in
+                    if(NSUserDefaults.standardUserDefaults().objectForKey("building_details") != nil){
+                        let current_dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+                        if(current_dict["leed_id"] as! Int == Int(leedid)!){
+                            gotomore(true)
+                        }else{
+                            //other project
+                          //  self.getbuilding(self.token, subscription_key: credentials().subscription_key, token_type: "Bearer", domain_url: credentials().domain_url,leedid: leedid)
+                            self.getbuilding(self.token, subscription_key: credentials().subscription_key, token_type: "Bearer", domain_url: credentials().domain_url,leedid: leedid, key: key, loggedin : true)
+                        }
+                    }else{
+                        //other project
+                        self.getbuilding(self.token, subscription_key: credentials().subscription_key, token_type: "Bearer", domain_url: credentials().domain_url,leedid: leedid, key: key, loggedin : true)
+                    }
+                }else{
+                    //other project
+                    self.getbuilding(self.token, subscription_key: credentials().subscription_key, token_type: "Bearer", domain_url: credentials().domain_url,leedid: leedid, key: key, loggedin : false)
+                }
+                
+                
+                
+                
+            }
+            
+            
+        }else{
+            dispatch_async(dispatch_get_main_queue(), {
+                var alertController = UIAlertController(title: "Invalid URL", message: "Please try again using a valid URL to submit the survey", preferredStyle: .ActionSheet)
+                var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                    UIAlertAction in
+                    NSLog("OK Pressed")
+                }
+                alertController.addAction(okAction)
+                self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+            })
+            }
+        print("LEED ID and key is ",leedid,key)
+        }
+        return true
+    }
+    
+    func gotomore(loggedin : Bool){
+        let subv = self.window!.subviews
+        for obj in subv {
+            obj.removeFromSuperview()
+        }
+        let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+        var v = UIViewController()
+        var grid = 0
+        if(loggedin == true){
+        if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 1){
+            v = mainstoryboard.instantiateViewControllerWithIdentifier("grid") as! UINavigationController
+        }else{
+            v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController
+        }
+        v.navigationItem.title = "Projects"
+        self.window?.rootViewController = v
+        
+        let viewController = mainstoryboard.instantiateViewControllerWithIdentifier("more")
+        var rootViewController = self.window!.rootViewController as! UINavigationController
+        rootViewController.pushViewController(viewController, animated: false)
+        let set = mainstoryboard.instantiateViewControllerWithIdentifier("smiley")
+        rootViewController.pushViewController(set, animated: false)
+        }else{
+                v = mainstoryboard.instantiateViewControllerWithIdentifier("login_nav") as! UINavigationController
+            self.window?.rootViewController = v
+            let viewController = mainstoryboard.instantiateViewControllerWithIdentifier("more")
+            var rootViewController = self.window!.rootViewController as! UINavigationController
+            rootViewController.pushViewController(viewController, animated: false)
+            let set = mainstoryboard.instantiateViewControllerWithIdentifier("smiley")
+            rootViewController.pushViewController(set, animated: false)
+        }
+    }
     
     
     func performsegue(notification:NSNotification){
@@ -132,7 +260,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func renewtoken(){
-        self.signin()
+        let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+        var v = UIViewController()
+        v = mainstoryboard.instantiateViewControllerWithIdentifier("intermediate") as! UIViewController
+        self.window?.rootViewController?.presentViewController(v, animated: true, completion: nil)
     }
     var shouldRotate = true
     
@@ -621,18 +752,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     
-    func getbuilding(token:String,subscription_key:String,token_type:String, domain_url:String){
-        let url = NSURL.init(string: String(format: "%@assets/?page=1",domain_url))
+    func getbuilding(token:String,subscription_key:String,token_type:String, domain_url:String, leedid : String, key: String, loggedin : Bool){
+        let url = NSURL.init(string: String(format: "%@assets/LEED:%@/scores/",domain_url,leedid))
         let request = NSMutableURLRequest.init(URL: url!)
         request.HTTPMethod = "GET"
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-type" )
-        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        //request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)")
                 dispatch_async(dispatch_get_main_queue(), {
-                    NSNotificationCenter.defaultCenter().postNotificationName("notifyclose", object: nil)
+                    var alertController = UIAlertController(title: "Error", message: "Something went wrong. Please try again later", preferredStyle: .ActionSheet)
+                    var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                        UIAlertAction in
+                        NSLog("OK Pressed")
+                    }
+                    alertController.addAction(okAction)
+                    self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
                     
                 })
                 return
@@ -642,50 +779,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
-                    NSNotificationCenter.defaultCenter().postNotificationName("notifyclose", object: nil)
+                    var alertController = UIAlertController(title: "Error", message: "Device in offline. Please try again later", preferredStyle: .ActionSheet)
+                    var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                        UIAlertAction in
+                        NSLog("OK Pressed")
+                    }
+                    alertController.addAction(okAction)
+                    self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
                 })
             }else{
                 print(data)
-                var jsonDictionary : NSDictionary
+                var jsonDictionary : NSMutableDictionary
                 do {
-                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                    let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
-                    NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "assetdata")
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()).mutableCopy() as! NSMutableDictionary
                     print("JSON data is",jsonDictionary)
                     dispatch_async(dispatch_get_main_queue(), {
-                        var subv = self.window!.subviews
-                        for obj in subv {
-                            obj.removeFromSuperview()
-                        }
-                        
-                        if(self.launched == 1){
-                            var mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
-                            if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 0){
-                                var v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets")
-                                self.window?.rootViewController = v
-                            }else{
-                                var v = mainstoryboard.instantiateViewControllerWithIdentifier("gridview")
-                                self.window?.rootViewController = v
-                            }
-                            
-                        }else{
-                            var mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
-                            var v = mainstoryboard.instantiateViewControllerWithIdentifier(self.vc.title!)
-                            self.window?.rootViewController = v
-                        }
-                    })
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 0){
-                            NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"instructionscontent"])
-                        }else{
-                            NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"gridview"])
-                        }
+                        var datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary["building"] as! NSDictionary)
+                        NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "building_details")
+                        jsonDictionary.removeObjectForKey("building")
+                        datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
+                        NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "performance_data")
+                        NSUserDefaults.standardUserDefaults().setInteger(1, forKey: "survey")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                        self.addsurveyattributes(leedid, key: key, loggedin : loggedin)
                     })
                 } catch {
                     print(error)
                     dispatch_async(dispatch_get_main_queue(), {
-                        NSNotificationCenter.defaultCenter().postNotificationName("notifyclose", object: nil)
+                        var alertController = UIAlertController(title: "Error", message: "Something went wrong. Please try again later", preferredStyle: .ActionSheet)
+                        var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+                            UIAlertAction in
+                            NSLog("OK Pressed")
+                        }
+                        alertController.addAction(okAction)
+                        self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
                     })
                 }
             }
@@ -694,7 +821,122 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         task.resume()
     }
 
-    
+    func addsurveyattributes(leedid : String, key: String, loggedin : Bool){
+        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "swindex")
+        let n = NSMutableArray()
+        NSUserDefaults.standardUserDefaults().setInteger(1, forKey: "transithide")
+        NSUserDefaults.standardUserDefaults().setInteger(1, forKey: "humanhide")
+        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "index")
+        NSUserDefaults.standardUserDefaults().setObject(n, forKey: "mainarray")
+        
+        var notexists = 0
+        // New Logic for storing the route values
+        let lid = leedid
+        print("Trans array is \(transportationarray)")
+        print("Human array is \(humanexarray)")
+        for i in 0..<transportationarray.count {
+            let a = transportationarray[i] as! NSArray
+            if (a.count == 2) {
+                let leedid = a[0] as! String
+                if lid == leedid {
+                    NSUserDefaults.standardUserDefaults().setObject(a[1].mutableCopy() as! NSMutableArray, forKey: "mainarray")
+                    NSUserDefaults.standardUserDefaults().setObject("\(leedid)", forKey: "transportbuildingid")
+                    notexists = 1
+                    NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "transithide")
+                    break
+                }
+            }
+        }
+        if (transportationarray.count == 0) || (notexists != 1) {
+            NSUserDefaults.standardUserDefaults().setObject(leedid, forKey: "transportbuildingid")
+        }
+        notexists = 0
+        for i in 0..<humanexarray.count {
+            let a = humanexarray[i] as! NSArray
+            if a.count == 2 {
+                let leedid = a[0] as! String
+                if lid == leedid {
+                    NSUserDefaults.standardUserDefaults().setObject(a[1], forKey: "experiencearr")
+                    NSUserDefaults.standardUserDefaults().setObject("\(leedid)", forKey: "humanbuildingid")
+                    notexists = 1
+                    NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "humanhide")
+                    break
+                }
+            }
+        }
+        if humanexarray.count == 0 {
+            var aa = [AnyObject]()
+            let x = [AnyObject]()
+            aa.append("5")
+            aa.append(x)
+            NSUserDefaults.standardUserDefaults().setObject(aa, forKey: "experiencearr")
+            humanexarray.addObject(aa)
+            NSUserDefaults.standardUserDefaults().setObject(leedid, forKey: "humanbuildingid")
+        }
+        else if notexists != 1 {
+            var aa = [AnyObject]()
+            let x = [AnyObject]()
+            aa.append("5")
+            aa.append(x)
+            NSUserDefaults.standardUserDefaults().setObject(aa, forKey: "experiencearr")
+            humanexarray.addObject(aa)
+            NSUserDefaults.standardUserDefaults().setObject(leedid, forKey: "humanbuildingid")
+        }
+        var array = NSMutableArray()
+        if(NSUserDefaults.standardUserDefaults().objectForKey("temp") != nil){
+            array = NSMutableArray.init(array: NSUserDefaults.standardUserDefaults().objectForKey("temp")?.mutableCopy() as! NSMutableArray)
+        }
+        NSUserDefaults.standardUserDefaults().setObject(array, forKey: "temp")
+        if(NSUserDefaults.standardUserDefaults().objectForKey("image") != nil){
+            array = NSMutableArray.init(array: NSUserDefaults.standardUserDefaults().objectForKey("image")?.mutableCopy() as! NSMutableArray)
+        }
+        array.removeAllObjects()
+        NSUserDefaults.standardUserDefaults().setObject(array, forKey: "image")
+            NSUserDefaults.standardUserDefaults().setObject(key, forKey: "key")
+        
+        NSUserDefaults.standardUserDefaults().setObject(leedid, forKey: "leed_id")
+        
+        let hot=0;
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "hot")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "dirty")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "dark")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "loud")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "smelly")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "cold")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "stuffy")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "privacy")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "other")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "glare")
+        NSUserDefaults.standardUserDefaults().setObject("", forKey: "vvtext")
+        NSUserDefaults.standardUserDefaults().setInteger(hot, forKey: "iteration")
+        NSUserDefaults.standardUserDefaults().setObject("", forKey: "smileyvalue")
+        var dateformat = NSDateFormatter()
+        if(NSUserDefaults.standardUserDefaults().objectForKey("listofrowsforhuman") != nil){
+            let ar = NSMutableArray.init(array: NSUserDefaults.standardUserDefaults().objectForKey("listofrowsforhuman")?.mutableCopy() as! NSMutableArray)
+            let current = NSUserDefaults.standardUserDefaults().integerForKey("humanbuildingid")
+            dateformat = NSDateFormatter()
+            dateformat.dateFormat = "dd/MM/YYYY"
+            let date_string = dateformat.stringFromDate(NSDate())
+            for m in 0..<ar.count{
+                let a = ar.objectAtIndex(m).mutableCopy() as! NSMutableArray
+                let x = Int(a.objectAtIndex(0) as! String)
+                let date = a.objectAtIndex(1) as! String
+                if(x == current){
+                    if(date_string == date){
+                        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "humanhide")
+                        break
+                    }else{
+                        NSUserDefaults.standardUserDefaults().setInteger(1, forKey: "humanhide")
+                    }
+                }else{
+                    NSUserDefaults.standardUserDefaults().setInteger(1, forKey: "humanhide")
+                }
+                
+            }
+        }
+        self.gotomore(loggedin)
+
+    }
     
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
@@ -801,7 +1043,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         NSUserDefaults.standardUserDefaults().setObject(jsonDictionary.valueForKey("authorization_token") as! String, forKey: "token")
                     }
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.getbuilding(self.token, subscription_key: credentials().subscription_key, token_type: "Bearer", domain_url: credentials().domain_url)
+                        
                     })
                     
                 } catch {

@@ -9,8 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface addsurvey : UIViewController <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate, UINavigationControllerDelegate>{
-    NSUserDefaults *prefs;
-    UIAlertView *alert;
+    NSUserDefaults *prefs;    
     NSMutableArray *mainarr;
     BOOL opened;
     NSIndexPath *ind;

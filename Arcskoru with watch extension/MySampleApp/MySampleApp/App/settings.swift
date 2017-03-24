@@ -48,8 +48,9 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
         dispatch_async(dispatch_get_main_queue(), {
             self.view.userInteractionEnabled = false
             self.spinner.hidden = false
-        })
-        getemailsubscriptionstatus()
+            self.updateproject()
+            self.getemailsubscriptionstatus()
+        })        
         self.tabbar.selectedItem = self.tabbar.items![3]
         self.view.bringSubviewToFront(nav)
         let navItem = UINavigationItem(title: (dict["name"] as? String)!);
@@ -61,6 +62,7 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(animated: Bool) {
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         self.navigationController?.navigationBar.backItem?.title = "Manage"
     }
     
@@ -134,8 +136,14 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
                 })
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -189,6 +197,10 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
     }
     
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
+    }
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -197,7 +209,10 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
     
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.081 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.081 * UIScreen.mainScreen().bounds.size.width;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -294,8 +309,14 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
                 self.view.userInteractionEnabled = true
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 self.view.userInteractionEnabled = true
@@ -377,7 +398,14 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
             }
             
             let httpStatus = response as? NSHTTPURLResponse
-            if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
                 // check for http errors
                 print("statusCode should be 200, but is \(httpStatus!.statusCode)")
                 print("response = \(response)")
@@ -433,8 +461,14 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
                 self.view.userInteractionEnabled = true
                 return
             }
-            
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
             }else{

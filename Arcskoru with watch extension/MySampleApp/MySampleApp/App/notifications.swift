@@ -102,9 +102,16 @@ class notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 3
     }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
+    }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 100
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.135 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.135 * UIScreen.mainScreen().bounds.size.width;
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -377,9 +384,9 @@ class notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
             if(grid == 1){
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc") 
             }else{
-                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") as! UINavigationController
+                listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             }
         let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
         listofassets.navigationItem.title = dict["name"] as? String

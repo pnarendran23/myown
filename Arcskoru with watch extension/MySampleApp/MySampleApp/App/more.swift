@@ -28,7 +28,6 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
         
         tableview.registerNib(UINib.init(nibName: "morecell", bundle: nil), forCellReuseIdentifier: "morecell")
         tableview.registerNib(UINib.init(nibName: "surveycategorytick", bundle: nil), forCellReuseIdentifier: "surveycell")
-        notificationsarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("notifications") as! NSData) as! NSArray
         var buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]
         assetname.text = buildingdetails["name"] as? String
         self.navigationItem.title = buildingdetails["name"] as? String
@@ -38,6 +37,11 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
         navItem.leftBarButtonItem = doneItem;
         nav.setItems([navItem], animated: false);
         
+        if(NSUserDefaults.standardUserDefaults().integerForKey("survey") == 1){
+            self.tabbar.hidden = true
+        }else{
+        notificationsarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("notifications") as! NSData) as! NSArray
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -59,8 +63,13 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
     override func viewWillAppear(animated: Bool) {
         var buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]
         self.navigationItem.title = buildingdetails["name"] as? String
+        if(NSUserDefaults.standardUserDefaults().integerForKey("survey") == 1){
+        self.navigationController?.navigationBar.backItem?.title = "Login"    
+        }else{
         self.navigationController?.navigationBar.backItem?.title = "Projects"
+        }
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.tableview.reloadData()
     }
     
     
@@ -190,6 +199,14 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
         if(indexPath.section == 0){
             let cell = tableView.dequeueReusableCellWithIdentifier("morecell")! as! morecell
             cell.badge.hidden = false
+            if(NSUserDefaults.standardUserDefaults().integerForKey("survey") == 1){
+             cell.userInteractionEnabled = false
+                cell.contentView.alpha = 0.4
+            }else{
+                cell.userInteractionEnabled = true
+                cell.contentView.alpha = 1
+            }
+            
         if(indexPath.row == 0){
             cell.title.text = "Notifications"
             cell.badge.setTitle("\(notificationsarr.count)", forState: UIControlState.Normal)
@@ -203,7 +220,8 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
             return cell
         }
         if(indexPath.section == 1){
-            let cell = tableView.dequeueReusableCellWithIdentifier("surveycell")! as! surveycategorytick            
+            let cell = tableView.dequeueReusableCellWithIdentifier("surveycell")! as! surveycategorytick
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
             if(indexPath.row == 0){
             cell.label.text = "Dynamic Plaque"
             cell.tickimg.hidden = true
@@ -225,7 +243,10 @@ class more: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabB
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.067 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.067 * UIScreen.mainScreen().bounds.size.width;
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

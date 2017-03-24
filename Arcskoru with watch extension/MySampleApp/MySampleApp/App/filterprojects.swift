@@ -11,8 +11,8 @@ import UIKit
 class filterprojects: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate {
 var tempselected = NSMutableArray()
     override func viewDidLoad() {
-        super.viewDidLoad()
-        tempselected = ["","","","",""]
+        super.viewDidLoad()        
+        tempselected = [[""],[""],["",""],["",""],[""]]
         filtertable.allowsMultipleSelection = false
         self.titlefont()
         self.navigationController?.delegate = self
@@ -22,12 +22,18 @@ var tempselected = NSMutableArray()
         temptobefiltered = tobefiltered
         filtertable.reloadData()
         for i in 0..<tobefiltered.count{
-            let str = tobefiltered.objectAtIndex(i) as! String
+            print(tobefiltered.objectAtIndex(i))
+            let arr = tobefiltered.objectAtIndex(i).mutableCopy() as! NSMutableArray
+            for j in 0..<arr.count{
+            let str = arr.objectAtIndex(j) as! String
             if(str != ""){
-                self.tableView(filtertable, didSelectRowAtIndexPath: NSIndexPath.init(forRow: i, inSection: 0))
+                self.tableView(filtertable, didSelectRowAtIndexPath: NSIndexPath.init(forRow: j, inSection: i))
                 break
             }
+            }
         }
+        
+        
         // Do any additional setup after loading the view.
     }
     @IBOutlet weak var filtertable: UITableView!
@@ -40,7 +46,7 @@ var tempselected = NSMutableArray()
         }
         else if(viewController is gridviewcontroller){
             let v = viewController as! gridviewcontroller
-            v.filterarr = filterarr
+            //v.filterarr = filterarr
             v.tobefiltered = tobefiltered
         }
     }
@@ -49,42 +55,62 @@ var tempselected = NSMutableArray()
     var tobefiltered = NSMutableArray()
     var temptobefiltered = NSMutableArray()
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return temptobefiltered.count
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return temptobefiltered.count
+        return temptobefiltered.objectAtIndex(section).count
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
         if(cell.accessoryType == UITableViewCellAccessoryType.None){
-            
+            var arr = NSMutableArray()
             temptobefiltered = NSMutableArray()
-            temptobefiltered.addObject("")
-            temptobefiltered.addObject("")
-            temptobefiltered.addObject("")
-            temptobefiltered.addObject("")
-            temptobefiltered.addObject("")
-            temptobefiltered.replaceObjectAtIndex(indexPath.row, withObject: (cell.textLabel?.text?.lowercaseString)!)
+            temptobefiltered = [[""],[""],["",""],["",""],[""]]
+            arr = temptobefiltered.objectAtIndex(indexPath.section).mutableCopy() as! NSMutableArray
+            print(temptobefiltered,arr)
+            arr.replaceObjectAtIndex(indexPath.row, withObject: (cell.textLabel?.text?.lowercaseString)!)
+            temptobefiltered = NSMutableArray()
+            temptobefiltered = [[""],[""],["",""],["",""],[""]]
+            temptobefiltered.replaceObjectAtIndex(indexPath.section, withObject: arr)
             filtertable.reloadData()
             print(temptobefiltered)
         }
         
     }
-    var filterarr = ["Buildings","Cities","Communities","My projects","All"]
     
+    var titlearr = ["","","Transportation","Buildings",""]
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return titlearr[section]
+    }
+    
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if(section == 2 || section == 3){
+        return 25
+        }
+        return 15
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 1
+    }
+    
+    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings","My portfolios"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
         cell.tintColor = UIColor.blueColor()
-        if(temptobefiltered.objectAtIndex(indexPath.row) as! String != ""){
+        if(temptobefiltered.objectAtIndex(indexPath.section).objectAtIndex(indexPath.row) as! String != ""){
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
             cell.selectionStyle = UITableViewCellSelectionStyle.None
         }else{
             cell.accessoryType = UITableViewCellAccessoryType.None
             cell.selectionStyle = UITableViewCellSelectionStyle.None
         }
-        cell.textLabel?.text = filterarr[indexPath.row]
+        let arr = filterarr[indexPath.section] as! NSArray
+        cell.textLabel?.text = arr[indexPath.row] as? String
         return cell
     }
     

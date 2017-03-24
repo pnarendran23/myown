@@ -35,6 +35,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
         var buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]
         self.navigationItem.title = buildingdetails["name"] as? String
         self.navigationController?.navigationBar.backItem?.title = "Manage"
@@ -705,12 +706,12 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                     print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -760,12 +761,12 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                 })
                 return
             }
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
-                return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                     print("statusCode should be 200, but is \(httpStatus.statusCode)")
@@ -865,8 +866,11 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {        
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.082 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.082 * UIScreen.mainScreen().bounds.size.width;
     }
 
     override func didReceiveMemoryWarning() {

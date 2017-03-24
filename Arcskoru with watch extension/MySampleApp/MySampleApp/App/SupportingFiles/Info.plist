@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.arc.mobile.url</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>leedon</string>
+			</array>
+		</dict>
+	</array>
 	<key>AWS</key>
 	<dict>
 		<key>Cognito</key>
@@ -90,7 +101,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>17</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

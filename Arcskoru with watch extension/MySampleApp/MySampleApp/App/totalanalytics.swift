@@ -371,12 +371,12 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 var taskerror = false
                 let httpStatus = response as? NSHTTPURLResponse
                 if(error == nil){
-                    if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
+                    if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
                         dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
-                    
-                })
-                return
+                            self.spinner.hidden = true
+                            self.view.userInteractionEnabled = true
+                            NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                        })
                     } else
                         if (httpStatus!.statusCode != 200 && httpStatus!.statusCode != 201) {
                             taskerror = true
@@ -456,8 +456,19 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         let tasky = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             
             var taskerror = false
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            }else{
+            
             
             if error == nil {
+                
+                
+                
                 let jsonDictionary : NSDictionary
                 do {
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
@@ -688,7 +699,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             } else {
                 taskerror = true
             }
-            
+            }
         })
         
         
@@ -1037,6 +1048,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

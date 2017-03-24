@@ -60,6 +60,8 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
         
         let textfield1 = self.view.viewWithTag(1) as! UITextField
         let textfield2 = self.view.viewWithTag(2) as! UITextField
+        textfield1.text = "testuser@gmail.com"
+        textfield2.text = "initpass"
         textfield1.resignFirstResponder()
         textfield2.resignFirstResponder()
         if(textfield1.text?.characters.count == 0){
@@ -124,7 +126,20 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
                 return
             }
             
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 400 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -136,13 +151,14 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
                 do {
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
                     print("JSON data is",jsonDictionary)
+                    dispatch_async(dispatch_get_main_queue(), {
                     if(jsonDictionary.valueForKey("token_type") as! String == "Bearer"){
                         NSUserDefaults.standardUserDefaults().setObject(username, forKey: "username")
                         NSUserDefaults.standardUserDefaults().setObject(password, forKey: "password")
                         NSUserDefaults.standardUserDefaults().setObject(jsonDictionary.valueForKey("authorization_token") as! String, forKey: "token")
                     }
-                    self.getbuilding(jsonDictionary.valueForKey("authorization_token") as! String, subscription_key: credential.subscription_key, token_type: jsonDictionary.valueForKey("token_type") as! String)
-                    
+                    self.getportfolio(jsonDictionary.valueForKey("authorization_token") as! String, subscription_key: credential.subscription_key, token_type: jsonDictionary.valueForKey("token_type") as! String)
+                    })
                     
                 } catch {
                     print(error)
@@ -243,6 +259,70 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return self.tableview.frame.size.height/2
     }
+        //https://api.usgbc.org/dev/leed/portfolios/?page=1
+
+    func getportfolio(token:String,subscription_key:String,token_type:String){
+        let url = NSURL.init(string: String(format: "%@portfolios/?page=1",domain_url))
+        let request = NSMutableURLRequest.init(URL: url!)
+        request.HTTPMethod = "GET"
+        request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
+        request.addValue("application/json", forHTTPHeaderField:"Content-type" )
+        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                print("error=\(error)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+                return
+            }
+            
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 400 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                })
+            }else{
+                print(data)
+                var jsonDictionary : NSDictionary
+                do {
+                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
+                    let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
+                    NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "portfolios")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    print("JSON data is",jsonDictionary)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "grid")
+                        self.getbuilding(token, subscription_key: subscription_key, token_type: token_type)
+                    })
+                } catch {
+                    print(error)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    })
+                }
+            }
+            
+        }
+        task.resume()
+    }
+    
     
     func getbuilding(token:String,subscription_key:String,token_type:String){
         let url = NSURL.init(string: String(format: "%@assets/?page=1",domain_url))
@@ -261,7 +341,20 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
                 return
             }
             
-            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 400 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }
+            else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.showalert("Invalid credentials", title: "Please check the credentials entered", action: "OK")
+                })
+            }else if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(response)")
                 dispatch_async(dispatch_get_main_queue(), {
@@ -282,6 +375,7 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
                         self.loginbtn.setTitle("Sign in", forState: UIControlState.Normal)
                     })
                     dispatch_async(dispatch_get_main_queue(), {
+                        NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "grid")
                         if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 0){
                         //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"instructionscontent"])
                             self.performSegueWithIdentifier("gotoinstructions", sender: nil)

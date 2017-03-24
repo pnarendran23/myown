@@ -23,7 +23,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     var timer = NSTimer()
     var isloading = false
     var tempfilter = NSMutableArray()
-    var filterarr = ["Buildings","Cities","Communities","My projects","All"]
+    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings","My portfolios"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
     @IBOutlet weak var spinner: UIView!
     @IBOutlet weak var allprojectslbl: UILabel!
     
@@ -71,6 +71,9 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     }
     @IBOutlet weak var addbutton: UIButton!
     
+    
+    
+    
     override func viewDidDisappear(animated: Bool)
     {
         super.viewDidDisappear(animated)
@@ -78,6 +81,9 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         for request in download_requests
         {
             request.invalidateAndCancel()
+        }
+        if (WCSession.isSupported()) {
+            watchsession.delegate = nil;
         }
     }
     
@@ -119,7 +125,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "filterproj"){
             let v = segue.destinationViewController as! filterprojects
-            v.filterarr = filterarr
+            v.filterarr = filterarr            
             v.tobefiltered = tobefiltered
         }
     }
@@ -134,9 +140,12 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     var humanexarray = NSMutableArray()
     var transportationarray = NSMutableArray()
     @IBOutlet weak var filtertable: UITableView!
-    var session = WCSession.defaultSession()    
-    override func viewDidLoad() {
-        self.titlefont()
+    var watchsession = WCSession.defaultSession()
+    
+    
+    
+    override func viewDidLoad() {        
+        self.titlefont()        
         //self.navigationController!.hidesBarsOnTap = false;
         //self.navigationController!.hidesBarsOnSwipe = false;
         //self.navigationController!.hidesBarsWhenVerticallyCompact = false;
@@ -147,17 +156,24 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             transportationarray = NSUserDefaults.standardUserDefaults().objectForKey("transportationarray")?.mutableCopy() as! NSMutableArray
         }
         //segctrl.hidden = true
-        if (WCSession.isSupported()) {
-            session = WCSession.defaultSession()
-            session.delegate = self;
-            session.activateSession()
-        }
         filterview.hidden = true
-        tobefiltered.addObject("")
-        tobefiltered.addObject("")
-        tobefiltered.addObject("")
-        tobefiltered.addObject("")
-        tobefiltered.addObject("")        
+        var a = NSMutableArray()
+        a.addObject("")
+        tobefiltered.addObject(a)
+        a = NSMutableArray()
+        a.addObject("")
+        tobefiltered.addObject(a)
+        a = NSMutableArray()
+        a.addObject("")
+        a.addObject("")
+        tobefiltered.addObject(a)
+        a = NSMutableArray()
+        a.addObject("")
+        a.addObject("")
+        tobefiltered.addObject(a)
+        a = NSMutableArray()
+        a.addObject("all")
+        tobefiltered.addObject(a)
         addbutton.layer.cornerRadius = (addbutton.layer.bounds.size.width)/2
                 filterbtn.layer.cornerRadius = (filterbtn.layer.bounds.size.width)/2
         let segmentButton: UISegmentedControl!
@@ -213,28 +229,86 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         
     }
     
+    
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        self.tableview.reloadData()
+    }
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.tableview.reloadData()
+    }
+    
     override func viewDidAppear(animated: Bool) {
+        page = 2
+        token = NSUserDefaults.standardUserDefaults().objectForKey("token") as! String
+        if(NSUserDefaults.standardUserDefaults().objectForKey("countries") == nil){
+            dispatch_async(dispatch_get_main_queue(), {
+                self.spinner.hidden = false
+                self.view.userInteractionEnabled = false
+                self.getstates(credentials().subscription_key)
+            })
+            
+        }
+        tableview.reloadData()
+        if (WCSession.isSupported()) {
+            watchsession = WCSession.defaultSession()
+            watchsession.delegate = self;
+            watchsession.activateSession()
+        }
         searchbar.text = ""
         let datakeyed = NSUserDefaults.standardUserDefaults().objectForKey("assetdata") as! NSData
         assets = NSKeyedUnarchiver.unarchiveObjectWithData(datakeyed)?.mutableCopy() as! NSMutableDictionary
+        buildingarr = assets["results"]!.mutableCopy() as! NSMutableArray
         filtertable.selectRowAtIndexPath(NSIndexPath.init(forRow: 4, inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition.None)
-        if(tobefiltered.containsObject("all")){
+        for arr in tobefiltered{
+            var a = arr as! NSArray
+            for str in a{
+                if(str as! String != ""){
+                    filteredobject = str as! String
+                    break
+                }
+            }
+        }
+        
+        if(filteredobject == ""){
+            filteredobject = "all"
+        }
+        
+        project_type = filteredobject
+        
+        
+        if(filteredobject == "all"){
             self.navigationItem.title = "All projects"
         }
-        if(tobefiltered.containsObject("buildings")){
+        if(filteredobject == "my buildings"){
             self.navigationItem.title = "Buildings"
         }
-        if(tobefiltered.containsObject("cities")){
+        if(filteredobject == "my cities"){
             self.navigationItem.title = "Cities"
         }
         
-        if(tobefiltered.containsObject("communities")){
+        if(filteredobject == "my communities"){
             self.navigationItem.title = "Communities"
         }
         
-        if(tobefiltered.containsObject("my projects")){
-            self.navigationItem.title = "My projects"
+        if(filteredobject == "my parking"){
+            self.navigationItem.title = "Parksmart"
         }
+        
+        if(filteredobject == "my transit"){
+            self.navigationItem.title = "My Transit"
+        }
+        
+        if(filteredobject == "my Portfolios"){
+            self.navigationItem.title = "Portfolios"
+        }
+        
+        if(filteredobject == "my portfolios"){
+            buildingarr = (NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("portfolios") as! NSData)?.mutableCopy() as! NSMutableDictionary)["results"]!.mutableCopy() as! NSMutableArray
+        }
+        
         self.tableView(filtertable, didSelectRowAtIndexPath: NSIndexPath.init(forRow: 4, inSection: 0))
         filterok(UIButton())
     }
@@ -283,7 +357,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         if(tableView == filtertable){
             return 1
         }
-        
+        if(searchbar.text?.characters.count == 0 || searcharr["building"] == nil || searcharr["portfolio"] == nil){
         if(buildingarr.count>0){
             self.notfound.hidden = true
             self.tableview.hidden = false
@@ -291,16 +365,33 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             self.notfound.hidden = false
             self.tableview.hidden = true
         }
-        return 1
+            return 1
+        }else{
+            self.notfound.hidden = true
+            self.tableview.hidden = false
+            return 2
+        }
+        
+        
+        
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(tableView == filtertable){
             return 5
         }
+        if(searchbar.text?.characters.count == 0 || searcharr["building"] == nil || searcharr["portfolio"] == nil){
         return buildingarr.count
+        }else{
+            if(section == 0){
+                return (searcharr["building"] as! NSArray).count
+            }else{
+                return (searcharr["portfolio"] as! NSArray).count
+            }
+        }
     }
     
+    var searcharr = NSMutableDictionary()
     
     func showalert(message:String, title:String, action:String){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
@@ -342,7 +433,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -380,24 +474,120 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         task.resume()
         
     }
+    var filteredobject = ""
     var project_type = ""
     @IBAction func filterok(sender: AnyObject) {
         print("listofbuildings ",listobuildings)
+        print("Filter asv ",filteredobject)
+        print("Updated buildingarr count",buildingarr.count)
         filterview.hidden = true
+        var temparr = NSMutableArray()
+        self.listobuildings = self.buildingarr
+        if(filteredobject == "my portfolios" || filteredobject == "all" || filteredobject == "my buildings" || searchbar.text?.characters.count > 0){
+            temparr = self.buildingarr
+            if(searchbar.text?.characters.count > 0){
+                self.navigationItem.title = "Search results"
+            }else{
+                if(filteredobject == "all"){
+                    self.navigationItem.title = "All projects"
+                }
+                if(filteredobject == "my buildings"){
+                    self.navigationItem.title = "Buildings"
+                }
+                if(filteredobject == "my cities"){
+                    self.navigationItem.title = "Cities"
+                }
+                
+                if(filteredobject == "my communities"){
+                    self.navigationItem.title = "Communities"
+                }
+                
+                if(filteredobject == "my parking"){
+                    self.navigationItem.title = "Parksmart"
+                }
+                
+                if(filteredobject == "my transit"){
+                    self.navigationItem.title = "My Transit"
+                }
+                
+                if(filteredobject == "my Portfolios"){
+                    self.navigationItem.title = "Portfolios"
+                }
+            }
+        }
+        else if(filteredobject == "my buildings"){
+            project_type = "building"
+            for index in 0..<listobuildings.count {
+                let data = listobuildings.objectAtIndex(index) as! [String:AnyObject]
+                if(data["project_type"] != nil){
+                    if(data["project_type"] as! String == "building"){
+                        temparr.addObject(data)
+                    }
+                }
+            }
+        }else if(filteredobject == "my cities"){
+            project_type = "city"
+            for i in 0..<listobuildings.count{
+                let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
+                if(data["project_type"] != nil){
+                    if(data["project_type"] as! String == "city"){
+                        temparr.addObject(data)
+                    }
+                }
+            }
+        }else if(filteredobject == "my communities"){
+            project_type = "community"
+            for i in 0..<listobuildings.count{
+                let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
+                if(data["project_type"] != nil){
+                    if(data["project_type"] as! String == "community"){
+                        temparr.addObject(data)
+                    }
+                }
+            }
+        }else if(filteredobject == "my parking"){
+            project_type = "parksmart"
+            for i in 0..<listobuildings.count{
+                let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
+                if(data["project_type"] != nil){
+                    if(data["project_type"] as! String == "parksmart"){
+                        temparr.addObject(data)
+                    }
+                }
+            }
+        }else if(filteredobject == "my transit"){
+            project_type = "transit"
+            for i in 0..<listobuildings.count{
+                let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
+                if(data["project_type"] != nil){
+                    if(data["project_type"] as! String == "transit"){
+                        temparr.addObject(data)
+                    }
+                }
+            }
+        }
+
+        /*
         if(searchbar.text?.characters.count == 0){
+            if(filteredobject == "my portfolios"){
+                self.listobuildings = self.buildingarr
+            }else{
             self.listobuildings = assets["results"]!.mutableCopy() as! NSMutableArray
+            }
         }else{
             self.listobuildings = self.buildingarr
         }
         buildingarr = NSMutableArray()
-        if(tobefiltered.containsObject("all")){
+        //if(tobefiltered.containsObject("all")){
+        if(filteredobject == "all"){
             buildingarr = assets["results"]!.mutableCopy() as! NSMutableArray
             project_type = "all"
             tableview.reloadData()
         }else{
             let temparr = NSMutableArray()
             print("Count",listobuildings.count)
-            if(tobefiltered.containsObject("buildings")){
+            //if(tobefiltered.containsObject("buildings")){
+            if(filteredobject == "my buildings"){
                 project_type = "building"
                 for index in 0..<listobuildings.count {
                     let data = listobuildings.objectAtIndex(index) as! [String:AnyObject]
@@ -408,7 +598,8 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     }
                 }
             }
-            if(tobefiltered.containsObject("cities")){
+            //if(tobefiltered.containsObject("cities")){
+            if(filteredobject == "my cities"){
                 project_type = "city"
                 for i in 0..<listobuildings.count{
                     let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
@@ -420,7 +611,8 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 }
             }
             
-            if(tobefiltered.containsObject("communities")){
+            //if(tobefiltered.containsObject("communities")){
+            if(filteredobject == "my communities"){
                 project_type = "community"
                 for i in 0..<listobuildings.count{
                     let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
@@ -432,21 +624,42 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 }
             }
             
-            if(tobefiltered.containsObject("my projects")){
-                project_type = "myproject"
+            //if(tobefiltered.containsObject("my projects")){
+            if(filteredobject == "my parking"){
+                project_type = "parksmart"
                 for i in 0..<listobuildings.count{
                     let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
                     if(data["project_type"] != nil){
-                        if(data["project_type"] as! String == "my project"){
+                        if(data["project_type"] as! String == "parksmart"){
                             temparr.addObject(data)
                         }
                     }
                 }
             }
+            
+            if(filteredobject == "my transit"){
+                project_type = "transit"
+                for i in 0..<listobuildings.count{
+                    let data = listobuildings.objectAtIndex(i) as! [String:AnyObject]
+                    if(data["project_type"] != nil){
+                        if(data["project_type"] as! String == "transit"){
+                            temparr.addObject(data)
+                        }
+                    }
+                }
+            }
+            
             buildingarr = temparr.mutableCopy() as! NSMutableArray
             
         }
         
+        
+        //if(searchbar.text?.characters.count > 0){
+            
+        //}
+ 
+    */
+        buildingarr = temparr.mutableCopy() as! NSMutableArray
         tableview.reloadData()
         
     }
@@ -456,10 +669,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if(tableView == tableview){
-        if(UIDevice.currentDevice().orientation == UIDeviceOrientation.PortraitUpsideDown || UIDevice.currentDevice().orientation == UIDeviceOrientation.Portrait){
-        return 0.146 * self.view.frame.size.height;
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+        return 0.146 * UIScreen.mainScreen().bounds.size.height;
         }
-        return 0.146 * self.view.frame.size.width;
+        return 0.146 * UIScreen.mainScreen().bounds.size.width;
         }
         return 50
     }
@@ -485,7 +698,16 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             print("To be filtered",tobefiltered)
         }
         else{
+            if(NSUserDefaults.standardUserDefaults().integerForKey("survey") == 1){
+                NSUserDefaults.standardUserDefaults().removeObjectForKey("building_details")
+            }
+            NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "survey")        
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        if(indexPath.section == 0){
+            buildingarr = self.searcharr.objectForKey("building")?.mutableCopy() as! NSMutableArray
+        }else{
+            buildingarr = self.searcharr.objectForKey("portfolio")?.mutableCopy() as! NSMutableArray
+        }
         let currentbuilding = buildingarr[indexPath.row] as! [String:AnyObject]
             if let update = currentbuilding["building_status"] as? String {
                 if(update == "activated_payment_done"){
@@ -741,7 +963,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -809,11 +1034,11 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                                 }
                             }
                             dispatch_async(dispatch_get_main_queue(),{
-                                WCSession.defaultSession().sendMessage(dict, replyHandler: nil, errorHandler: { (error) -> Void in
+                                self.watchsession.sendMessage(dict, replyHandler: nil, errorHandler: { (error) -> Void in
                                     
                                 })
                                 do{
-                                    try WCSession.defaultSession().updateApplicationContext(dict)
+                                    try self.watchsession.updateApplicationContext(dict)
                                 }catch{
                                     
                                 }
@@ -836,6 +1061,11 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             
         }
         task.resume()
+        
+    }
+    
+    
+    func session(session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
         
     }
 
@@ -865,7 +1095,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -933,7 +1166,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -989,7 +1225,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1026,7 +1265,20 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         task.resume()
     }
     
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if(searchbar.text?.characters.count > 0){
+        if(section == 0){
+            return "Buildings"
+        }
+        return "Portfolios"
+        }
+        return ""
+    }
+    
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if(searchbar.text?.characters.count > 0){
+        return 35
+        }
         return 1
     }
     
@@ -1053,7 +1305,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1113,7 +1368,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1208,7 +1466,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1291,20 +1552,26 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         if(tableView == filtertable){
             let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
             cell.tintColor = UIColor.blueColor()
-            if(tobefiltered.objectAtIndex(indexPath.row) as! String != ""){
+            if(tobefiltered.objectAtIndex(indexPath.row) as? String != ""){
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
             }else{
             cell.accessoryType = UITableViewCellAccessoryType.None
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             }
-            cell.textLabel?.text = filterarr[indexPath.row]
+            //cell.textLabel?.text = filterarr[indexPath.row]
             return cell
         }
         //== 'activated_payment_done'
         let cell = tableView.dequeueReusableCellWithIdentifier("assetcell", forIndexPath: indexPath) as! buildingcell
+        
+        if(searchbar.text?.characters.count == 0 || searcharr["building"] == nil || searcharr["portfolio"] == nil){
         let arr = buildingarr[indexPath.row] as! [String:AnyObject]
+            if(arr["leed_id"] != nil){
         cell.leedidlbl.text = String(format: "%d",arr["leed_id"] as! Int)
+            }else{
+                cell.leedidlbl.text = String(format: "%d",arr["pf_id"] as! Int)
+            }
         let actualstring = NSMutableAttributedString()
         var tempostring = NSMutableAttributedString()
         if(arr["name"] != nil){
@@ -1359,6 +1626,127 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         }else{
             cell.statuslbl.text = "Not available"
         }
+        }else{
+            if(indexPath.section == 0){
+                buildingarr = self.searcharr.objectForKey("building")?.mutableCopy() as! NSMutableArray
+                let arr = buildingarr[indexPath.row] as! [String:AnyObject]
+                cell.leedidlbl.text = String(format: "%d",arr["leed_id"] as! Int)
+                let actualstring = NSMutableAttributedString()
+                var tempostring = NSMutableAttributedString()
+                if(arr["name"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["name"] as? String)!)
+                }
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                tempostring = NSMutableAttributedString(string:"\n")
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                if(arr["street"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["street"] as! String).capitalizedString)
+                }
+                tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSMakeRange(0, tempostring.length))
+                tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 14)!, range: NSMakeRange(0, tempostring.length))
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                tempostring = NSMutableAttributedString(string:" ")
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                
+                if(arr["city"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["city"] as! String).capitalizedString)
+                }
+                tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSMakeRange(0, tempostring.length))
+                tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 14)!, range: NSMakeRange(0, tempostring.length))
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                cell.namelbl.adjustsFontSizeToFitWidth = true
+                cell.namelbl.attributedText = actualstring as NSAttributedString
+                if(indexPath.row == 0){
+                    print(actualstring)
+                }
+                //cell.namelbl.text =
+                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                if let update = arr["building_status"] as? String {
+                    if(update == "activated_payment_done"){
+                        cell.statuslbl.text = "Registered"
+                    }else if(update == "activated_payment_pending"){
+                        cell.statuslbl.text = "Make payment"
+                    }else if(update == "agreement_pending"){
+                        cell.statuslbl.text = "Sign Agreement"
+                    }
+                    else if(update == "activated_addendum_agreement_pending"){
+                        cell.statuslbl.text = "Agreement pending"
+                    }else{
+                        cell.statuslbl.text = ""
+                    }
+                    //  print(dateFormat.stringFromDate(dte!))
+                    //cell.statuslbl.text =
+                    //lastupdatedlbl
+                    
+                }else{
+                    cell.statuslbl.text = "Not available"
+                }
+            }else{
+                buildingarr = self.searcharr.objectForKey("portfolio")?.mutableCopy() as! NSMutableArray
+                let arr = buildingarr[indexPath.row] as! [String:AnyObject]
+                if(arr["pf_id"] != nil){
+                cell.leedidlbl.text = String(format: "%d",arr["pf_id"] as! Int)
+                }
+                let actualstring = NSMutableAttributedString()
+                var tempostring = NSMutableAttributedString()
+                if(arr["name"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["name"] as? String)!)
+                }
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                tempostring = NSMutableAttributedString(string:"\n")
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                if(arr["street"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["street"] as! String).capitalizedString)
+                }
+                tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSMakeRange(0, tempostring.length))
+                tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 14)!, range: NSMakeRange(0, tempostring.length))
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                tempostring = NSMutableAttributedString(string:" ")
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
+                
+                if(arr["city"] != nil){
+                    tempostring = NSMutableAttributedString(string:(arr["city"] as! String).capitalizedString)
+                }
+                tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.darkGrayColor(), range: NSMakeRange(0, tempostring.length))
+                tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 14)!, range: NSMakeRange(0, tempostring.length))
+                actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
+                cell.namelbl.adjustsFontSizeToFitWidth = true
+                cell.namelbl.attributedText = actualstring as NSAttributedString
+                if(indexPath.row == 0){
+                    print(actualstring)
+                }
+                //cell.namelbl.text =
+                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+                if let update = arr["building_status"] as? String {
+                    if(update == "activated_payment_done"){
+                        cell.statuslbl.text = "Registered"
+                    }else if(update == "activated_payment_pending"){
+                        cell.statuslbl.text = "Make payment"
+                    }else if(update == "agreement_pending"){
+                        cell.statuslbl.text = "Sign Agreement"
+                    }
+                    else if(update == "activated_addendum_agreement_pending"){
+                        cell.statuslbl.text = "Agreement pending"
+                    }else{
+                        cell.statuslbl.text = ""
+                    }
+                    //  print(dateFormat.stringFromDate(dte!))
+                    //cell.statuslbl.text =
+                    //lastupdatedlbl
+                    
+                }else{
+                    cell.statuslbl.text = "Not available"
+                }
+            }
+        }
         return cell
     }
     
@@ -1377,24 +1765,72 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         }
         
         if(str.characters.count == 0){
+            searchbar.resignFirstResponder()
             let datakeyed = NSUserDefaults.standardUserDefaults().objectForKey("assetdata") as! NSData
             assets = NSKeyedUnarchiver.unarchiveObjectWithData(datakeyed)?.mutableCopy() as! NSMutableDictionary
             buildingarr = assets["results"]!.mutableCopy() as! NSMutableArray
+            if(filteredobject == "my portfolios"){
+                buildingarr = (NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("portfolios") as! NSData)?.mutableCopy() as! NSMutableDictionary)["results"]!.mutableCopy() as! NSMutableArray
+            }
             if(tobefiltered.containsObject("all")){
                 self.spinner.hidden = true
                 self.tableview.reloadData()
             }else{
                 filterok(filterbtn)
             }
+            self.spinner.hidden = true
+            self.tableview.reloadData()
         }else{
             let tempstring = str.stringByReplacingOccurrencesOfString(" ", withString: "%20")
             str = tempstring
             var urlstring = ""
+            if(project_type == "my portfolios"){
+               project_type = "all"
+            }else if(project_type == "my cities"){
+                project_type = "cities"
+            }else if(project_type == "my communities"){
+                project_type = "communities"
+            }else if(project_type == "my transit"){
+                project_type = "transit"
+            }else if(project_type == "my parking"){
+                project_type = "parksmart"
+            }else if(project_type == "my buildings"){
+                project_type = "building"
+            }else{
+                project_type = "all"
+            }
+            
+            if(filteredobject == "all"){
+                self.navigationItem.title = "All projects"
+            }
+            if(filteredobject == "my buildings"){
+                self.navigationItem.title = "Buildings"
+            }
+            if(filteredobject == "my cities"){
+                self.navigationItem.title = "Cities"
+            }
+            
+            if(filteredobject == "my communities"){
+                self.navigationItem.title = "Communities"
+            }
+            
+            if(filteredobject == "my parking"){
+                self.navigationItem.title = "Parksmart"
+            }
+            
+            if(filteredobject == "my transit"){
+                self.navigationItem.title = "My Transit"
+            }
+            
+            if(filteredobject == "my Portfolios"){
+                self.navigationItem.title = "Portfolios"
+            }
+
+            
             if(project_type == "all"){
              //   loadMoreDataFromServer("\(credentials().domain_url)assets/?page=\(page)", subscription_key: c.subscription_key)
                 urlstring = String(format: "%@assets/search/?q=%@",credentials().domain_url,str)
             }else{
-                
             urlstring = String(format: "%@assets/search/?q=%@&project_type=\(project_type as String)",credentials().domain_url,str)
             }
             
@@ -1425,6 +1861,9 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 print("error=\(error)",error?.code)
+                if(self.filteredobject == "my portfolios"){
+                    self.project_type = self.filteredobject
+                }
                 if(error?.code == -999){
                     
                 }else{
@@ -1436,7 +1875,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1464,10 +1906,54 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
 
             }else{
                 print(data)
-                let jsonDictionary : NSArray
+                var jsonDictionary : NSMutableDictionary
                 do {
-                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSArray
-                    self.buildingarr = jsonDictionary.mutableCopy() as! NSMutableArray
+                    jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()).mutableCopy() as! NSMutableDictionary
+                    print(jsonDictionary)
+                    
+                    var building = jsonDictionary["building"]!.mutableCopy() as! NSMutableArray
+                    var temp = NSMutableArray()
+                    for item in building{
+                        var a = item as! NSDictionary
+                        if(self.filteredobject == "my cities"){
+                            if(a["project_type"] as! String == "city"){
+                                temp.addObject(a)
+                            }
+                        }
+                        
+                        if(self.filteredobject == "my communities"){
+                            if(a["project_type"] as! String == "community"){
+                                temp.addObject(a)
+                            }
+                        }
+                        
+                        if(self.filteredobject == "my transit"){
+                            if(a["project_type"] as! String == "transit"){
+                                temp.addObject(a)
+                            }
+                        }
+                        
+                        if(self.filteredobject == "my parking"){
+                            if(a["project_type"] as! String == "parksmart"){
+                                temp.addObject(a)
+                            }
+                        }
+                        
+                        if(self.filteredobject == "my buildings"){
+                            if(a["project_type"] as! String == "building"){
+                                temp.addObject(a)
+                            }
+                        }
+                        
+                        if(self.filteredobject == "all"){
+                                temp.addObject(a)
+                        }
+                    }
+                    print(jsonDictionary.allKeys)
+                    jsonDictionary["building"] = temp
+                    
+                    self.searcharr = jsonDictionary.mutableCopy() as! NSMutableDictionary
+                    //self.buildingarr = jsonDictionary.mutableCopy() as! NSMutableArray
                     dispatch_async(dispatch_get_main_queue(), {
                         self.spinner.hidden = true
                         self.view.userInteractionEnabled = true
@@ -1516,7 +2002,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         let contentHeight = scrollView.contentSize.height
         
         if offsetY > contentHeight - scrollView.frame.size.height {
-            if(searchbar.text?.characters.count == 0){
+            if(searchbar.text?.characters.count == 0 || searcharr["building"] == nil || searcharr["portfolio"] == nil){
             if (assets["next"] as? String) != nil {
                 if(isloading == false){
                     let c = credentials()
@@ -1524,10 +2010,30 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         self.view.userInteractionEnabled = false
                         self.spinner.hidden = false
                     })
+                    if(project_type == "my portfolios"){
+                        project_type = "all"
+                    }else if(project_type == "my cities"){
+                        project_type = "cities"
+                    }else if(project_type == "my communities"){
+                        project_type = "communities"
+                    }else if(project_type == "my transit"){
+                        project_type = "transit"
+                    }else if(project_type == "my parking"){
+                        project_type = "parksmart"
+                    }else if(project_type == "my buildings"){
+                        project_type = "building"
+                    }else{
+                        project_type = "all"
+                    }
+                    
                     if(project_type == "all"){
                     loadMoreDataFromServer("\(credentials().domain_url)assets/?page=\(page)", subscription_key: c.subscription_key)
                     }else{
+                        if(project_type == "my portfolios"){
+                        loadMoreDataFromServer("\(credentials().domain_url)portfolios/?&page=\(page)", subscription_key: c.subscription_key)
+                        }else{
                         loadMoreDataFromServer("\(credentials().domain_url)assets/?project_type=\(project_type as String)&page=\(page)", subscription_key: c.subscription_key)
+                        }
                     }
                     if(self.tobefiltered.containsObject("all")){
                         self.tableview.reloadData()
@@ -1567,7 +2073,11 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.isloading = false
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1601,8 +2111,8 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 do {
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! [String:AnyObject]
                     if(jsonDictionary["results"] != nil){
-                    self.assets = jsonDictionary.mutableCopy() as! NSMutableDictionary
-                    let temparr = self.assets["results"] as! NSArray
+                    //self.assets = jsonDictionary.mutableCopy() as! NSMutableDictionary
+                    let temparr = jsonDictionary["results"] as! NSArray
                     let tempbuilding = NSMutableArray()
                     for i in 0..<self.buildingarr.count {
                         tempbuilding.addObject(self.buildingarr.objectAtIndex(i))
@@ -1611,12 +2121,14 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         tempbuilding.addObject(temparr.objectAtIndex(i))
                     }
                     self.buildingarr = tempbuilding.mutableCopy() as! NSMutableArray
+                    print("Buildingarr count after load more ",self.buildingarr.count)
                         self.page = self.page + 1
                     }
                     dispatch_async(dispatch_get_main_queue(), {
                         self.isloading = false
                         self.view.userInteractionEnabled = true
                         self.spinner.hidden = true
+                        self.tableview.reloadData()
                     })
                     
                 } catch {
@@ -1674,7 +2186,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1764,7 +2279,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                 dispatch_async(dispatch_get_main_queue(), {
-                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                 })
                 return
             } else
@@ -1865,7 +2383,10 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 }
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401{
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
+                        NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
                     })
                     return
                 } else
@@ -1994,8 +2515,9 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
 extension UIViewController{
         func maketoast(message:String){
             let toastLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/2 - 150, self.view.frame.size.height-100, 300, 35))
-            toastLabel.backgroundColor = UIColor.darkGrayColor()
-            toastLabel.textColor = UIColor.whiteColor()
+            toastLabel.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2)
+            toastLabel.backgroundColor = UIColor.whiteColor()
+            toastLabel.textColor = UIColor.blackColor()
             toastLabel.textAlignment = NSTextAlignment.Center;
             self.view.addSubview(toastLabel)
             //self.window?.rootViewController?.presentedViewController?.view.addSubview(toastLabel)
@@ -2011,7 +2533,10 @@ extension UIViewController{
                 toastLabel.alpha = 0.0
                 
                 }, completion: nil)
+            
         }
+    
+    
 }
 
 

@@ -14,9 +14,9 @@
 
 @implementation smiley
 @synthesize slider;
- NSString* subscription_key = @"e6aecd40e07c40718a0b3ed9a0cc609d";//"f94b34f0576f4a85b3c0c22eefb625b3";
- NSString* domain_url = @"https://api.usgbc.org/stg/leed/";
- NSString* survey_url = @"https://stg.app.arconline.io/app/project/";
+ NSString* subscription_key = @"f94b34f0576f4a85b3c0c22eefb625b3";//"e6aecd40e07c40718a0b3ed9a0cc609d";
+ NSString* domain_url = @"https://api.usgbc.org/dev/leed/";
+ NSString* survey_url = @"https://dev.app.arconline.io/app/project/";
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.spinner.layer setCornerRadius:10];
@@ -27,10 +27,6 @@
     
     [self.navigationItem setTitle:[NSString stringWithFormat:@"%@",dict[@"name"]]];
     opened=NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(closeit)
-                                                 name:UIApplicationDidEnterBackgroundNotification
-                                               object:nil];
     self.vv.layer.cornerRadius=5;
     prefs=[NSUserDefaults standardUserDefaults];
     [slider setMaximumTrackTintColor:[UIColor whiteColor]];
@@ -110,6 +106,7 @@
     [slider addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
     NSLog(@"%@",experiencearr);
     [self valueChanged:slider];
+    [self.view bringSubviewToFront:self.spinner];
     // Do any additional setup after loading the view.
 }
 
@@ -171,6 +168,7 @@
     smiling.lineWidth = 0.056 * smiling.frame.size.width;
     smiling.strokeColor=[UIColor colorWithRed:.96 green:.77 blue:.27 alpha:1].CGColor;
     [self.view.layer addSublayer:smiling];
+    [self.view bringSubviewToFront:self.spinner];
     /*
     if(width==320 && height ==568){
 
@@ -915,210 +913,232 @@
         [self performSegueWithIdentifier:@"gotohuman" sender:nil];
     }
     else{
-        alert= [[UIAlertView alloc] initWithTitle:@"Survey Submission"
-                                          message:@"Please enter your name"
-                                         delegate:self
-                                cancelButtonTitle:@"Modify"
-                                otherButtonTitles:@"Submit",nil];
-        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-            opened=YES;
-        [alert show];
-    }
-    
-}
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-        opened=NO;
-    if(buttonIndex==1){
-        [self.spinner setHidden:NO];
-        NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        NSMutableString *randomString = [NSMutableString stringWithCapacity: 16];
-        for (int i=0; i<16; i++) {
-            [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform((int)[letters length])]];
-        }
-        NSString *location=[alertView textFieldAtIndex:0].text;
-        //NSString *urlString=[NSString stringWithFormat:@"http://sbx2.leedon.io/buildings/LEED:%@/survey/environment/?key=%@&recompute_score=1",[prefs objectForKey:@"leed_id"],[prefs objectForKey:@"key"]];
-        //assets/LEED:1000126479/survey/environment/?subscription-key=8e0baacec376430ba0f81a5d960ccbb0&key=slaJjULbXHk7CJUEggoNJ7jy&recompute_score=1
-        NSString *urlString=[NSString stringWithFormat:@"%@assets/LEED:%@/survey/environment/?subscription-key=%@&key=%@&recompute_score=1",domain_url,[prefs objectForKey:@"leed_id"],subscription_key,[prefs objectForKey:@"key"]];
-        //NSString *urlString = @"https://api.usgbc.org/stg/leed/assets/LEED:1000126479/survey/environment/?subscription-key=8e0baacec376430ba0f81a5d960ccbb0&key=slaJjULbXHk7CJUEggoNJ7jy&recompute_score=1";
-        NSLog(@"URL asdas d%@",urlString);
-        NSMutableArray *ar=[[NSMutableArray arrayWithArray:[prefs objectForKey:@"listofrowsforhuman"]]mutableCopy];
-        int exist=0;
-        int current=(int)[prefs integerForKey:@"humanbuildingid"];
-        NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
-        [dateformate setDateFormat:@"dd/MM/YYYY"];
-        NSString *date_String=[dateformate stringFromDate:[NSDate date]];
+        UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"Survey submission" message:@"Please enter your details" preferredStyle:UIAlertControllerStyleAlert];
         
-        NSLog(@"%@",ar);
-        if((int)[prefs integerForKey:@"url"]!=1){
-            nope=1;
-            for (int m=0; m<ar.count; m++) {
-                NSMutableArray *a=[[ar objectAtIndex:m] mutableCopy];
-                NSLog(@"%@",a);
-                int x=[[a objectAtIndex:0]intValue];
-                NSString *date=[a objectAtIndex:1];
-                //            int star=[[a objectAtIndex:1]intValue];
-                if(x==current){
-                    if([date_String isEqualToString:date]){
-                        exist=1;
-                        nope=0;
-                        [prefs setObject:ar forKey:@"listofrowsforhuman"];
-                        break;
-                    }
-                    else{
-                        [a replaceObjectAtIndex:1 withObject:date_String];
-                        [ar replaceObjectAtIndex:m withObject:a];
-                        [prefs setObject:ar forKey:@"listofrowsforhuman"];
-                    }
+        
+        UIAlertAction* modify = [UIAlertAction actionWithTitle:@"Modify" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            
+        }];
+        
+        UIAlertAction* submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            opened=NO;
+                [self.spinner setHidden:NO];
+                NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                NSMutableString *randomString = [NSMutableString stringWithCapacity: 16];
+                for (int i=0; i<16; i++) {
+                    [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform((int)[letters length])]];
                 }
-                else{
+                NSString *name=alrt.textFields[0].text;
+                NSString *location=alrt.textFields[1].text;
+                //NSString *urlString=[NSString stringWithFormat:@"http://sbx2.leedon.io/buildings/LEED:%@/survey/environment/?key=%@&recompute_score=1",[prefs objectForKey:@"leed_id"],[prefs objectForKey:@"key"]];
+                //assets/LEED:1000126479/survey/environment/?subscription-key=8e0baacec376430ba0f81a5d960ccbb0&key=slaJjULbXHk7CJUEggoNJ7jy&recompute_score=1
+                NSString *urlString=[NSString stringWithFormat:@"%@assets/LEED:%@/survey/environment/?subscription-key=%@&key=%@&recompute_score=1",domain_url,[prefs objectForKey:@"leed_id"],subscription_key,[prefs objectForKey:@"key"]];
+                //NSString *urlString = @"https://api.usgbc.org/stg/leed/assets/LEED:1000126479/survey/environment/?subscription-key=8e0baacec376430ba0f81a5d960ccbb0&key=slaJjULbXHk7CJUEggoNJ7jy&recompute_score=1";
+                NSLog(@"URL asdas d%@",urlString);
+                NSMutableArray *ar=[[NSMutableArray arrayWithArray:[prefs objectForKey:@"listofrowsforhuman"]]mutableCopy];
+                int exist=0;
+                int current=(int)[prefs integerForKey:@"humanbuildingid"];
+                NSDateFormatter *dateformate=[[NSDateFormatter alloc]init];
+                [dateformate setDateFormat:@"dd/MM/YYYY"];
+                NSString *date_String=[dateformate stringFromDate:[NSDate date]];
+                
+                NSLog(@"%@",ar);
+                if((int)[prefs integerForKey:@"url"]!=1){
                     nope=1;
-                }
-            }
-        }
-        
-        if(exist==0){
-            NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-            NSArray *cookies = [cookieStorage cookiesForURL:[NSURL URLWithString:urlString]];
-            for (NSHTTPCookie *cookie in cookies) {
-                [cookieStorage deleteCookie:cookie];
-            }
-            
-        }
-        
-        if(exist==0){
-            NSMutableURLRequest *urlrequest = [[[NSMutableURLRequest alloc] init] mutableCopy] ;
-            [urlrequest setURL:[NSURL URLWithString:urlString]];
-            [urlrequest setHTTPMethod:@"POST"];
-            [urlrequest setValue:@"application/json" forHTTPHeaderField: @"content-Type"];
-            [urlrequest setValue: subscription_key forHTTPHeaderField:@"Ocp-Apim-Subscription-Key"];
-            NSMutableData *body = [[NSMutableData alloc] init];
-            NSString *header;
-
-                //header=[NSString stringWithFormat:@"{\n    \"instance\": \"%@\",\n    \"response_method\": \"%@\",\n    \"complaints\": [],\n    \"satisfaction\": %i}",randomString,location,position];
-            header=[NSString stringWithFormat:@"{\n    \"tenant_name\": \"%@\",\n    \"response_method\": \"web\",\n    \"complaints\": \"[]\", \n \"other_complaint\": \"\", \n    \"satisfaction\": %i, \n \"language\": \"English\",\"location\": \"\"}",location,position];
-            //header = @"tenant_name=Test user&response_method=web&satisfaction=3&location=&complaints=[]&other_complaint=This test&language=English";
-            
-            //tenant_name=Test user&response_method=web&satisfaction=3&location=&complaints=["cold","hot"]&other_complaint=This test&language=English
-            NSLog(@"%@",header);
-            [body appendData:[[NSString stringWithString:header] dataUsingEncoding:NSUTF8StringEncoding]];
-            [urlrequest setHTTPBody:body];
-            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
-            NSURL *url = [NSURL URLWithString:urlString];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
-                                                                   cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                               timeoutInterval:60.0];
-            
-            [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            [request addValue:subscription_key forHTTPHeaderField:@"Ocp-Apim-Subscription-Key"];
-            
-            [request setHTTPMethod:@"POST"];
-            
-            [request setHTTPBody:body];
-            
-            
-            NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                int code = (int)[(NSHTTPURLResponse *)response statusCode];                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                [self.spinner setHidden:YES];
-                if(code==200 || code == 201){
-                    [prefs setInteger:0 forKey:@"humanhide"];
-                    alert = [[UIAlertView alloc] initWithTitle:nil message:@"Human Survey submitted" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-                    submitteddonthide=(int)[prefs integerForKey:@"humandone"];
-                    opened=YES;
-                    //[alert show];
-                    [self maketoast:@"Survey submitted successfully"];
-                    //[self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-                    submitteddonthide=0;
-                    if(nope==1){
-                        if((int)[prefs integerForKey:@"url"]!=1){
-                            NSMutableArray *ab=[[NSMutableArray alloc] init];
-                            int current=(int)[prefs integerForKey:@"leed_id"];
-                            [ab addObject:[NSString stringWithFormat:@"%d",current]];
-                            [ab addObject:date_String];
-                            [ar addObject:ab];
-                            [prefs setObject:ar forKey:@"listofrowsforhuman"];
+                    for (int m=0; m<ar.count; m++) {
+                        NSMutableArray *a=[[ar objectAtIndex:m] mutableCopy];
+                        NSLog(@"%@",a);
+                        int x=[[a objectAtIndex:0]intValue];
+                        NSString *date=[a objectAtIndex:1];
+                        //            int star=[[a objectAtIndex:1]intValue];
+                        if(x==current){
+                            if([date_String isEqualToString:date]){
+                                exist=1;
+                                nope=0;
+                                [prefs setObject:ar forKey:@"listofrowsforhuman"];
+                                break;
+                            }
+                            else{
+                                [a replaceObjectAtIndex:1 withObject:date_String];
+                                [ar replaceObjectAtIndex:m withObject:a];
+                                [prefs setObject:ar forKey:@"listofrowsforhuman"];
+                            }
+                        }
+                        else{
+                            nope=1;
                         }
                     }
+                }
+            
+            
+            if(exist == 1){
+                NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
+                if(dict[@"lobby_survey_status"] == false || dict[@"lobby_survey_status"] == [NSNull null]){
+                    exist = 1;
+                }else{
+                    exist = 0;
+                }
+            }
+                
+                if(exist==0){
+                    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+                    NSArray *cookies = [cookieStorage cookiesForURL:[NSURL URLWithString:urlString]];
+                    for (NSHTTPCookie *cookie in cookies) {
+                        [cookieStorage deleteCookie:cookie];
+                    }
                     
-                    if([prefs  integerForKey:@"transithide"]==0){
-                        [self.navigationController popViewControllerAnimated:YES];
+                }
+                
+                if(exist==0){
+ 
+                    NSString *urlString=[NSString stringWithFormat:@"%@assets/LEED:%@/survey/environment/?subscription-key=%@&key=%@&recompute_score=1",domain_url,[prefs objectForKey:@"leed_id"],subscription_key,[prefs objectForKey:@"key"]];
+                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
+                                                                           cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                                       timeoutInterval:60.0];
+                                        
+                    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+                    [request addValue:subscription_key forHTTPHeaderField:@"Ocp-Apim-Subscription-Key"];
+                    
+                    [request setHTTPMethod:@"POST"];
+                    NSMutableDictionary *mapData = [[NSMutableDictionary alloc] init];
+                    
+                    mapData[@"tenant_name"] = name;
+                    mapData[@"response_method"] = @"web";
+                    mapData[@"location"] = location;
+                    mapData[@"satisfaction"] = [NSNumber numberWithInteger:position];
+                    mapData[@"complaints"] = @"[]";
+                    mapData[@"other_complaint"] = @"";
+                    mapData[@"language"] = @"English";
+                    NSLog(@"%@",mapData);
+                    NSError *error;
+                    NSData *postData = [NSJSONSerialization dataWithJSONObject:mapData options:0 error:&error];
+                    [request setHTTPBody:postData];
+                    
+                    
+                    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+                    [configuration setHTTPAdditionalHeaders:@{@"Accept" : @"application/json", @"Content-Type" : @"application/x-www-form-urlencoded"}];
+                    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+                    
+                    NSURLSessionDataTask *postDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                        int code = (int)[(NSHTTPURLResponse *)response statusCode];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.spinner setHidden:YES];
+                            if (code == 401) {           // check for http errors
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    self.spinner.hidden = YES;
+                                    self.view.userInteractionEnabled = YES;
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:@"renewtoken" object:nil userInfo:nil];
+                                });
+                            }
+                            else if(code==200 || code == 201){
+                                [prefs setInteger:0 forKey:@"humanhide"];
+                                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human Survey submitted" preferredStyle:UIAlertControllerStyleAlert];
+                                [self presentViewController:alrt animated:YES completion:nil];
+                                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                submitteddonthide=(int)[prefs integerForKey:@"humandone"];
+                                opened=YES;
+                                submitteddonthide=0;
+                                if(nope==1){
+                                    if((int)[prefs integerForKey:@"url"]!=1){
+                                        NSMutableArray *ab=[[NSMutableArray alloc] init];
+                                        int current=(int)[prefs integerForKey:@"leed_id"];
+                                        [ab addObject:[NSString stringWithFormat:@"%d",current]];
+                                        [ab addObject:date_String];
+                                        [ar addObject:ab];
+                                        [prefs setObject:ar forKey:@"listofrowsforhuman"];
+                                    }
+                                }
+                                
+                                if([prefs  integerForKey:@"transithide"]==0){
+                                    [self.navigationController popViewControllerAnimated:YES];
+                                }
+                                else{
+                                    //[self performSegueWithIdentifier:@"humantotransit" sender:nil];
+                                    [self humantotransit];
+                                }
+                                return;
+                                
+                            }
+                            else if(code==0){
+                                submitteddonthide=(int)[prefs integerForKey:@"humandone"];
+                                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please check your internet connection" preferredStyle:UIAlertControllerStyleAlert];
+                                [self presentViewController:alrt animated:YES completion:nil];
+                                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                            }
+                            else{
+                                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human Survey submission Failed" preferredStyle:UIAlertControllerStyleAlert];
+                                [self presentViewController:alrt animated:YES completion:nil];
+                                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                
+                            }
+                        });
+                        
+                    }];
+                    
+                    [postDataTask resume];
+                }
+                else{
+                    UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"You've already taken survey" preferredStyle:UIAlertControllerStyleAlert];
+                    [self presentViewController:alrt animated:YES completion:nil];
+                    [prefs setInteger:0 forKey:@"humanhide"];
+                    [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                    
+                    if([[prefs objectForKey:@"mainarray"] count]>0){
+                        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                        UIViewController *more = [mainstoryboard instantiateViewControllerWithIdentifier:@"more"];
+                        UIViewController *listroutes = [mainstoryboard instantiateViewControllerWithIdentifier:@"listroutes"];
+                        UINavigationController *rootvc = [self navigationController];
+                        NSMutableArray *controllers = [[rootvc viewControllers] mutableCopy];
+                        [controllers removeAllObjects];
+                        UIViewController *v = [mainstoryboard instantiateViewControllerWithIdentifier:@"listofassets"];
+                        int grid = (int)[[NSUserDefaults standardUserDefaults]integerForKey:@"grid"];
+                        if(grid == 1){
+                            v = [mainstoryboard instantiateViewControllerWithIdentifier:@"grid"];
+                        }else{
+                            v = [mainstoryboard instantiateViewControllerWithIdentifier:@"listofassets"];
+                        }
+                        UIViewController *listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"projectslist"];
+                        if(grid == 1){
+                            listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"gridvc"];
+                        }else{
+                            listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"projectslist"];
+                        }
+                        [controllers addObject:listofassets];
+                        [controllers addObject:more];
+                        [controllers addObject:listroutes];
+                        [self.navigationController setViewControllers:controllers animated:YES];
+                        
                     }
                     else{
                         //[self performSegueWithIdentifier:@"humantotransit" sender:nil];
                         [self humantotransit];
                     }
-                    return;
-                    
                 }
-                else if(code==0){
-                    submitteddonthide=(int)[prefs integerForKey:@"humandone"];
-                    alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please check your internet connection" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-                    [alert show];
-                    [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-                }
-                else{
-                    alert = [[UIAlertView alloc] initWithTitle:nil message:@"Human Survey submission Failed" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-                    
-                    [alert show];
-                    [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-                    
-                } 
-                });
-                
-            }];
-            
-            [postDataTask resume];
-            
-            
-            /*[NSURLConnection sendSynchronousRequest:urlrequest returningResponse:&response error:&error];
-            int code = (int)[(NSHTTPURLResponse *)response statusCode];
-            NSLog(@"codess s s%d",code,response);
-            */
-        }
-        else{
-            alert = [[UIAlertView alloc] initWithTitle:nil message:@"You've already taken survey" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-            [alert show];
-                            [prefs setInteger:0 forKey:@"humanhide"];
-            [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-           
-            if([[prefs objectForKey:@"mainarray"] count]>0){
-                UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];                
-                UIViewController *more = [mainstoryboard instantiateViewControllerWithIdentifier:@"more"];
-                UIViewController *listroutes = [mainstoryboard instantiateViewControllerWithIdentifier:@"listroutes"];
-                UINavigationController *rootvc = [self navigationController];
-                NSMutableArray *controllers = [[rootvc viewControllers] mutableCopy];
-                [controllers removeAllObjects];
-                UIViewController *v = [mainstoryboard instantiateViewControllerWithIdentifier:@"listofassets"];
-                int grid = (int)[[NSUserDefaults standardUserDefaults]integerForKey:@"grid"];
-                if(grid == 1){
-                    v = [mainstoryboard instantiateViewControllerWithIdentifier:@"grid"];
-                }else{
-                    v = [mainstoryboard instantiateViewControllerWithIdentifier:@"listofassets"];
-                }
-                UIViewController *listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"projectslist"];
-                if(grid == 1){
-                    listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"gridvc"];
-                }else{
-                    listofassets = [mainstoryboard instantiateViewControllerWithIdentifier:@"projectslist"];
-                }
-                [controllers addObject:listofassets];
-                [controllers addObject:more];
-                [controllers addObject:listroutes];
-                //self.navigationController.hidesBarsOnTap = NO;
-                //self.navigationController.hidesBarsOnSwipe = NO;
-                //self.navigationController.hidesBarsWhenVerticallyCompact = NO;
-                [self.navigationController setViewControllers:controllers animated:YES];
 
-            }
-            else{
-            //[self performSegueWithIdentifier:@"humantotransit" sender:nil];
-                [self humantotransit];
-            }
-        }
+            }];
+        
+        [alrt addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"Enter your name(optional)";
+            textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            textField.borderStyle = UITextBorderStyleRoundedRect;
+        }];
+        
+        [alrt addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"Enter your location(optional)";
+            textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            textField.borderStyle = UITextBorderStyleRoundedRect;
+        }];
+        
+        [alrt addAction:modify];
+        [alrt addAction:submit];
+        
+        [self presentViewController:alrt animated:YES completion:nil];
+            opened=YES;
+        //[alert show];
     }
+    
 }
+
 - (NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
@@ -1183,30 +1203,11 @@
         
     }
 }
--(void)maketoast:(NSString *)message{
-UIAlertView *toast = [[UIAlertView alloc] initWithTitle:nil
-                                                message:message
-                                               delegate:nil
-                                      cancelButtonTitle:nil
-                                      otherButtonTitles:nil, nil];
-[toast show];
-
-int duration = 2.0; // duration in seconds
-
-dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-    [toast dismissWithClickedButtonIndex:0 animated:YES];
-});
-}
-
--(void)closeit{
-    if(opened==YES){
-    [alert dismissWithClickedButtonIndex:0 animated:YES];
-    }
-}
 
 
--(void)dismissAlert:(UIAlertView *)alert{
-    [alert dismissWithClickedButtonIndex:0 animated:YES];
+-(void)dismissAlert:(UIAlertController *)alert{
+    [alert dismissViewControllerAnimated:YES completion:nil];
+    //[alert dismissWithClickedButtonIndex:0 animated:YES];
 }
 
 - (IBAction)goback:(id)sender {

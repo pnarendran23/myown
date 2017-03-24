@@ -15,10 +15,7 @@ var label = ""
     var performancescoresarr = NSMutableArray()
     var allptsarr = [[1],[3,1],[5,3],[5,3,1,5,6,8],[10,1,0,2]]
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(true)
-        
-    }
+    
     override func viewDidDisappear(animated: Bool) {
         var buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]
         self.navigationItem.title = buildingdetails["name"] as? String
@@ -79,7 +76,10 @@ self.splitViewController?.delegate = self
     
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 185
+        if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            return 0.251 * UIScreen.mainScreen().bounds.size.height;
+        }
+        return 0.251 * UIScreen.mainScreen().bounds.size.width;
     }
     
     @IBAction func back(sender: UIBarButtonItem) {
