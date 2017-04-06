@@ -12,6 +12,8 @@
 {
     UIButton *Button;
     UIButton *Button1;
+    UIView *notificationView;
+    UILabel *notificationLabel;
     int nope;
     BOOL opened;
     UIButton *checkbox;

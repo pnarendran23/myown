@@ -1135,13 +1135,57 @@ else if(clicked.tag==1001){
     else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Maximum Limit Reached" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
 
-        [alert show];
-        [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-
+        //[alert show];
+        //[self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+        [self maketoast:@"Maximum limit reached" withbackground:[UIColor blackColor] withdelay:4.5];
     }
 
 
 }
+-(void)maketoast:(NSString *)message withbackground:(UIColor *)color withdelay:(double)delay{
+    if([notificationView isDescendantOfView:self.view]){
+        [notificationView removeFromSuperview];
+    }
+    notificationLabel = [[UILabel alloc] init];
+    notificationView = [[UIView alloc] init];
+    if(self.navigationController != nil){
+        notificationView.frame = CGRectMake(0.0, 0.0 , self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    }else{
+        
+    }
+    notificationLabel.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, notificationView.frame.size.height);
+    notificationLabel.text      = message;
+    [notificationView setBackgroundColor:color];
+    [notificationLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    [notificationLabel setNumberOfLines:3];
+    [notificationLabel setTextColor:[UIColor whiteColor]];
+    [notificationLabel setTextAlignment:NSTextAlignmentCenter];
+    [notificationView addSubview:notificationLabel];
+    [self.view addSubview:notificationView];
+    [self.view bringSubviewToFront:notificationView];
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        notificationView.frame = CGRectMake(0.0, self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y, self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    } completion:^(BOOL finished){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self hide];
+        });
+    }];
+    
+    
+    
+}
+
+-(void)hide{
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+    } completion:^(BOOL finished){        
+        [notificationView removeFromSuperview];
+    }];
+    
+    
+}
+
 
 -(void)dismissAlert:(UIAlertView *)alert{
     [alert dismissWithClickedButtonIndex:(int)nil animated:YES];
@@ -1223,9 +1267,9 @@ else if(clicked.tag==1001){
     if(([routescore.text isEqualToString:@""])||([routescore.text isEqualToString:@"0"])){
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please Enter a value greater than 0" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
 
-        [alert show];
-        [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
-
+        //[alert show];
+        //[self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+        [self maketoast:@"Please enter a value greater than 0" withbackground:[UIColor blackColor] withdelay:4.5];
         
     }
     else{
@@ -1308,8 +1352,9 @@ else if(clicked.tag==1001){
         if([self.howmany.text isEqualToString:@"0"]||([self.howmany.text isEqualToString:@""])){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please enter more than 0" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
 
-            [alert show];
-            [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+            //[alert show];
+            //[self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+            [self maketoast:@"Please enter more than 0" withbackground:[UIColor blackColor] withdelay:4.5];
         }
         else{
         goback=0;
@@ -2070,9 +2115,9 @@ else if(clicked.tag==1001){
     else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please enter atleast one route" delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
         
-        [alert show];
-        
-        [self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
+        //[alert show];
+        [self maketoast:@"Please enter at least one route" withbackground:[UIColor blackColor] withdelay:4.5];
+        //[self performSelector:@selector(dismissAlert:) withObject:alert afterDelay:1.0f];
     }
     
  

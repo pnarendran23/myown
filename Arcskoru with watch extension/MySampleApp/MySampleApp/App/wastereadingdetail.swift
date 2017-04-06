@@ -238,14 +238,14 @@ var adding = 0
                 dispatch_async(dispatch_get_main_queue(), {
                     self.spinner.hidden = true
                     self.view.userInteractionEnabled = true
-                self.maketoast("Generated waste shouldn't be lesser than the waste diverted")
+                self.maketoast("Generated waste shouldn't be lesser than the waste diverted",type: "error")
                 })
             }
         }else{
             dispatch_async(dispatch_get_main_queue(), {
                 self.spinner.hidden = true
                 self.view.userInteractionEnabled = true
-            self.maketoast("All fields are mandatory")
+            self.maketoast("All fields are mandatory",type: "error")
             })
         }
     }
@@ -330,7 +330,7 @@ var adding = 0
                 dispatch_async(dispatch_get_main_queue(), {
                     self.spinner.hidden = true
                     self.view.userInteractionEnabled = true
-                    self.maketoast("Generated waste shouldn't be lesser than the waste diverted")
+                    self.maketoast("Generated waste shouldn't be lesser than the waste diverted",type: "error")
                 })
                 
             }
@@ -338,7 +338,7 @@ var adding = 0
             dispatch_async(dispatch_get_main_queue(), {
             self.spinner.hidden = true
             self.view.userInteractionEnabled = true
-            self.maketoast("All fields are mandatory")
+            self.maketoast("All fields are mandatory",type: "error")
             })
         }
     }
@@ -360,17 +360,25 @@ var adding = 0
     }
     
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                self.view.userInteractionEnabled = true
-            })
-            
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
-        alertController.addAction(defaultAction)
-        presentViewController(alertController, animated: true, completion: nil)
+        
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.view.userInteractionEnabled = true
+            self.spinner.hidden = true
+            self.view.userInteractionEnabled = true
+            self.maketoast(message, type: "error")
+            // self.navigationController?.popViewControllerAnimated(true)
+        })
+        
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
+        
+        
     }
 
     

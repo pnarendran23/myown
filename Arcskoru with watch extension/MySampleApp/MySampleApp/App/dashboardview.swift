@@ -46,6 +46,20 @@ class dashboardview: UIView {
         
         if let blank : CALayer = layers["blank"] as? CALayer{
             blank.frame = CGRectMake(0.39726 * blank.superlayer!.bounds.width, 0.38641 * blank.superlayer!.bounds.height, 0.24304 * blank.superlayer!.bounds.width, 0.24742 * blank.superlayer!.bounds.height)
+            let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+            if(dict["certification"] as! String == "" || dict["certification"] as! String == "Denied" || dict["certification"] as! String == "None" || dict["certification"] is NSNull){
+                blank.contents = UIImage(named:"nonleed")?.CGImage
+            }else{
+                if((dict["certification"] as! String).lowercaseString == "certified"){
+                    blank.contents = UIImage(named:"certified")?.CGImage
+                }else if((dict["certification"] as! String).lowercaseString == "silver"){
+                    blank.contents = UIImage(named:"silver")?.CGImage
+                }else if((dict["certification"] as! String).lowercaseString == "gold"){
+                    blank.contents = UIImage(named:"gold")?.CGImage
+                }else if((dict["certification"] as! String).lowercaseString == "platinum"){
+                    blank.contents = UIImage(named:"platinum")?.CGImage
+                }
+            }
         }
         
         if let humanback : CAShapeLayer = layers["humanback"] as? CAShapeLayer{
@@ -139,7 +153,7 @@ class dashboardview: UIView {
         }
         
         if let transportlabel : CATextLayer = layers["transportlabel"] as? CATextLayer{
-            transportlabel.frame = CGRectMake(0.05754 * transportlabel.superlayer!.bounds.width, 0.2432 * transportlabel.superlayer!.bounds.height, 0.3996 * transportlabel.superlayer!.bounds.width, 0.04701 * transportlabel.superlayer!.bounds.height)
+            transportlabel.frame = CGRectMake(0.05754 * transportlabel.superlayer!.bounds.width, 0.2472 * transportlabel.superlayer!.bounds.height, 0.3996 * transportlabel.superlayer!.bounds.width, 0.04701 * transportlabel.superlayer!.bounds.height)
             transportlabel.fontSize = (0.25 * transportlabel.superlayer!.bounds.height)/10
         }
         
@@ -167,11 +181,11 @@ class dashboardview: UIView {
         }
         
         if let waste : CALayer = layers["waste"] as? CALayer{
-            waste.frame = CGRectMake(0.01136 * waste.superlayer!.bounds.width, 0.15938 * waste.superlayer!.bounds.height, 0.03889 * waste.superlayer!.bounds.width, 0.0384 * waste.superlayer!.bounds.height)
+            waste.frame = CGRectMake(0.01136 * waste.superlayer!.bounds.width, 0.15838 * waste.superlayer!.bounds.height, 0.03889 * waste.superlayer!.bounds.width, 0.0384 * waste.superlayer!.bounds.height)
         }
         
         if let transport : CALayer = layers["transport"] as? CALayer{
-            transport.frame = CGRectMake(0.01082 * transport.superlayer!.bounds.width, 0.24424 * transport.superlayer!.bounds.height, 0.03889 * transport.superlayer!.bounds.width, 0.03292 * transport.superlayer!.bounds.height)
+            transport.frame = CGRectMake(0.01082 * transport.superlayer!.bounds.width, 0.24324 * transport.superlayer!.bounds.height, 0.03889 * transport.superlayer!.bounds.width, 0.03292 * transport.superlayer!.bounds.height)
         }
         
         if let human : CALayer = layers["human"] as? CALayer{
@@ -179,31 +193,31 @@ class dashboardview: UIView {
         }
         
         if let humanmaxscore : CATextLayer = layers["humanmaxscore"] as? CATextLayer{
-            humanmaxscore.frame = CGRectMake(0.32921 * humanmaxscore.superlayer!.bounds.width, 0.40125 * humanmaxscore.superlayer!.bounds.height, 0.03959 * humanmaxscore.superlayer!.bounds.height, 0.03959 * humanmaxscore.superlayer!.bounds.height)
+            humanmaxscore.frame = CGRectMake(0.32921 * humanmaxscore.superlayer!.bounds.width, 0.40145 * humanmaxscore.superlayer!.bounds.height, 0.03959 * humanmaxscore.superlayer!.bounds.height, 0.03959 * humanmaxscore.superlayer!.bounds.height)
             humanmaxscore.fontSize = (0.77 * humanmaxscore.bounds.width)
             humanmaxscore.string = "\(humanmaxscorevalue)"
         }
         
         if let transportmaxscore : CATextLayer = layers["transportmaxscore"] as? CATextLayer{
-            transportmaxscore.frame = CGRectMake(0.25143 * transportmaxscore.superlayer!.bounds.width, 0.40125 * transportmaxscore.superlayer!.bounds.height, 0.03959 * transportmaxscore.superlayer!.bounds.height, 0.03959 * transportmaxscore.superlayer!.bounds.height)
+            transportmaxscore.frame = CGRectMake(0.25143 * transportmaxscore.superlayer!.bounds.width, 0.40145 * transportmaxscore.superlayer!.bounds.height, 0.03959 * transportmaxscore.superlayer!.bounds.height, 0.03959 * transportmaxscore.superlayer!.bounds.height)
             transportmaxscore.fontSize = (0.77 * transportmaxscore.bounds.width)
             transportmaxscore.string = "\(transportmaxscorevalue)"
         }
         
         if let wastemaxscore : CATextLayer = layers["wastemaxscore"] as? CATextLayer{
-            wastemaxscore.frame = CGRectMake(0.17366 * wastemaxscore.superlayer!.bounds.width, 0.40125 * wastemaxscore.superlayer!.bounds.height, 0.03959 * wastemaxscore.superlayer!.bounds.height, 0.03959 * wastemaxscore.superlayer!.bounds.height)
+            wastemaxscore.frame = CGRectMake(0.17366 * wastemaxscore.superlayer!.bounds.width, 0.40145 * wastemaxscore.superlayer!.bounds.height, 0.03959 * wastemaxscore.superlayer!.bounds.height, 0.03959 * wastemaxscore.superlayer!.bounds.height)
             wastemaxscore.fontSize = (0.77 * wastemaxscore.bounds.width)
             wastemaxscore.string = "\(wastemaxscorevalue)"
         }
         
         if let watermaxscore : CATextLayer = layers["watermaxscore"] as? CATextLayer{
-            watermaxscore.frame = CGRectMake(0.09346 * watermaxscore.superlayer!.bounds.width, 0.40125 * watermaxscore.superlayer!.bounds.height, 0.03959 * watermaxscore.superlayer!.bounds.height, 0.03959 * watermaxscore.superlayer!.bounds.height)
+            watermaxscore.frame = CGRectMake(0.09346 * watermaxscore.superlayer!.bounds.width, 0.40145 * watermaxscore.superlayer!.bounds.height, 0.03959 * watermaxscore.superlayer!.bounds.height, 0.03959 * watermaxscore.superlayer!.bounds.height)
             watermaxscore.fontSize = (0.77 * watermaxscore.bounds.width)
             watermaxscore.string = "\(watermaxscorevalue)"
         }
         
         if let energymaxscore : CATextLayer = layers["energymaxscore"] as? CATextLayer{
-            energymaxscore.frame = CGRectMake(0.01811 * energymaxscore.superlayer!.bounds.width, 0.40125 * energymaxscore.superlayer!.bounds.height, 0.03959 * energymaxscore.superlayer!.bounds.height, 0.03959 * energymaxscore.superlayer!.bounds.height)
+            energymaxscore.frame = CGRectMake(0.01811 * energymaxscore.superlayer!.bounds.width, 0.40145 * energymaxscore.superlayer!.bounds.height, 0.03959 * energymaxscore.superlayer!.bounds.height, 0.03959 * energymaxscore.superlayer!.bounds.height)
             energymaxscore.fontSize = (0.77 * energymaxscore.bounds.width)
             energymaxscore.string = "\(energymaxscorevalue)"
         }
@@ -408,8 +422,14 @@ class dashboardview: UIView {
         
         if let puckscore : CATextLayer = layers["puckscore"] as? CATextLayer{
             puckscore.frame = CGRectMake(0.47017 * puckscore.superlayer!.bounds.width, 0.44826 * puckscore.superlayer!.bounds.height, 0.09722 * puckscore.superlayer!.bounds.width, 0.09897 * puckscore.superlayer!.bounds.height)
-            puckscore.fontSize = (0.2 * puckscore.superlayer!.bounds.height)/2.5
+            puckscore.fontSize = (0.23 * puckscore.superlayer!.bounds.height)/2.5
             puckscore.string = "\(energyscorevalue + waterscorevalue + wastescorevalue + basescorevalue + transportscorevalue + humanscorevalue)"
+            
+            let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+            if(dict["certification"] as! String == "" || dict["certification"] as! String == "Denied" || dict["certification"] as! String == "None" || dict["certification"] is NSNull){
+                puckscore.fontSize = (0.24 * puckscore.superlayer!.bounds.height)/2.5
+            }
+            
         }
     }
     

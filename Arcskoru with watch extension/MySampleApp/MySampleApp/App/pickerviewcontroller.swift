@@ -8,11 +8,13 @@
 
 import UIKit
 
-class pickerviewcontroller: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate {
+class pickerviewcontroller: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate, UITabBarDelegate {
     @IBOutlet weak var picker: UIPickerView!
 var dict = NSMutableDictionary()
     var data_dict = NSMutableDictionary()
 var countriesarr = NSArray()
+    
+    @IBOutlet weak var tabbar: UITabBar!
 var statesarr  = NSArray()
     var currentcountry = ""
     var currentstate = ""
@@ -27,9 +29,40 @@ var statesarr  = NSArray()
         let filteritem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(done(_:)))
         self.navigationItem.rightBarButtonItem = filteritem
         self.navigationItem.setRightBarButtonItem(filteritem, animated: true)
-        let notificationsarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("notifications") as! NSData) as! NSArray          
+        let notificationsarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("notifications") as! NSData) as! NSArray
+        if(notificationsarr.count > 0 ){
+            self.tabbar.items![4].badgeValue = "\(notificationsarr.count)"
+        }else{
+            self.tabbar.items![4].badgeValue = nil
+        }
+        self.tabbar.selectedItem = self.tabbar.items![3]
         
+        if(data_dict.allKeys.count == 0 ){
+            self.tabbar.hidden = true
+        }else{
+            self.tabbar.hidden = false
+        }
         // Do any additional setup after loading the view.
+    }
+    
+    func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+        if(item.title == "Score"){
+            //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"plaque"])
+            NSNotificationCenter.defaultCenter().postNotificationName("performrootsegue", object: nil, userInfo: ["seguename":"plaque"])
+        }else if(item.title == "Analytics"){
+            //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"beforeanalytics"])
+            NSNotificationCenter.defaultCenter().postNotificationName("performrootsegue", object: nil, userInfo: ["seguename":"totalanalysis"])
+        }else if(item.title == "Manage"){
+            //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"manage"])
+            NSNotificationCenter.defaultCenter().postNotificationName("performrootsegue", object: nil, userInfo: ["seguename":"manage"])
+        }else if(item.title == "More"){
+            //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"more"])
+            NSNotificationCenter.defaultCenter().postNotificationName("performrootsegue", object: nil, userInfo: ["seguename":"more"])
+        }else if(item.title == "Credits/Actions"){
+            //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"listofactions"])
+            NSNotificationCenter.defaultCenter().postNotificationName("performrootsegue", object: nil, userInfo: ["seguename":"listofactions"])
+        }
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -45,8 +78,32 @@ var statesarr  = NSArray()
     func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
         if let controller = viewController as? addnewproject {
             controller.data_dict = data_dict    // Here you pass the data back to your original view controller
+        }else if let controller = viewController as? managecity {
+            var tempstring = NSMutableString.init(string: self.currentstate)
+            var temp = ""
+            temp = tempstring.stringByReplacingOccurrencesOfString(self.currentcountry, withString: "")
+            self.currentstate = temp
+            controller.building_dict["state"] = self.currentstate
+            controller.building_dict["country"] = self.currentcountry
+            
+        }else if let controller = viewController as? manageacity {
+            var tempstring = NSMutableString.init(string: self.currentstate)
+            var temp = ""
+            temp = tempstring.stringByReplacingOccurrencesOfString(self.currentcountry, withString: "")
+            self.currentstate = temp
+            
+            // 6 - country, 12 - state, 12 - country 22 - state, 23 - country
+            if(indx == 6 || indx == 12){
+            controller.building_dict["state"] = self.currentstate
+            controller.building_dict["country"] = self.currentcountry
+            }else if(indx == 22 || indx == 23){
+                controller.building_dict["manageEntityState"] = self.currentstate
+                controller.building_dict["manageEntityCountry"] = self.currentcountry
+            }
         }
     }
+    
+    var indx = 0
     
     func done(sender: UIBarButtonItem){
         dispatch_async(dispatch_get_main_queue(), {

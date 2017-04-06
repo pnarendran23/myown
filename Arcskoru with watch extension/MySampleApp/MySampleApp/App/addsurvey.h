@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface addsurvey : UIViewController <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate, UINavigationControllerDelegate>{
-    NSUserDefaults *prefs;    
+    NSUserDefaults *prefs;
+    UIView *notificationView;
+    UILabel *notificationLabel;
     NSMutableArray *mainarr;
     BOOL opened;
     NSIndexPath *ind;

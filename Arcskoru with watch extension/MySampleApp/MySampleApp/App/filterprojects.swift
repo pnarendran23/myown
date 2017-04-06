@@ -12,7 +12,7 @@ class filterprojects: UIViewController, UITableViewDelegate, UITableViewDataSour
 var tempselected = NSMutableArray()
     override func viewDidLoad() {
         super.viewDidLoad()        
-        tempselected = [[""],[""],["",""],["",""],[""]]
+        tempselected = [[""],[""],["",""],[""],[""]]
         filtertable.allowsMultipleSelection = false
         self.titlefont()
         self.navigationController?.delegate = self
@@ -67,12 +67,12 @@ var tempselected = NSMutableArray()
         if(cell.accessoryType == UITableViewCellAccessoryType.None){
             var arr = NSMutableArray()
             temptobefiltered = NSMutableArray()
-            temptobefiltered = [[""],[""],["",""],["",""],[""]]
+            temptobefiltered = [[""],[""],["",""],[""],[""]]
             arr = temptobefiltered.objectAtIndex(indexPath.section).mutableCopy() as! NSMutableArray
             print(temptobefiltered,arr)
             arr.replaceObjectAtIndex(indexPath.row, withObject: (cell.textLabel?.text?.lowercaseString)!)
             temptobefiltered = NSMutableArray()
-            temptobefiltered = [[""],[""],["",""],["",""],[""]]
+            temptobefiltered = [[""],[""],["",""],[""],[""]]
             temptobefiltered.replaceObjectAtIndex(indexPath.section, withObject: arr)
             filtertable.reloadData()
             print(temptobefiltered)
@@ -98,7 +98,7 @@ var tempselected = NSMutableArray()
         return 1
     }
     
-    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings","My portfolios"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
+    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!
         cell.tintColor = UIColor.blueColor()

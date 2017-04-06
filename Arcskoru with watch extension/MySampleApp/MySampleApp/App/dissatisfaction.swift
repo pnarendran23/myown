@@ -554,7 +554,7 @@ class dissatisfaction: UIView {
         let title = CATextLayer()
         self.layer.addSublayer(title)
         title.contentsScale   = UIScreen.mainScreen().scale
-        title.string          = "Dissatisfaction"
+        title.string          = "Dissatisfaction Level"
         title.font            = "OpenSans-Bold"
         title.fontSize        = 9
         title.alignmentMode   = kCAAlignmentLeft;
@@ -925,7 +925,7 @@ class dissatisfaction: UIView {
             durationtext.fontSize        = 0.03 * self.frame.size.width
         }
         if let title : CATextLayer = layers["title"] as? CATextLayer{
-            title.frame = CGRectMake(0.0377 * title.superlayer!.bounds.width, 0.03708 * title.superlayer!.bounds.height, 0.22667 * title.superlayer!.bounds.width, 0.03861 * title.superlayer!.bounds.height)
+            title.frame = CGRectMake(0.0377 * title.superlayer!.bounds.width, 0.03708 * title.superlayer!.bounds.height, 0.492667 * title.superlayer!.bounds.width, 0.03861 * title.superlayer!.bounds.height)
             title.fontSize        = 0.03 * self.frame.size.width
         }
                 

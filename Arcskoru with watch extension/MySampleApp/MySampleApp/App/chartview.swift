@@ -54,6 +54,8 @@ class chartview: UIView {
         
     }
     
+    var outofscore = 0
+    
     func setupLayers(){
         var temp1 = 0
         var temp2 = 0
@@ -68,6 +70,14 @@ class chartview: UIView {
         temp2 = data2.count
         temp1 = data.count
         maxarraysize = [temp1,temp2].maxElement()!
+        print(maxarraysize)
+        if(maxvalue%10 > 0){
+            outofscore = (maxvalue + (10 - maxvalue%10))
+        }else{
+            outofscore = maxvalue
+        }
+        
+        print("Out of score",outofscore)
         
         let rectangle = CAShapeLayer()
         self.layer.addSublayer(rectangle)
@@ -569,10 +579,11 @@ class chartview: UIView {
         durationtext.foregroundColor = UIColor.blackColor().CGColor;
         layers["durationtext"] = durationtext
         
-        
+        print(data,text6.string as! String)
+        var tempvalue = 0
+        if(text6.string as! String == "6\n" ){
         if((data2.count>0 || data.count>0)&&(maxvalue>0)){
-            var divider =  maxvalue/10
-            var tempvalue = 0
+            var divider =  outofscore/10
             tempvalue += divider
             text.string = String(format:"%d",tempvalue)
             tempvalue += divider
@@ -593,8 +604,9 @@ class chartview: UIView {
             text9.string = String(format:"%d",tempvalue)
             tempvalue += divider
             text10.string = String(format:"%d",tempvalue)
+            
         }
-
+        }
         
         setupLayerFrames()
     }
@@ -906,58 +918,58 @@ class chartview: UIView {
         }
         
         if let text : CATextLayer = layers["text"] as? CATextLayer{
-            text.frame = CGRectMake(0.11677 * text.superlayer!.bounds.width, 0.75833 * text.superlayer!.bounds.height, 0.03333 * text.superlayer!.bounds.width, 0.03333 * text.superlayer!.bounds.height)
-            text.fontSize        = 0.03 * self.frame.size.width
+            text.frame = CGRectMake(0.11677 * text.superlayer!.bounds.width, 0.75833 * text.superlayer!.bounds.height, 0.03833 * text.superlayer!.bounds.width, 0.03833 * text.superlayer!.bounds.height)
+            text.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text2 : CATextLayer = layers["text2"] as? CATextLayer{
-            text2.frame = CGRectMake(0.11677 * text2.superlayer!.bounds.width, 0.685 * text2.superlayer!.bounds.height, 0.03333 * text2.superlayer!.bounds.width, 0.03333 * text2.superlayer!.bounds.height)
-            text2.fontSize        = 0.03 * self.frame.size.width
+            text2.frame = CGRectMake(0.11677 * text2.superlayer!.bounds.width, 0.685 * text2.superlayer!.bounds.height, 0.03833 * text2.superlayer!.bounds.width, 0.03833 * text2.superlayer!.bounds.height)
+            text2.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text3 : CATextLayer = layers["text3"] as? CATextLayer{
-            text3.frame = CGRectMake(0.11677 * text3.superlayer!.bounds.width, 0.61167 * text3.superlayer!.bounds.height, 0.03333 * text3.superlayer!.bounds.width, 0.03333 * text3.superlayer!.bounds.height)
-            text3.fontSize        = 0.03 * self.frame.size.width
+            text3.frame = CGRectMake(0.11677 * text3.superlayer!.bounds.width, 0.61167 * text3.superlayer!.bounds.height, 0.03833 * text3.superlayer!.bounds.width, 0.03833 * text3.superlayer!.bounds.height)
+            text3.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text4 : CATextLayer = layers["text4"] as? CATextLayer{
-            text4.frame = CGRectMake(0.11677 * text4.superlayer!.bounds.width, 0.53833 * text4.superlayer!.bounds.height, 0.03333 * text4.superlayer!.bounds.width, 0.03333 * text4.superlayer!.bounds.height)
-            text4.fontSize        = 0.03 * self.frame.size.width
+            text4.frame = CGRectMake(0.11677 * text4.superlayer!.bounds.width, 0.53833 * text4.superlayer!.bounds.height, 0.03833 * text4.superlayer!.bounds.width, 0.03833 * text4.superlayer!.bounds.height)
+            text4.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text5 : CATextLayer = layers["text5"] as? CATextLayer{
-            text5.frame = CGRectMake(0.11677 * text5.superlayer!.bounds.width, 0.465 * text5.superlayer!.bounds.height, 0.03333 * text5.superlayer!.bounds.width, 0.03333 * text5.superlayer!.bounds.height)
-            text5.fontSize        = 0.03 * self.frame.size.width
+            text5.frame = CGRectMake(0.11677 * text5.superlayer!.bounds.width, 0.465 * text5.superlayer!.bounds.height, 0.03833 * text5.superlayer!.bounds.width, 0.03833 * text5.superlayer!.bounds.height)
+            text5.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text6 : CATextLayer = layers["text6"] as? CATextLayer{
-            text6.frame = CGRectMake(0.11677 * text6.superlayer!.bounds.width, 0.39167 * text6.superlayer!.bounds.height, 0.03333 * text6.superlayer!.bounds.width, 0.03333 * text6.superlayer!.bounds.height)
-            text6.fontSize        = 0.03 * self.frame.size.width
+            text6.frame = CGRectMake(0.11677 * text6.superlayer!.bounds.width, 0.39167 * text6.superlayer!.bounds.height, 0.03833 * text6.superlayer!.bounds.width, 0.03833 * text6.superlayer!.bounds.height)
+            text6.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text7 : CATextLayer = layers["text7"] as? CATextLayer{
-            text7.frame = CGRectMake(0.11677 * text7.superlayer!.bounds.width, 0.31833 * text7.superlayer!.bounds.height, 0.03333 * text7.superlayer!.bounds.width, 0.03333 * text7.superlayer!.bounds.height)
-            text7.fontSize        = 0.03 * self.frame.size.width
+            text7.frame = CGRectMake(0.11677 * text7.superlayer!.bounds.width, 0.31833 * text7.superlayer!.bounds.height, 0.03833 * text7.superlayer!.bounds.width, 0.03833 * text7.superlayer!.bounds.height)
+            text7.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text8 : CATextLayer = layers["text8"] as? CATextLayer{
-            text8.frame = CGRectMake(0.11677 * text8.superlayer!.bounds.width, 0.245 * text8.superlayer!.bounds.height, 0.03333 * text8.superlayer!.bounds.width, 0.03333 * text8.superlayer!.bounds.height)
-            text8.fontSize        = 0.03 * self.frame.size.width
+            text8.frame = CGRectMake(0.11677 * text8.superlayer!.bounds.width, 0.245 * text8.superlayer!.bounds.height, 0.03833 * text8.superlayer!.bounds.width, 0.03833 * text8.superlayer!.bounds.height)
+            text8.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text9 : CATextLayer = layers["text9"] as? CATextLayer{
-            text9.frame = CGRectMake(0.11677 * text9.superlayer!.bounds.width, 0.17167 * text9.superlayer!.bounds.height, 0.03333 * text9.superlayer!.bounds.width, 0.03333 * text9.superlayer!.bounds.height)
-            text9.fontSize        = 0.03 * self.frame.size.width
+            text9.frame = CGRectMake(0.11677 * text9.superlayer!.bounds.width, 0.17167 * text9.superlayer!.bounds.height, 0.03833 * text9.superlayer!.bounds.width, 0.03833 * text9.superlayer!.bounds.height)
+            text9.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let text10 : CATextLayer = layers["text10"] as? CATextLayer{
-            text10.frame = CGRectMake(0.11677 * text10.superlayer!.bounds.width, 0.09833 * text10.superlayer!.bounds.height, 0.03333 * text10.superlayer!.bounds.width, 0.03333 * text10.superlayer!.bounds.height)
-            text10.fontSize        = 0.03 * self.frame.size.width
+            text10.frame = CGRectMake(0.11677 * text10.superlayer!.bounds.width, 0.09833 * text10.superlayer!.bounds.height, 0.03833 * text10.superlayer!.bounds.width, 0.03833 * text10.superlayer!.bounds.height)
+            text10.fontSize        = 0.022 * self.frame.size.width
         }
         
         if let durationtext : CATextLayer = layers["durationtext"] as? CATextLayer{
             durationtext.frame = CGRectMake(0.1601 * durationtext.superlayer!.bounds.width, 0.85312 * durationtext.superlayer!.bounds.height, 0.7426 * durationtext.superlayer!.bounds.width, 0.04 * durationtext.superlayer!.bounds.height)
-            durationtext.fontSize        = 0.03 * self.frame.size.width
+            durationtext.fontSize        = 0.022 * self.frame.size.width
         }
         
         CATransaction.commit()
@@ -973,7 +985,7 @@ class chartview: UIView {
         let backStrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=1){
             var f1 = Float(data2[0]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             backStrokeEndAnim.values         = [0, f3/2]
@@ -991,7 +1003,7 @@ class chartview: UIView {
         let frontStrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=1){
             var f1 = Float(data[0]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
         frontStrokeEndAnim.values         = [0, f3/2]
@@ -1009,7 +1021,7 @@ class chartview: UIView {
         let back2StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=2){
             var f1 = Float(data2[1]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back2StrokeEndAnim.values         = [0, f3/2]
@@ -1027,7 +1039,7 @@ class chartview: UIView {
         let front2StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=2){
             var f1 = Float(data[1]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front2StrokeEndAnim.values         = [0, f3/2]
@@ -1045,7 +1057,7 @@ class chartview: UIView {
         let back3StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=3){
             var f1 = Float(data2[2]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back3StrokeEndAnim.values         = [0, f3/2]
@@ -1063,7 +1075,7 @@ class chartview: UIView {
         let front3StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=3){
             var f1 = Float(data[2]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front3StrokeEndAnim.values         = [0, f3/2]
@@ -1081,7 +1093,7 @@ class chartview: UIView {
         let back4StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=4){
             var f1 = Float(data2[3]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back4StrokeEndAnim.values         = [0, f3/2]
@@ -1099,7 +1111,7 @@ class chartview: UIView {
         let front4StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=4){
             var f1 = Float(data[3]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front4StrokeEndAnim.values         = [0, f3/2]
@@ -1117,7 +1129,7 @@ class chartview: UIView {
         let back5StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=5){
             var f1 = Float(data2[4]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back5StrokeEndAnim.values         = [0, f3/2]
@@ -1135,7 +1147,7 @@ class chartview: UIView {
         let front5StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=5){
             var f1 = Float(data[4]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front5StrokeEndAnim.values         = [0, f3/2]
@@ -1153,7 +1165,7 @@ class chartview: UIView {
         let back6StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=6){
             var f1 = Float(data2[5]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back6StrokeEndAnim.values         = [0, f3/2]
@@ -1171,7 +1183,7 @@ class chartview: UIView {
         let front6StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=6){
             var f1 = Float(data[5]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front6StrokeEndAnim.values         = [0, f3/2]
@@ -1189,7 +1201,7 @@ class chartview: UIView {
         let back7StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=7){
             var f1 = Float(data2[6]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back7StrokeEndAnim.values         = [0, f3/2]
@@ -1207,7 +1219,7 @@ class chartview: UIView {
         let front7StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=7){
             var f1 = Float(data[6]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front7StrokeEndAnim.values         = [0, f3/2]
@@ -1225,7 +1237,7 @@ class chartview: UIView {
         let back8StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=8){
             var f1 = Float(data2[7]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back8StrokeEndAnim.values         = [0, f3/2]
@@ -1243,7 +1255,7 @@ class chartview: UIView {
         let front8StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=8){
             var f1 = Float(data[7]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front8StrokeEndAnim.values         = [0, f3/2]
@@ -1261,7 +1273,7 @@ class chartview: UIView {
         let back9StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=9){
             var f1 = Float(data2[8]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back9StrokeEndAnim.values         = [0, f3/2]
@@ -1279,7 +1291,7 @@ class chartview: UIView {
         let front9StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=9){
             var f1 = Float(data[8]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front9StrokeEndAnim.values         = [0, f3/2]
@@ -1297,7 +1309,7 @@ class chartview: UIView {
         let back10StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=10){
             var f1 = Float(data2[9]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back10StrokeEndAnim.values         = [0, f3/2]
@@ -1315,7 +1327,7 @@ class chartview: UIView {
         let front10StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=10){
             var f1 = Float(data[9]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front10StrokeEndAnim.values         = [0, f3/2]
@@ -1333,7 +1345,7 @@ class chartview: UIView {
         let back11StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=11){
             var f1 = Float(data2[10]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back11StrokeEndAnim.values         = [0, f3/2]
@@ -1351,7 +1363,7 @@ class chartview: UIView {
         let front11StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=11){
             var f1 = Float(data[10]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front11StrokeEndAnim.values         = [0, f3/2]
@@ -1369,7 +1381,7 @@ class chartview: UIView {
         let back12StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=12){
             var f1 = Float(data2[11]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back12StrokeEndAnim.values         = [0, f3/2]
@@ -1387,7 +1399,7 @@ class chartview: UIView {
         let front12StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=12){
             var f1 = Float(data[11]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front12StrokeEndAnim.values         = [0, f3/2]
@@ -1405,7 +1417,7 @@ class chartview: UIView {
         let back13StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=13){
             var f1 = Float(data2[12]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back13StrokeEndAnim.values         = [0, f3/2]
@@ -1423,7 +1435,7 @@ class chartview: UIView {
         let front13StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=13){
             var f1 = Float(data[12]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front13StrokeEndAnim.values         = [0, f3/2]
@@ -1441,7 +1453,7 @@ class chartview: UIView {
         let back14StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=14){
             var f1 = Float(data2[13]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back14StrokeEndAnim.values         = [0, f3/2]
@@ -1459,7 +1471,7 @@ class chartview: UIView {
         let front14StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=14){
             var f1 = Float(data[13]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front14StrokeEndAnim.values         = [0, f3/2]
@@ -1477,7 +1489,7 @@ class chartview: UIView {
         let back15StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=15){
             var f1 = Float(data2[14]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             back15StrokeEndAnim.values         = [0, f3/2]
@@ -1495,7 +1507,7 @@ class chartview: UIView {
         let front15StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=15){
             var f1 = Float(data[14]) as! Float
-            var f2 = Float(maxvalue) as! Float
+            var f2 = Float(outofscore) as! Float
             var f3 = f1/f2 as! Float
             //print("f3 is",f3)
             front15StrokeEndAnim.values         = [0, f3/2]

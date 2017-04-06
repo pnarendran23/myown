@@ -174,7 +174,7 @@ class individual: UIView {
         }
         
         if let title : CATextLayer = layers["title"] as? CATextLayer{
-            title.frame = CGRectMake(0.40055 * title.superlayer!.bounds.width, 0.46346 * title.superlayer!.bounds.height, 0.17527 * title.superlayer!.bounds.width, 0.07308 * title.superlayer!.bounds.height)
+            title.frame = CGRectMake(0.39455 * title.superlayer!.bounds.width, 0.47046 * title.superlayer!.bounds.height, 0.17527 * title.superlayer!.bounds.width, 0.07308 * title.superlayer!.bounds.height)
             title.fontSize = (0.52 * title.bounds.height)/2.4
             title.string = titlevalue            
         }
@@ -191,7 +191,7 @@ class individual: UIView {
         }
         
         if let context2 : CATextLayer = layers["context2"] as? CATextLayer{
-            context2.frame = CGRectMake(0.11195 * context2.superlayer!.bounds.width, 0.151 * context2.superlayer!.bounds.height, 0.2848 * context2.superlayer!.bounds.width, 0.07285 * context2.superlayer!.bounds.height)
+            context2.frame = CGRectMake(0.13195 * context2.superlayer!.bounds.width, 0.151 * context2.superlayer!.bounds.height, 0.2848 * context2.superlayer!.bounds.width, 0.07285 * context2.superlayer!.bounds.height)
             context2.fontSize = (0.25 * context2.superlayer!.bounds.height)/13
             context2.string = context2value
         }

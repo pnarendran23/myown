@@ -56,7 +56,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.sharedApplication().statusBarStyle = .Default
         
         
-        if(NSUserDefaults.standardUserDefaults().objectForKey("username") != nil && NSUserDefaults.standardUserDefaults().objectForKey("password") != nil){
+        
+        // Logged in
+         if(NSUserDefaults.standardUserDefaults().objectForKey("username") != nil && NSUserDefaults.standardUserDefaults().objectForKey("password") != nil){
             let subv = self.window!.subviews
             for obj in subv {
                 obj.removeFromSuperview()
@@ -251,9 +253,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController    
         }
         v.navigationItem.title = "Projects"
-        self.window?.rootViewController = v        
+        self.window?.rootViewController = v
         let viewController = mainstoryboard.instantiateViewControllerWithIdentifier(seguename)
-        var rootViewController = self.window!.rootViewController as! UINavigationController        
+        var rootViewController = self.window!.rootViewController as! UINavigationController
         rootViewController.pushViewController(viewController, animated: false)
         //self.window?.rootViewController = v
     }
@@ -952,9 +954,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        launched = 0
-        
-        timer = NSTimer.scheduledTimerWithTimeInterval(1200.0, target: self, selector: #selector(self.needsvalidation), userInfo: nil, repeats: false)
+        //launched = 0        
+        //timer = NSTimer.scheduledTimerWithTimeInterval(1200.0, target: self, selector: #selector(self.needsvalidation), userInfo: nil, repeats: false)
     }
     
     
@@ -971,32 +972,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        if(timer.valid){
-        validationneeded = 0
-        timer.invalidate()
-        }
-        // Clear the badge icon when you open the app.
-        if(validationneeded == 1){
-        vc  = UIApplication.topViewController()!
-        //print("Opened view is", vc.title)
-        /*UIStoryboard *mainStoryBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *vc = [mainStoryBoard instantiateViewControllerWithIdentifier:@"login"];
-        self.window.rootViewController = vc;*/
-        var subViewArray = self.window!.subviews        
-        if(NSUserDefaults.standardUserDefaults().objectForKey("token") != nil && NSUserDefaults.standardUserDefaults().objectForKey("username") != nil && NSUserDefaults.standardUserDefaults().objectForKey("password") != nil){
-            for obj in subViewArray {
-                
-                obj.removeFromSuperview()
-            }
-            
-            var mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
-            var v = mainstoryboard.instantiateViewControllerWithIdentifier("mediate")
-            self.window?.rootViewController = v
-        getstates(credentials().subscription_key)
-        }else{
-            
-        }
-        }
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
     }
     

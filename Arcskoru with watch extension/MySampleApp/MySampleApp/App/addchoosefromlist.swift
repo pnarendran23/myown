@@ -289,27 +289,27 @@ class addchoosefromlist: UIViewController, UITableViewDataSource , UITableViewDe
     
     
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                self.currentselected = self.tempselected
-                self.tableview.reloadData()
-                self.view.userInteractionEnabled = true
-                self.navigationController?.popViewControllerAnimated(true)
-                
-            })
-            
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        alertController.addAction(defaultAction)
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = true
+            self.currentselected = self.tempselected
+            self.tableview.reloadData()
+            self.view.userInteractionEnabled = true
+            self.maketoast(message, type: "error")
+            //self.navigationController?.popViewControllerAnimated(true)
+        })
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
         
         
     }
-    
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -339,7 +339,7 @@ class addchoosefromlist: UIViewController, UITableViewDataSource , UITableViewDe
         super.viewDidDisappear(animated)
         //stop all download requests
         for request in download_requests
-        {
+        {            
             request.invalidateAndCancel()
         }
     }

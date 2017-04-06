@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface smiley : UIViewController <UIApplicationDelegate>{
+    UIView *notificationView;
+    UILabel *notificationLabel;
     BOOL opened;
     NSUserDefaults *prefs;
     CAShapeLayer * smiling;

@@ -217,7 +217,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -260,7 +264,7 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                         if(self.currentfeeds.count > 0){
                             self.feedstable.hidden = false
                         }else{
-                            self.feedstable.hidden = true
+                            //self.feedstable.hidden = true
                         }
                         self.feedstable.reloadData()
                     })
@@ -280,6 +284,9 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     }
     
     func statusupdate(sender:UILabel){
+        if(ivupload1.on == false){
+            maketoast("Affirmation required before changing the status", type: "error")
+        }else{
         self.teammembers = statusarr
         dispatch_async(dispatch_get_main_queue(), {
             self.assigncontainer.hidden = false
@@ -290,19 +297,19 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
             self.assignokbtn.setTitle("Save", forState: UIControlState.Normal)
             self.picker.reloadAllComponents()
         })
+        }
     }
     
     
     func checkcredit_type(tempdict:[String:AnyObject]) -> String {
         var temp = ""
-        
-        if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
-            temp = "Data input"
-        }
-        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
-            temp = "Base scores"
-        }else if(tempdict["Mandatory"] as! String == "X" || tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
+        if(tempdict["Mandatory"] as! String == "X"){
             temp = "Pre-requisites"
+        }else if ((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
+            temp = "Base scores"
+        }
+        else{
+            temp = "Data input"
         }
         
         return temp
@@ -321,7 +328,10 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if(tableView == feedstable){
-            return "Activities"
+            if(currentfeeds.count > 0){
+            return "Activity feeds"
+            }
+            return "No activities present"
         }
         return ""
     }
@@ -490,7 +500,8 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         let date = formatter.dateFromString(str)!
         formatter.dateFormat = "MMM dd, yyyy at HH:MM a"
         str = formatter.stringFromDate(date)
-        
+        cell.detailTextLabel?.numberOfLines = 5
+        cell.textLabel?.numberOfLines = 5
         cell.detailTextLabel?.text = "on \(str)"
         return cell
         
@@ -564,7 +575,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -710,7 +725,7 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         currentindex = NSUserDefaults.standardUserDefaults().integerForKey("selected_action")
         NSUserDefaults.standardUserDefaults().synchronize()
         currentarr = currentcategory[currentindex] as! [String:AnyObject]
-        feedstable.hidden = true
+        //feedstable.hidden = true
         showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: currentarr["CreditId"] as! String, shortcreditID: currentarr["CreditShortId"] as! String)
         category.text = checkcredit_type(currentarr)
         self.actiontitle.text = currentarr["CreditDescription"] as? String
@@ -912,7 +927,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -980,7 +999,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1095,7 +1118,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1167,7 +1194,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1209,8 +1240,8 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
                     //self.view.userInteractionEnabled = true
                     NSUserDefaults.standardUserDefaults().synchronize()
                     self.navigate()
-                    self.tableview.reloadData()
-                    self.maketoast("Updated successfully")
+                    self.tableview.reloadData()                    
+                        self.maketoast("Updated successfully", type: "message")
                         return
                     })
                 } catch {
@@ -1268,7 +1299,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1372,21 +1407,23 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
     }
 
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                //self.view.userInteractionEnabled = true
-                self.navigationController?.popViewControllerAnimated(true)
-                
-            })
-            
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        alertController.addAction(defaultAction)
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.view.userInteractionEnabled = true
+            self.spinner.hidden = true
+            self.view.userInteractionEnabled = true
+            self.maketoast(message, type: "error")
+            //self.navigationController?.popViewControllerAnimated(true)
+        })
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
         
         
     }
@@ -1422,7 +1459,11 @@ class prerequisites: UIViewController, UITableViewDataSource,UITableViewDelegate
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)

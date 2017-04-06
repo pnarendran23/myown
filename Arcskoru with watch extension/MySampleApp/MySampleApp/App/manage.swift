@@ -115,9 +115,9 @@ var categoryarr = NSArray()
             
         }else if(indexPath.row == 1){
             cell.img.image = self.imageWithImage(UIImage(named:"user.png")!, scaledToSize: CGSize(width:30, height: 30))
-        }else if(indexPath.row == 2){
-            cell.img.image = UIImage.init(named: "star")
-            cell.img.image = self.imageWithImage(UIImage(named:"star.png")!, scaledToSize: CGSize(width:30, height: 30))
+        }else if(indexPath.row == 2){            
+            cell.img.image = self.imageWithImage(UIImage(named:"certifications.png")!, scaledToSize: CGSize(width:30, height: 30))
+            //cell.img.image = self.imageWithImage(UIImage(named:"star.png")!, scaledToSize: CGSize(width:30, height: 30))
         }else if(indexPath.row == 3){
             cell.img.image = UIImage.init(named: "creditcard")
             cell.img.image = self.imageWithImage(UIImage(named:"creditcard.png")!, scaledToSize: CGSize(width:30, height: 30))
@@ -132,8 +132,16 @@ var categoryarr = NSArray()
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if(indexPath.row == 0){            
-            self.performSegueWithIdentifier("gotoproject", sender: nil)
+        if(indexPath.row == 0){
+            
+            var temp = ""
+            let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+            if((dict["project_type"] as! String).lowercaseString == "city" || (dict["project_type"] as! String).lowercaseString == "community"){
+                temp = "manageacity"
+            }else{
+                temp = "gotoproject"
+            }
+            self.performSegueWithIdentifier(temp, sender: nil)
         }else if(indexPath.row == 1){
             self.performSegueWithIdentifier("gototeam", sender: nil)
         }else if(indexPath.row == 2){

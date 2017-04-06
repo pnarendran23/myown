@@ -578,6 +578,15 @@ UIActivityIndicatorView *spinner;
         CAShapeLayer *pl=self.layerss[@"platinum"];
         maxscore.fontSize=0.39*pl.bounds.size.width;//0.35
         stepscore.fontSize=0.39*pl.bounds.size.width;//0.35
+        
+        NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
+        
+        if([dict[@"certification"] isEqualToString:@""] || [dict[@"certification"] isEqualToString:@"Denied"] || [dict[@"certification"] isEqualToString:@"None"] || dict[@"certification"] == [NSNull null]){
+            maxscore.fontSize= 0.425*pl.bounds.size.width;//0.35
+            stepscore.fontSize=0.4*pl.bounds.size.width;
+        }
+        
+        
         NSLog(@"font sixe %f %f",maxscore.fontSize,pl.bounds.size.width);
         
     }
@@ -672,7 +681,12 @@ UIActivityIndicatorView *spinner;
         maxscore.fontSize=0.35*pl.bounds.size.width;
         stepscore.fontSize=0.35*pl.bounds.size.width;
         NSLog(@"font sixe %f %f",maxscore.fontSize,pl.bounds.size.width);
+        NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
         
+        if([dict[@"certification"] isEqualToString:@""] || [dict[@"certification"] isEqualToString:@"Denied"] || [dict[@"certification"] isEqualToString:@"None"] || dict[@"certification"] == [NSNull null]){
+            maxscore.fontSize= 0.425*pl.bounds.size.width;//0.35
+            stepscore.fontSize=0.4*pl.bounds.size.width;
+        }
         
         
     }
@@ -1484,7 +1498,7 @@ UIActivityIndicatorView *spinner;
                 certified.hidden=YES;
                 nonleed.hidden=YES;
                 blank.hidden=YES;
-                if(totalls>=80){
+                /*if(totalls>=80){
                     platinum.hidden=NO;
                     if(initiall==YES){
                         blank.hidden=NO;
@@ -1512,7 +1526,6 @@ UIActivityIndicatorView *spinner;
                 }
                 else if(totalls<=40 && totalls>0){
                     blank.hidden=NO;
-                    
                 }
                 else{
                     blank.hidden=YES;
@@ -1520,6 +1533,45 @@ UIActivityIndicatorView *spinner;
                     booms.hidden=YES;
                     nonleed.hidden=NO;
                     mhumanvalue=mtransportvalue=mwastevalue=mwatervalue=menergyvalue=1;
+                }
+                */
+                
+                
+                //let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
+                
+                NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
+                
+                if([dict[@"certification"] isEqualToString:@""] || [dict[@"certification"] isEqualToString:@"Denied"] || [dict[@"certification"] isEqualToString:@"None"] || dict[@"certification"] == [NSNull null]){
+                    blank.hidden=YES;
+                    silver.hidden = YES;
+                    gold.hidden = YES;
+                    platinum.hidden = YES;
+                    leed.hidden=YES;
+                    booms.hidden=YES;
+                    nonleed.hidden=NO;
+                }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"platinum"]){
+                    platinum.hidden=NO;
+                    if(initiall==YES){
+                        blank.hidden=NO;
+                    }else{
+                        blank.hidden=YES;
+                    }
+                }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"gold"]){
+                    gold.hidden=NO;
+                    if(initiall==YES){
+                        blank.hidden=NO;
+                    }else{
+                        blank.hidden=YES;
+                    }
+                }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"silver"]){
+                    silver.hidden=NO;
+                    if(initiall==YES){
+                        blank.hidden=NO;
+                    }else{
+                        blank.hidden=YES;
+                    }
+                }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"certified"]){
+                    blank.hidden=NO;
                 }
                 
                 
@@ -2398,7 +2450,7 @@ UIActivityIndicatorView *spinner;
     
     silver.hidden=YES;
     score.hidden=YES;
-    if(totalls>=80){
+    /*if(totalls>=80){
         platinum.hidden=NO;
         if(initiall==YES){
             blank.hidden=NO;
@@ -2432,6 +2484,40 @@ UIActivityIndicatorView *spinner;
         blank.hidden=YES;
         nonleed.hidden=NO;
         mhumanvalue=mtransportvalue=mwastevalue=mwatervalue=menergyvalue=1;
+    }*/
+    
+    
+    NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
+    
+    if([dict[@"certification"] isEqualToString:@""] || [dict[@"certification"] isEqualToString:@"Denied"] || [dict[@"certification"] isEqualToString:@"None"] || dict[@"certification"] == [NSNull null]){
+        blank.hidden=YES;
+        silver.hidden = YES;
+        gold.hidden = YES;
+        platinum.hidden = YES;
+        nonleed.hidden=NO;
+    }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"platinum"]){
+        platinum.hidden=NO;
+        if(initiall==YES){
+            blank.hidden=NO;
+        }else{
+            blank.hidden=YES;
+        }
+    }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"gold"]){
+        gold.hidden=NO;
+        if(initiall==YES){
+            blank.hidden=NO;
+        }else{
+            blank.hidden=YES;
+        }
+    }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"silver"]){
+        silver.hidden=NO;
+        if(initiall==YES){
+            blank.hidden=NO;
+        }else{
+            blank.hidden=YES;
+        }
+    }else if ([[dict[@"certification"] lowercaseString] isEqualToString:@"certified"]){
+        blank.hidden=NO;
     }
     
     CAShapeLayer *humanleveler=self.layerss[@"humanleveler"];

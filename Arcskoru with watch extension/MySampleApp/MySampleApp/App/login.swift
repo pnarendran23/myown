@@ -183,7 +183,7 @@ class login: UIViewController,UITableViewDelegate,UITableViewDataSource, UINavig
                 self.view.userInteractionEnabled = true
                 self.spinner.hidden = true
                 self.loginbtn.setTitle("Sign in", forState: UIControlState.Normal)
-                self.navigationController?.popViewControllerAnimated(true)
+                //self.navigationController?.popViewControllerAnimated(true)
                 
             })
             

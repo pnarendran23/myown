@@ -735,23 +735,76 @@
         else if(code==0){
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please check your internet connection" preferredStyle:UIAlertControllerStyleAlert];
-                [self presentViewController:alrt animated:YES completion:nil];
-                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                //[self presentViewController:alrt animated:YES completion:nil];
+                //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                [self maketoast:@"Please check your internet connection" withbackground:[UIColor blackColor] withdelay:4.5];
             });
             
         }
         else{
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Transit Survey Submission Failed" preferredStyle:UIAlertControllerStyleAlert];
-                [self presentViewController:alrt animated:YES completion:nil];
-                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
-                
+                //[self presentViewController:alrt animated:YES completion:nil];
+                //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                [self maketoast:@"Transit survey submission failed" withbackground:[UIColor blackColor] withdelay:4.5];
             });
         }
         
     }];
     [postDataTask resume];
 }
+
+
+-(void)maketoast:(NSString *)message withbackground:(UIColor *)color withdelay:(double)delay{
+    
+    if([notificationView isDescendantOfView:self.view]){
+        [notificationView removeFromSuperview];
+    }
+    
+    notificationLabel = [[UILabel alloc] init];
+    notificationView = [[UIView alloc] init];
+    if(self.navigationController != nil){
+        notificationView.frame = CGRectMake(0.0, 0.0 , self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    }else{
+        
+    }
+    notificationLabel.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, notificationView.frame.size.height);
+    notificationLabel.text      = message;
+    [notificationView setBackgroundColor:color];
+    [notificationLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    [notificationLabel setNumberOfLines:3];
+    [notificationLabel setTextColor:[UIColor whiteColor]];
+    [notificationLabel setTextAlignment:NSTextAlignmentCenter];
+    [notificationView addSubview:notificationLabel];
+    [self.view addSubview:notificationView];
+    [self.view bringSubviewToFront:notificationView];
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        notificationView.frame = CGRectMake(0.0, self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y, self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    } completion:^(BOOL finished){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self hide];
+        });
+    }];
+    
+    
+    
+}
+
+-(void)hide{
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+    } completion:^(BOOL finished){
+        [self.spinner setHidden:YES];
+        [notificationView removeFromSuperview];
+    }];
+    
+    
+}
+
+
+
+
 - (IBAction)backbarbtn:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }

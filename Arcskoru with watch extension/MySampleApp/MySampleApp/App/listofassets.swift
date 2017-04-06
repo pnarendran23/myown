@@ -23,7 +23,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     var timer = NSTimer()
     var isloading = false
     var tempfilter = NSMutableArray()
-    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings","My portfolios"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
+    var filterarr = [["My cities"] as! NSArray,["My communities"] as! NSArray,["My Transit","My parking"] as! NSArray,["My buildings"] as! NSArray,["All"] as! NSArray] as! NSMutableArray
     @IBOutlet weak var spinner: UIView!
     @IBOutlet weak var allprojectslbl: UILabel!
     
@@ -104,7 +104,27 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     
     @IBAction func addproject(sender: AnyObject) {
         //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"addproject"])
-        self.performSegueWithIdentifier("addnewproject", sender: nil)
+        //
+        let alertController = UIAlertController(title: "Create a new project", message: "Please select the type of project you want to create", preferredStyle: .ActionSheet)
+        
+        let buildings = UIAlertAction(title: "Buildings", style: .Default, handler: { action in
+            self.performSegueWithIdentifier("addnewproject", sender: nil)
+        })
+        let cities = UIAlertAction(title: "Cities", style: .Default, handler: {action in
+            self.type = "cities"
+            self.performSegueWithIdentifier("managecities", sender: nil)
+        
+        })
+        let communities = UIAlertAction(title: "Communities", style: .Default, handler: {action in
+            self.type = "communities"
+            self.performSegueWithIdentifier("managecities", sender: nil)            
+        })
+        alertController.addAction(buildings)
+        alertController.addAction(cities)
+        alertController.addAction(communities)
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        
     }
     
     func adjustit(){
@@ -121,12 +141,17 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         //filterview.hidden = false
         self.performSegueWithIdentifier("filterproj", sender: nil)
     }
+    var type = ""
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "filterproj"){
             let v = segue.destinationViewController as! filterprojects
             v.filterarr = filterarr            
             v.tobefiltered = tobefiltered
+        }else if(segue.identifier == "managecities"){
+            let v = segue.destinationViewController as! managecity
+            v.type = type
+            
         }
     }
     
@@ -168,8 +193,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         a.addObject("")
         tobefiltered.addObject(a)
         a = NSMutableArray()
-        a.addObject("")
-        a.addObject("")
+        a.addObject("")        
         tobefiltered.addObject(a)
         a = NSMutableArray()
         a.addObject("all")
@@ -357,7 +381,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         if(tableView == filtertable){
             return 1
         }
-        if(searchbar.text?.characters.count == 0 || searcharr["building"] == nil || searcharr["portfolio"] == nil){
+       
         if(buildingarr.count>0){
             self.notfound.hidden = true
             self.tableview.hidden = false
@@ -366,13 +390,6 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             self.tableview.hidden = true
         }
             return 1
-        }else{
-            self.notfound.hidden = true
-            self.tableview.hidden = false
-            return 2
-        }
-        
-        
         
     }
     
@@ -394,22 +411,25 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     var searcharr = NSMutableDictionary()
     
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                self.view.userInteractionEnabled = true
-                self.navigationController?.popViewControllerAnimated(true)
-            })
-            
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        alertController.addAction(defaultAction)
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.view.userInteractionEnabled = true
+            self.spinner.hidden = true
+            self.view.userInteractionEnabled = true
+            self.maketoast(message, type: "error")
+            //self.navigationController?.popViewControllerAnimated(true)
+        })
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-     
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
+        
+        
     }
     
     
@@ -703,12 +723,25 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "survey")        
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            if(searchbar.text?.characters.count > 0 ){
         if(indexPath.section == 0){
             buildingarr = self.searcharr.objectForKey("building")?.mutableCopy() as! NSMutableArray
         }else{
             buildingarr = self.searcharr.objectForKey("portfolio")?.mutableCopy() as! NSMutableArray
         }
+            }
         let currentbuilding = buildingarr[indexPath.row] as! [String:AnyObject]
+            var project_type = ""
+            if(currentbuilding["project_type"] != nil){
+                project_type = currentbuilding["project_type"] as! String
+            }
+            if(project_type == "parksmart"){
+                print("Parksmart")
+                let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(currentbuilding)
+                NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "building_details")
+                NSUserDefaults.standardUserDefaults().synchronize()
+                self.performSegueWithIdentifier("gotoparking", sender: nil)
+            }else{
             if let update = currentbuilding["building_status"] as? String {
                 if(update == "activated_payment_done"){
             let currentleedid = currentbuilding["leed_id"] as! Int
@@ -904,7 +937,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     showalert("Please sign the agreement for this project to proceed", title: "Error", action: "OK")
             }
             }
-        
+            }
         //https://api.usgbc.org/leed/assets/LEED:1000137566/scores/?at=2016-11-07
         }
     }
@@ -1268,16 +1301,16 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if(searchbar.text?.characters.count > 0){
         if(section == 0){
-            return "Buildings"
+         //   return "Buildings"
         }
-        return "Portfolios"
+//        return "Portfolios"
         }
         return ""
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(searchbar.text?.characters.count > 0){
-        return 35
+        //return 35
         }
         return 1
     }
@@ -1912,6 +1945,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     print(jsonDictionary)
                     
                     var building = jsonDictionary["building"]!.mutableCopy() as! NSMutableArray
+                    if(building.count > 0){
                     var temp = NSMutableArray()
                     for item in building{
                         var a = item as! NSDictionary
@@ -1966,6 +2000,14 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                             self.tableview.reloadData()
                         }
                     })
+                    }else{
+                        dispatch_async(dispatch_get_main_queue(), {
+                        self.spinner.hidden = true
+                        self.view.userInteractionEnabled = true
+                        self.buildingarr = building
+                        self.tableview.reloadData()
+                        })
+                    }
                 } catch {
                     print(error)
                     dispatch_async(dispatch_get_main_queue(), {
@@ -2513,8 +2555,14 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
 }
 
 extension UIViewController{
-        func maketoast(message:String){
-            let toastLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/2 - 150, self.view.frame.size.height-100, 300, 35))
+    func maketoast(message:String, type:String){
+        var color = UIColor()
+        if(type == "error"){
+            color = UIColor.blueColor()
+        }else{
+            color = UIColor.blueColor()
+        }
+           /* let toastLabel = UILabel(frame: CGRectMake(self.view.frame.size.width/2 - 150, self.view.frame.size.height-100, 300, 35))
             toastLabel.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2)
             toastLabel.backgroundColor = UIColor.whiteColor()
             toastLabel.textColor = UIColor.blackColor()
@@ -2533,6 +2581,13 @@ extension UIViewController{
                 toastLabel.alpha = 0.0
                 
                 }, completion: nil)
+            */
+            if (self.navigationController != nil) {
+                // being pushed
+                AWBanner.showWithDuration(4.5, delay: 0.0, message: NSLocalizedString(message, comment: ""), backgroundColor: color, textColor: UIColor.whiteColor(), originY: self.navigationController!.navigationBar.frame.size.height + self.navigationController!.navigationBar.frame.origin.y)
+            }else{
+                AWBanner.showWithDuration(4.5, delay: 0.0, message:  NSLocalizedString(message, comment: ""), backgroundColor: color, textColor: UIColor.whiteColor())
+            }
             
         }
     

@@ -59,10 +59,15 @@ class satisfaction: UIView {
         var temp2 = 0
         temp1 = data.maxElement()!
         temp2 = data2.maxElement()!
-        maxvalue = 10
+        maxvalue = temp1
         temp2 = data2.count
         temp1 = data.count
         maxarraysize = [temp1,temp2].maxElement()!
+        if(maxvalue%10 > 0){
+            outofscore = (maxvalue + (10 - maxvalue%10))
+        }else{
+            outofscore = maxvalue
+        }
         
         let rectangle = CAShapeLayer()
         self.layer.addSublayer(rectangle)
@@ -553,7 +558,7 @@ class satisfaction: UIView {
         let title = CATextLayer()
         self.layer.addSublayer(title)
         title.contentsScale   = UIScreen.mainScreen().scale
-        title.string          = "Satisfaction"
+        title.string          = "Satisfaction Rating"
         title.font            = "OpenSans-Bold"
         title.fontSize        = 9
         title.alignmentMode   = kCAAlignmentLeft;
@@ -562,10 +567,39 @@ class satisfaction: UIView {
         
 
         
-        
+        var tempvalue = 0
+        if(text6.string as! String == "6\n" ){
+            if((data2.count>0 || data.count>0)&&(maxvalue>0)){
+                var divider =  outofscore/10
+                tempvalue += divider
+                text.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text2.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text3.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text4.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text5.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text6.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text7.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text8.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text9.string = String(format:"%d",tempvalue)
+                tempvalue += divider
+                text10.string = String(format:"%d",tempvalue)
+                
+            }
+        }
+
         
         setupLayerFrames()
     }
+    
+    var outofscore = 0
     
     func setupLayerFrames(){
         CATransaction.begin()
@@ -928,7 +962,7 @@ class satisfaction: UIView {
             durationtext.fontSize        = 0.03 * self.frame.size.width
         }
         if let title : CATextLayer = layers["title"] as? CATextLayer{
-            title.frame = CGRectMake(0.0377 * title.superlayer!.bounds.width, 0.03708 * title.superlayer!.bounds.height, 0.22667 * title.superlayer!.bounds.width, 0.03861 * title.superlayer!.bounds.height)
+            title.frame = CGRectMake(0.0377 * title.superlayer!.bounds.width, 0.03708 * title.superlayer!.bounds.height, 0.42667 * title.superlayer!.bounds.width, 0.03861 * title.superlayer!.bounds.height)
             title.fontSize        = 0.03 * self.frame.size.width
         }
         
@@ -945,7 +979,7 @@ class satisfaction: UIView {
         let backStrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=1){
             let f1 = Float(data2[0]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             backStrokeEndAnim.values         = [0, f3/2]
@@ -963,7 +997,7 @@ class satisfaction: UIView {
         let frontStrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=1){
             let f1 = Float(data[0]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             frontStrokeEndAnim.values         = [0, f3/2]
@@ -981,7 +1015,7 @@ class satisfaction: UIView {
         let back2StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=2){
             let f1 = Float(data2[1]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back2StrokeEndAnim.values         = [0, f3/2]
@@ -999,7 +1033,7 @@ class satisfaction: UIView {
         let front2StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=2){
             let f1 = Float(data[1])
-            let f2 = Float(maxvalue)
+            let f2 = Float(outofscore)
             let f3 = f1/f2 
             //print("f3 is",f3)
             front2StrokeEndAnim.values         = [0, f3/2]
@@ -1017,7 +1051,7 @@ class satisfaction: UIView {
         let back3StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=3){
             let f1 = Float(data2[2])
-            let f2 = Float(maxvalue)
+            let f2 = Float(outofscore)
             let f3 = f1/f2 
             //print("f3 is",f3)
             back3StrokeEndAnim.values         = [0, f3/2]
@@ -1035,7 +1069,7 @@ class satisfaction: UIView {
         let front3StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=3){
             let f1 = Float(data[2]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front3StrokeEndAnim.values         = [0, f3/2]
@@ -1053,7 +1087,7 @@ class satisfaction: UIView {
         let back4StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=4){
             let f1 = Float(data2[3]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back4StrokeEndAnim.values         = [0, f3/2]
@@ -1071,7 +1105,7 @@ class satisfaction: UIView {
         let front4StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=4){
             let f1 = Float(data[3]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front4StrokeEndAnim.values         = [0, f3/2]
@@ -1089,7 +1123,7 @@ class satisfaction: UIView {
         let back5StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=5){
             let f1 = Float(data2[4]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back5StrokeEndAnim.values         = [0, f3/2]
@@ -1107,7 +1141,7 @@ class satisfaction: UIView {
         let front5StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=5){
             let f1 = Float(data[4]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front5StrokeEndAnim.values         = [0, f3/2]
@@ -1125,7 +1159,7 @@ class satisfaction: UIView {
         let back6StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=6){
             let f1 = Float(data2[5]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back6StrokeEndAnim.values         = [0, f3/2]
@@ -1143,7 +1177,7 @@ class satisfaction: UIView {
         let front6StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=6){
             let f1 = Float(data[5]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front6StrokeEndAnim.values         = [0, f3/2]
@@ -1161,7 +1195,7 @@ class satisfaction: UIView {
         let back7StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=7){
             let f1 = Float(data2[6]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back7StrokeEndAnim.values         = [0, f3/2]
@@ -1179,7 +1213,7 @@ class satisfaction: UIView {
         let front7StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=7){
             let f1 = Float(data[6]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front7StrokeEndAnim.values         = [0, f3/2]
@@ -1197,7 +1231,7 @@ class satisfaction: UIView {
         let back8StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=8){
             let f1 = Float(data2[7]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back8StrokeEndAnim.values         = [0, f3/2]
@@ -1215,7 +1249,7 @@ class satisfaction: UIView {
         let front8StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=8){
             let f1 = Float(data[7]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front8StrokeEndAnim.values         = [0, f3/2]
@@ -1233,7 +1267,7 @@ class satisfaction: UIView {
         let back9StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=9){
             let f1 = Float(data2[8]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back9StrokeEndAnim.values         = [0, f3/2]
@@ -1251,7 +1285,7 @@ class satisfaction: UIView {
         let front9StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=9){
             let f1 = Float(data[8]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front9StrokeEndAnim.values         = [0, f3/2]
@@ -1269,7 +1303,7 @@ class satisfaction: UIView {
         let back10StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=10){
             let f1 = Float(data2[9]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back10StrokeEndAnim.values         = [0, f3/2]
@@ -1287,7 +1321,7 @@ class satisfaction: UIView {
         let front10StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=10){
             let f1 = Float(data[9]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front10StrokeEndAnim.values         = [0, f3/2]
@@ -1305,7 +1339,7 @@ class satisfaction: UIView {
         let back11StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=11){
             let f1 = Float(data2[10]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back11StrokeEndAnim.values         = [0, f3/2]
@@ -1323,7 +1357,7 @@ class satisfaction: UIView {
         let front11StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=11){
             let f1 = Float(data[10]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front11StrokeEndAnim.values         = [0, f3/2]
@@ -1341,7 +1375,7 @@ class satisfaction: UIView {
         let back12StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=12){
             let f1 = Float(data2[11]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back12StrokeEndAnim.values         = [0, f3/2]
@@ -1359,7 +1393,7 @@ class satisfaction: UIView {
         let front12StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=12){
             let f1 = Float(data[11]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front12StrokeEndAnim.values         = [0, f3/2]
@@ -1377,7 +1411,7 @@ class satisfaction: UIView {
         let back13StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=13){
             let f1 = Float(data2[12]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back13StrokeEndAnim.values         = [0, f3/2]
@@ -1395,7 +1429,7 @@ class satisfaction: UIView {
         let front13StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=13){
             let f1 = Float(data[12]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front13StrokeEndAnim.values         = [0, f3/2]
@@ -1413,7 +1447,7 @@ class satisfaction: UIView {
         let back14StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=14){
             let f1 = Float(data2[13]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back14StrokeEndAnim.values         = [0, f3/2]
@@ -1431,7 +1465,7 @@ class satisfaction: UIView {
         let front14StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=14){
             let f1 = Float(data[13]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             front14StrokeEndAnim.values         = [0, f3/2]
@@ -1449,7 +1483,7 @@ class satisfaction: UIView {
         let back15StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data2.count>=15){
             let f1 = Float(data2[14]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore) 
             let f3 = f1/f2 
             //print("f3 is",f3)
             back15StrokeEndAnim.values         = [0, f3/2]
@@ -1467,7 +1501,7 @@ class satisfaction: UIView {
         let front15StrokeEndAnim            = CAKeyframeAnimation(keyPath:"strokeEnd")
         if(data.count>=15){
             let f1 = Float(data[14]) 
-            let f2 = Float(maxvalue) 
+            let f2 = Float(outofscore)
             let f3 = f1/f2 
             //print("f3 is",f3)
             front15StrokeEndAnim.values         = [0, f3/2]

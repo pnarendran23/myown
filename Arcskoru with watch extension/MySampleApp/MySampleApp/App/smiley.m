@@ -1033,8 +1033,11 @@
                             else if(code==200 || code == 201){
                                 [prefs setInteger:0 forKey:@"humanhide"];
                                 UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human Survey submitted" preferredStyle:UIAlertControllerStyleAlert];
-                                [self presentViewController:alrt animated:YES completion:nil];
-                                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                //[self presentViewController:alrt animated:YES completion:nil];
+                                //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                [self maketoast:@"Human survey submitted" withbackground:[UIColor blueColor] withdelay:4.5];
+                                
+                                
                                 submitteddonthide=(int)[prefs integerForKey:@"humandone"];
                                 opened=YES;
                                 submitteddonthide=0;
@@ -1062,14 +1065,17 @@
                             else if(code==0){
                                 submitteddonthide=(int)[prefs integerForKey:@"humandone"];
                                 UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please check your internet connection" preferredStyle:UIAlertControllerStyleAlert];
-                                [self presentViewController:alrt animated:YES completion:nil];
-                                [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                //[self presentViewController:alrt animated:YES completion:nil];
+                                //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                [self maketoast:@"Please check your internet connection" withbackground:[UIColor blackColor] withdelay:4.5];
                             }
                             else{
-                                UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human Survey submission Failed" preferredStyle:UIAlertControllerStyleAlert];
+                              /*  UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human Survey submission Failed" preferredStyle:UIAlertControllerStyleAlert];
                                 [self presentViewController:alrt animated:YES completion:nil];
                                 [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                                */
                                 
+                                [self maketoast:@"Human Survey submission Failed" withbackground:[UIColor blackColor] withdelay:4.5];
                             }
                         });
                         
@@ -1079,9 +1085,10 @@
                 }
                 else{
                     UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"You've already taken survey" preferredStyle:UIAlertControllerStyleAlert];
-                    [self presentViewController:alrt animated:YES completion:nil];
+                    //[self presentViewController:alrt animated:YES completion:nil];
                     [prefs setInteger:0 forKey:@"humanhide"];
-                    [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                    //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                    [self maketoast:@"You've already taken survey" withbackground:[UIColor blackColor] withdelay:4.5];
                     
                     if([[prefs objectForKey:@"mainarray"] count]>0){
                         UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -1136,6 +1143,49 @@
             opened=YES;
         //[alert show];
     }
+}
+-(void)maketoast:(NSString *)message withbackground:(UIColor *)color withdelay:(double)delay{
+    if([notificationView isDescendantOfView:self.view]){
+        [notificationView removeFromSuperview];
+    }
+    notificationLabel = [[UILabel alloc] init];
+    notificationView = [[UIView alloc] init];
+    if(self.navigationController != nil){
+    notificationView.frame = CGRectMake(0.0, 0.0 , self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    }else{
+        
+    }
+    notificationLabel.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, notificationView.frame.size.height);
+    notificationLabel.text      = message;
+    [notificationView setBackgroundColor:color];
+    [notificationLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    [notificationLabel setNumberOfLines:3];
+    [notificationLabel setTextColor:[UIColor whiteColor]];
+    [notificationLabel setTextAlignment:NSTextAlignmentCenter];
+    [notificationView addSubview:notificationLabel];
+    [self.view addSubview:notificationView];
+    [self.view bringSubviewToFront:notificationView];
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+            notificationView.frame = CGRectMake(0.0, self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y, self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    } completion:^(BOOL finished){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self hide];
+        });
+    }];
+    
+    
+    
+}
+
+-(void)hide{
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+    } completion:^(BOOL finished){
+        [self.spinner setHidden:YES];
+        [notificationView removeFromSuperview];
+    }];
+    
     
 }
 

@@ -99,7 +99,7 @@ class circularprogress: UIView {
         }
         
         if let outof : CATextLayer = layers["outof"] as? CATextLayer{
-            outof.frame = CGRectMake(0.27 * outof.superlayer!.bounds.width, 0.585 * outof.superlayer!.bounds.height, 0.5 * outof.superlayer!.bounds.width, 0.12769 * outof.superlayer!.bounds.height)
+            outof.frame = CGRectMake(0.25 * outof.superlayer!.bounds.width, 0.585 * outof.superlayer!.bounds.height, 0.5 * outof.superlayer!.bounds.width, 0.12769 * outof.superlayer!.bounds.height)
         }
         
         if let outercircle : CAShapeLayer = layers["outercircle"] as? CAShapeLayer{

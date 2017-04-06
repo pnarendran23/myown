@@ -92,7 +92,33 @@ class instructionscontentViewController: UIViewController, UINavigationControlle
     }
     
     func timerDidFire(){
-        NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"listofassets"])
+        //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"listofassets"])
+        let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
+        let datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+        let rootViewController = self.navigationController
+        var controllers = (rootViewController!.viewControllers)
+        controllers.removeAll()
+        var v = UIViewController()
+        var grid = 0
+        if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 1){
+            v = mainstoryboard.instantiateViewControllerWithIdentifier("grid") as! UINavigationController
+        }else{
+            v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController
+        }
+        var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+        if(grid == 1){
+            listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
+        }else{
+            listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
+        }
+        
+        listofassets.navigationItem.title = "All projects"
+        controllers.append(listofassets)
+        //controllers.append(listofactions)
+        //controllers.append(datainput)
+        self.navigationController?.setViewControllers(controllers, animated: false)
+        
     }
     
     

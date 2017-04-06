@@ -280,23 +280,25 @@ var data_dict = NSMutableDictionary()
 
     
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                self.currentselected = self.tempselected
-                self.tableview.reloadData()
-                self.view.userInteractionEnabled = true
-            self.navigationController?.popViewControllerAnimated(true)
-                
-            })
+        
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.spinner.hidden = true
+            self.currentselected = self.tempselected
+            self.tableview.reloadData()
+            self.view.userInteractionEnabled = true
+            self.maketoast(message, type: "error")
+            //self.navigationController?.popViewControllerAnimated(true)
             
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        })
         
-        alertController.addAction(defaultAction)
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
         
         
     }
@@ -326,7 +328,7 @@ var data_dict = NSMutableDictionary()
     
     override func viewWillDisappear(animated: Bool) {
         for request in download_requests
-        {
+        {            
             request.invalidateAndCancel()
         }
         var    buildingdetails = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! [String : AnyObject]

@@ -1326,6 +1326,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 self.slider1changed(cell.slider1)
                 // slider values go from 0 to the number of values in your numbers array
                 //print(energyvalues)
+                cell.slider2.setValue(0.0, animated: true)
                 if(energyvalues.count == 0){
                     cell.slider2.userInteractionEnabled = false
                     cell.l3.hidden = true
@@ -1336,12 +1337,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     cell.slider2.hidden = false
                     cell.l3.hidden = false
                     cell.l4.hidden = false
-                    
                     if(energyvalues.count == 1){
                         cell.slider2.userInteractionEnabled = false
                         cell.l3.text = "If I want to increase my score by +1"
                         cell.l4.text = "I need to reduce by emission by \(energyvalues[0])%"
-                        cell.slider2.value = Float(energyvalues[0])
+                        cell.slider2.setValue(Float(energyvalues[0]), animated: true)
                     }else{
                         cell.slider2.userInteractionEnabled = true
                         cell.slider2.setValue(0.0, animated: true)
@@ -1387,6 +1387,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 cell.outoflbl.text = "\(waterscore) out of \(watermaxscore)"
                 cell.slider1.addTarget(self, action: #selector(self.slider1changed(_:)), forControlEvents: UIControlEvents.ValueChanged)
                 cell.slider1.setValue(0.0, animated: true)
+                cell.slider2.setValue(0.0, animated: true)
                 self.slider1changed(cell.slider1)
                 if(watervalues.count == 0){
                     cell.slider2.userInteractionEnabled = false
@@ -1398,12 +1399,12 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     cell.slider2.hidden = false
                     cell.l3.hidden = false
                     cell.l4.hidden = false
-                    
+                    cell.slider2.setValue(0.0, animated: true)
                     if(watervalues.count == 1){
                         cell.slider2.userInteractionEnabled = false
                         cell.l3.text = "If I want to increase my score by +1"
                         cell.l4.text = "I need to reduce by emission by \(watervalues[0])%"
-                        cell.slider2.value = Float(watervalues[0])
+                        cell.slider2.setValue(Float(watervalues[0]), animated: true)
                     }else{
                         cell.slider2.setValue(0.0, animated: true)
                         cell.slider2.minimumValue = 0.0
@@ -1443,9 +1444,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 cell.slider1.maximumValue = 10.0
                 // slider values go from 0 to the number of values in your numbers array
                 cell.slider1.addTarget(self, action: #selector(self.slider1changed(_:)), forControlEvents: UIControlEvents.ValueChanged)
+                cell.slider2.setValue(0.0, animated: true)
                 cell.outoflbl.text = "\(wastescore) out of \(wastemaxscore)"
                 cell.outoflbl.textColor = UIColor.init(red: 0.461, green: 0.76, blue: 0.629, alpha: 1)
                 cell.slider1.setValue(0.0, animated: true)
+                cell.slider2.setValue(0.0, animated: true)
                 self.slider1changed(cell.slider1)
                 if(wastevalues.count == 0){
                     cell.slider2.userInteractionEnabled = false
@@ -1463,9 +1466,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         cell.slider2.userInteractionEnabled = false
                         cell.l3.text = "If I want to increase my score by +1"
                         cell.l4.text = "I need to reduce by emission by \(wastevalues[0])%"
-                        cell.slider2.value = Float(wastevalues[0])
+                        cell.slider2.setValue(Float(wastevalues[0]), animated: true)
                     }else{
-                        cell.slider2.value = Float(wastevalues.minElement()!)
+                        cell.slider2.setValue(Float(wastevalues.minElement()!), animated: true)
                     }
                     cell.slider2.maximumValue = Float(wastevalues.count)
                     if(wastevalues.count > 0){
@@ -1505,6 +1508,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 cell.outoflbl.text = "\(transportscore) out of \(transportmaxscore)"
                 cell.outoflbl.textColor = UIColor.init(red: 0.572, green: 0.556, blue: 0.505, alpha: 1)
                 self.slider1changed(cell.slider1)
+                cell.slider2.setValue(0.0, animated: true)
                 if(transitvalues.count == 0){
                     cell.l3.hidden = true
                     cell.l4.hidden = true
@@ -1520,7 +1524,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         cell.slider2.userInteractionEnabled = false
                         cell.l3.text = "If I want to increase my score by +1"
                         cell.l4.text = "I need to reduce by emission by \(transitvalues[0])%"
-                        cell.slider2.value = Float(transitvalues[0])
+                        cell.slider2.setValue(Float(transitvalues[0]), animated: true)
                     }else{
                         cell.slider2.value = Float(transitvalues.minElement()!)
                     }
@@ -1560,6 +1564,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 cell.outoflbl.text = "\(humanscore) out of \(humanmaxscore)"
                 cell.outoflbl.textColor = UIColor.init(red: 0.92, green: 0.609, blue: 0.236, alpha: 1)
                 cell.slider1.setValue(0.0, animated: true)
+                cell.slider2.setValue(0.0, animated: true)
                 self.slider1changed(cell.slider1)
                 if(humanvalues.count == 0){
                     cell.l3.hidden = true
@@ -1576,7 +1581,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         cell.slider2.userInteractionEnabled = false
                         cell.l3.text = "If I want to increase my score by +1"
                         cell.l4.text = "I need to reduce by emission by \(humanvalues[0])%"
-                        cell.slider2.value = Float(humanvalues[0])
+                        cell.slider2.setValue(Float(humanvalues[0]), animated: true)
                     }else{
                         cell.slider2.value = Float(humanvalues.minElement()!)
                     }
@@ -1694,7 +1699,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             cell.layoutSubviews()
             
         }
-        
+      /*
         if(indexPath.section == 2){
             let cell = tableview.dequeueReusableCellWithIdentifier("totalcell3")! as! totalanalysis3
             cell.graphbtn.tag = 50
@@ -1996,7 +2001,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
          }*/
         if(indexPath.section == 7){
             let _ = tableview.dequeueReusableCellWithIdentifier("certcell")!
-        }
+        }*/
         
     }
     
@@ -2064,7 +2069,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     label2.text = "Not available"
                                 }
                             }catch{
-                                
+                                label2.text = "Not available"
                             }
                         }
                     }
@@ -2111,7 +2116,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     label2.text = "Not available"
                                 }
                             }catch{
-                                
+                                label2.text = "Not available"
                             }
                         }
                     }
@@ -2160,7 +2165,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     label2.text = "Not available"
                                 }
                             }catch{
-                                
+                                label2.text = "Not available"
                             }
                         }
                     }
@@ -2338,7 +2343,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
              //myUtterance.pitchMultiplier = 1;
              synth.speakUtterance(myUtterance)*/
             if(reportedscores.count > 0){
-            self.performSegueWithIdentifier("gotographs", sender: nil)
+            //self.performSegueWithIdentifier("gotographs", sender: nil)
             }
         }
         else{
@@ -2645,21 +2650,22 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     func showalert(message:String, title:String, action:String){
         
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
             dispatch_async(dispatch_get_main_queue(), {
                 self.view.userInteractionEnabled = true
                 self.spinner.hidden = true
                 self.tableview.alpha = 1.0
+                self.maketoast(message, type: "error")
                // self.navigationController?.popViewControllerAnimated(true)
             })
             
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+//        }
+  //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        alertController.addAction(defaultAction)
+    //    alertController.addAction(defaultAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //presentViewController(alertController, animated: true, completion: nil)
         
         
     }

@@ -21,6 +21,52 @@
 -(void)viewDidAppear:(BOOL)animated{
     self.navigationController.navigationBar.backItem.title = @"Back";
 }
+
+-(void)maketoast:(NSString *)message withbackground:(UIColor *)color withdelay:(double)delay{
+    if([notificationView isDescendantOfView:self.view]){
+        [notificationView removeFromSuperview];
+    }
+    notificationLabel = [[UILabel alloc] init];
+    notificationView = [[UIView alloc] init];
+    if(self.navigationController != nil){
+        notificationView.frame = CGRectMake(0.0, 0.0 , self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    }else{
+        
+    }
+    notificationLabel.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, notificationView.frame.size.height);
+    notificationLabel.text      = message;
+    [notificationView setBackgroundColor:color];
+    [notificationLabel setFont:[UIFont fontWithName:@"OpenSans" size:15]];
+    [notificationLabel setNumberOfLines:3];
+    [notificationLabel setTextColor:[UIColor whiteColor]];
+    [notificationLabel setTextAlignment:NSTextAlignmentCenter];
+    [notificationView addSubview:notificationLabel];
+    [self.view addSubview:notificationView];
+    [self.view bringSubviewToFront:notificationView];
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+        notificationView.frame = CGRectMake(0.0, self.navigationController.navigationBar.frame.size.height + self.navigationController.navigationBar.frame.origin.y, self.view.frame.size.width, 0.058 * [UIScreen mainScreen].bounds.size.height);
+    } completion:^(BOOL finished){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self hide];
+        });
+    }];
+    
+    
+    
+}
+
+-(void)hide{
+    
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+    } completion:^(BOOL finished){
+        [self.spinner setHidden:YES];
+        [notificationView removeFromSuperview];
+    }];
+    
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.spinner.layer setCornerRadius:10];
@@ -535,8 +581,9 @@
       UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please choose at least one option" preferredStyle:UIAlertControllerStyleAlert];
         
         
-        [self presentViewController:alrt animated:YES completion:nil];
-         [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+        //[self presentViewController:alrt animated:YES completion:nil];
+         //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+        [self maketoast:@"Please choose at least one option" withbackground:[UIColor blackColor] withdelay:4.5];
     }
     else{
         
@@ -723,8 +770,9 @@
                             [prefs setInteger:0 forKey:@"humanhide"];
                             submitteddonthide=(int)[prefs integerForKey:@"humandone"];
                             UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Human survey submitted" preferredStyle:UIAlertControllerStyleAlert];
-                            [self presentViewController:alrt animated:YES completion:nil];
-                            [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                            //[self presentViewController:alrt animated:YES completion:nil];
+                            //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                            [self maketoast:@"Human survey submitted" withbackground:[UIColor blueColor] withdelay:4.5];
                             submitteddonthide=0;
                             if(nope==1){
                                 if((int)[prefs integerForKey:@"url"]!=1){
@@ -749,8 +797,9 @@
                         else if(code==0){
                             submitteddonthide=(int)[prefs integerForKey:@"humandone"];
                             UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"Please check your internet connection" preferredStyle:UIAlertControllerStyleAlert];
-                            [self presentViewController:alrt animated:YES completion:nil];
-                            [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                            //[self presentViewController:alrt animated:YES completion:nil];
+                            //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                            [self maketoast:@"Please check your internet connection" withbackground:[UIColor blackColor] withdelay:4.5];
                         }
                         else{
                             //non_field_errors
@@ -761,19 +810,22 @@
                                                                                        error:&error];
                                 if(json[@"non_field_errors"] != nil){
                                     UIAlertController *alrtt = [UIAlertController alertControllerWithTitle:@"" message:[NSString stringWithFormat:@"%@",json[@"non_field_errors"]] preferredStyle:UIAlertControllerStyleAlert];
-                                    [self presentViewController:alrtt animated:YES completion:nil];
-                                    [self performSelector:@selector(dismissAlert:) withObject:alrtt afterDelay:1.0f];
+                                    //[self presentViewController:alrtt animated:YES completion:nil];
+                                    //[self performSelector:@selector(dismissAlert:) withObject:alrtt afterDelay:1.0f];
+                                    [self maketoast:[NSString stringWithFormat:@"%@",json[@"non_field_errors"]] withbackground:[UIColor blackColor] withdelay:4.5];
                                 }else{
                                     UIAlertController *alrtt = [UIAlertController alertControllerWithTitle:@"" message:@"Something went wrong. Please try again later" preferredStyle:UIAlertControllerStyleAlert];
                                     //[alrt dismissViewControllerAnimated:<#(BOOL)#> completion:<#^(void)completion#>]
                                     //alert.dismissViewControllerAnimated(true, completion: nil)
                                     [alrt dismissViewControllerAnimated:YES completion:nil];
                                     [alrtt dismissViewControllerAnimated:YES completion:nil];
-                                    [self presentViewController:alrtt animated:YES completion:nil];
-                                    [self performSelector:@selector(dismissAlert:) withObject:alrtt afterDelay:1.0f];
+                                    //[self presentViewController:alrtt animated:YES completion:nil];
+                                    //[self performSelector:@selector(dismissAlert:) withObject:alrtt afterDelay:1.0f];
+                                    [self maketoast:@"Something went wrong. Plesae try again later" withbackground:[UIColor blackColor] withdelay:4.5];
                                 }
+                            }else{
+                            [self maketoast:@"Something went wrong. Plesae try again later" withbackground:[UIColor blackColor] withdelay:4.5];
                             }
-                            
                         }
                     });
                         
@@ -785,9 +837,10 @@
                 }
                 else{
                     UIAlertController *alrt = [UIAlertController alertControllerWithTitle:@"" message:@"You've already taken survey" preferredStyle:UIAlertControllerStyleAlert];
-                    [self presentViewController:alrt animated:YES completion:nil];
+                    //[self presentViewController:alrt animated:YES completion:nil];
                     [prefs setInteger:0 forKey:@"humanhide"];
-                    [self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                    //[self performSelector:@selector(dismissAlert:) withObject:alrt afterDelay:1.0f];
+                    [self maketoast:@"You've already taken survey" withbackground:[UIColor blackColor] withdelay:4.5];
                     if([prefs  integerForKey:@"transithide"]==0){
                         [self.navigationController popViewControllerAnimated:YES];
                     }

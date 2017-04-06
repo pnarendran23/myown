@@ -23,13 +23,16 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     @IBOutlet weak var nav: UINavigationBar!
     
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
         NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "fromnotification")
-        self.navigationController?.navigationBar.backItem?.title = "Projects"
         print("Filter array is",filterarr)
         if(filterarr.count == 0){
             filterarr.addObject("All actions")
         }
         self.viewDidLoad()
+        if(self.navigationController != nil){
+        self.navigationController!.navigationBar.backItem!.title = "Projects"
+        }
     }
     
     @IBAction func filterit(sender: UIBarButtonItem) {
@@ -37,7 +40,9 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         
     }
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
+
+        building_dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
         self.titlefont()
         backbtn.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
         tableview.backgroundColor = nav.backgroundColor
@@ -89,24 +94,20 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         base_scores = NSMutableArray()
         for i in 0 ..< currentarr.count {
             let tempdict = currentarr[i] as! [String:AnyObject]
-            if(tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
+            /*if(tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
                 pre_requisitesactionsarr.addObject(tempdict)
-            }
-            if(tempdict["Mandatory"] as! String == "X" && tempdict["CreditcategoryDescrption"] as! String != "Performance" && tempdict["CreditcategoryDescrption"] as! String != "Performance Category"){
+            }*/
+            //if(tempdict["Mandatory"] as! String == "X" && tempdict["CreditcategoryDescrption"] as! String != "Performance" && tempdict["CreditcategoryDescrption"] as! String != "Performance Category"){
+            if(tempdict["Mandatory"] as! String == "X"){
                 pre_requisitesactionsarr.addObject(tempdict)
-            }
-        }
-        for i in 0 ..< currentarr.count {
-            let tempdict = currentarr[i] as! [String:AnyObject]
-            if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || (tempdict["CreditcategoryDescrption"] as! String == "Performance Category")){
-                data_input.addObject(tempdict)
-            }
-        }
-        for i in 0 ..< currentarr.count {
-            let tempdict = currentarr[i] as! [String:AnyObject]
-            if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
+            }else if ((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
                 base_scores.addObject(tempdict)
             }
+            else{//(tempdict["CreditcategoryDescrption"] as! String == "Performance" || (tempdict["CreditcategoryDescrption"] as! String == "Performance Category"))
+                data_input.addObject(tempdict)
+            }
+            
+            
         }
         
         
@@ -227,6 +228,8 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
         UIGraphicsEndImageContext()
         return newImage!
     }
+    
+    var building_dict = NSDictionary()
     
     func sayHello(sender: UIBarButtonItem) {
         print("Projects clicked")
@@ -369,8 +372,10 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
             }
             else if((arr["CreditDescription"] as! String).lowercaseString == "transportation"){
                 cell.shortcredit.image = UIImage.init(named: "transport-border")
-            }else{
+            }else if ((arr["CreditDescription"] as! String).lowercaseString == "human experience"){
                 cell.shortcredit.image = UIImage.init(named: "human-border")
+            }else{
+                cell.shortcredit.image = self.imageWithImage(UIImage(named: "settings.png")!, scaledToSize: CGSizeMake(32, 32))
             }
         }
         
@@ -380,13 +385,13 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
     
     func checkcredit_type(tempdict:[String:AnyObject]) -> String {
         var temp = ""
-        if(tempdict["CreditcategoryDescrption"] as! String == "Performance" || tempdict["CreditcategoryDescrption"] as! String == "Performance Category"){
-            temp = "Data input"
-        }
-        else if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance" || tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && tempdict["CreditcategoryDescrption"] as! String != "Innovation"){
-            temp = "Base scores"
-        }else if(tempdict["Mandatory"] as! String == "X" || tempdict["CreditcategoryDescrption"] as! String == "Innovation"){
+        if(tempdict["Mandatory"] as! String == "X"){
             temp = "Pre-requisites"
+        }else if ((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
+            temp = "Base scores"
+        }
+        else{
+            temp = "Data input"
         }
         
         return temp
@@ -409,7 +414,10 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
             let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
             
             let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
-            let datainput = mainstoryboard.instantiateViewControllerWithIdentifier("prerequisites")
+            var datainput = mainstoryboard.instantiateViewControllerWithIdentifier("prerequisites")
+            if(building_dict["project_type"] as! String == "city" || building_dict["project_type"] as! String == "community"){
+                datainput = mainstoryboard.instantiateViewControllerWithIdentifier("prerequisitess")
+            }
             let rootViewController = self.navigationController
             var controllers = (rootViewController!.viewControllers)
             controllers.removeAll()
@@ -427,24 +435,28 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
             }else{
                 listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
             }
-            _ = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
             listofassets.navigationItem.title = "Projects"
             controllers.append(listofassets)
             controllers.append(listofactions)
             controllers.append(datainput)
-            self.navigationController?.setViewControllers(controllers, animated: true)
-            
-            
+            self.navigationController?.setViewControllers(controllers, animated: true)                        
         }else if(checkcredit_type(arr) == "Data input"){
             let data = NSKeyedArchiver.archivedDataWithRootObject(currentarr)
             NSUserDefaults.standardUserDefaults().setObject(data, forKey: "currentcategory")
             
             NSUserDefaults.standardUserDefaults().setInteger(indexPath.section, forKey: "selected_action")
-            if((arr["CreditDescription"] as! String).lowercaseString == "energy" || (arr["CreditDescription"] as! String).lowercaseString == "water"){
                 //self.performSegueWithIdentifier("datainput", sender: nil)
                 let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
                 let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
-                let datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+            var datainput = UIViewController()
+            if((arr["CreditDescription"] as! String).lowercaseString == "water" || (arr["CreditDescription"] as! String).lowercaseString == "energy"){
+             datainput = mainstoryboard.instantiateViewControllerWithIdentifier("datainput")
+            }else{
+             datainput = mainstoryboard.instantiateViewControllerWithIdentifier("waste")
+            }
+                if(building_dict["project_type"] as! String == "city" || building_dict["project_type"] as! String == "community"){
+                    datainput = mainstoryboard.instantiateViewControllerWithIdentifier("prerequisitess")
+                }
                 let rootViewController = self.navigationController
                 var controllers = (rootViewController!.viewControllers)
                 controllers.removeAll()
@@ -468,41 +480,7 @@ class listofactions: UIViewController,UITableViewDelegate,UITableViewDataSource,
                 controllers.append(listofactions)
                 controllers.append(datainput)
                 self.navigationController?.setViewControllers(controllers, animated: true)
-                
-            }else if((arr["CreditDescription"] as! String).lowercaseString == "waste" || (arr["CreditDescription"] as! String).lowercaseString == "transportation" || (arr["CreditDescription"] as! String).lowercaseString == "human experience"){
-                //self.performSegueWithIdentifier("gotowaste", sender: nil)
-                let mainstoryboard = UIStoryboard.init(name: "Main", bundle: nil)
-                
-                let listofactions = mainstoryboard.instantiateViewControllerWithIdentifier("listofactions")
-                let datainput = mainstoryboard.instantiateViewControllerWithIdentifier("waste")
-                let rootViewController = self.navigationController
-                var controllers = (rootViewController!.viewControllers)
-                controllers.removeAll()
-                var v = UIViewController()
-                if(NSUserDefaults.standardUserDefaults().integerForKey("grid") == 1){
-                    v = mainstoryboard.instantiateViewControllerWithIdentifier("grid") as! UINavigationController
-                }else{
-                    v = mainstoryboard.instantiateViewControllerWithIdentifier("listofassets") as! UINavigationController
-                }
-                var grid = 0
-                grid = NSUserDefaults.standardUserDefaults().integerForKey("grid")
-                var listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
-                if(grid == 1){
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("gridvc")
-                }else{
-                    listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist") 
-                }
-                _ = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
-                listofassets.navigationItem.title = "Projects"
-                controllers.append(listofassets)
-                controllers.append(listofactions)
-                controllers.append(datainput)
-                //self.navigationController!.hidesBarsOnTap = false;
-                //self.navigationController!.hidesBarsOnSwipe = false;
-                //self.navigationController!.hidesBarsWhenVerticallyCompact = false;
-                self.navigationController?.setViewControllers(controllers, animated: true)
             }
-        }
     }
 
     func sendValue(value: NSString) {

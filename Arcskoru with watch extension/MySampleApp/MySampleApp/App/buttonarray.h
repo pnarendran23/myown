@@ -13,6 +13,8 @@
 @interface buttonarray : UIViewController<UICollectionViewDataSource,UICollectionViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UICollectionViewDelegateFlowLayout,NSURLConnectionDelegate>
 {
     BOOL submitteddonthide;
+    UIView *notificationView;
+    UILabel *notificationLabel;
     NSUserDefaults *buttonselect;
     UIButton *Button;
     CAShapeLayer *line;

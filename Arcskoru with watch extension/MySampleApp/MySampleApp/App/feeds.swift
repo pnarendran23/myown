@@ -56,7 +56,8 @@ var currentfeeds = NSArray()
         let date = formatter.dateFromString(str)! 
         formatter.dateFormat = "MMM dd, yyyy at HH:MM a"
         str = formatter.stringFromDate(date)
-        
+        cell.detailTextLabel?.numberOfLines = 5
+        cell.textLabel?.numberOfLines = 5
         cell.detailTextLabel?.text = "on \(str)"
         return cell
     }

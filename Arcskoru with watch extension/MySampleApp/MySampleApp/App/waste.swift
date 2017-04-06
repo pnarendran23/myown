@@ -1,4 +1,3 @@
-//
 //  ViewController.swift
 //  LEEDOn
 //
@@ -143,7 +142,8 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     var fromnotification = NSUserDefaults.standardUserDefaults().integerForKey("fromnotification")
     
     override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
+         building_dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
         if(fromnotification == 1){
             prev.hidden = true
             next.hidden = true
@@ -156,6 +156,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.prev.layer.frame.size.height = self.next.layer.frame.size.height
         self.prev.layer.frame.origin.x = 0.98 * (self.next.layer.frame.origin.x - self.prev.layer.frame.size.width)
         tableview.registerNib(UINib.init(nibName: "prerequisitescell2", bundle: nil), forCellReuseIdentifier: "cell2")
+        feedstable.registerNib(UINib.init(nibName: "progresscell", bundle: nil), forCellReuseIdentifier: "progresscell")
         vwidth = self.vv.frame.size.width
         vheight = self.vv.frame.size.height
         affirmationtext.adjustsFontSizeToFitWidth = true
@@ -238,8 +239,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
             let tap = UITapGestureRecognizer.init(target: self, action: #selector(datainput.statusupdate(_:)))
             self.creditstatus.userInteractionEnabled = true
             self.creditstatus.addGestureRecognizer(tap)
-            self.navigate()
-            
+            //self.navigate()
         })
         
         let appdelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -254,7 +254,10 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         return false
     }
     
-        func statusupdate(sender:UILabel){
+        func statusupdate(sender:UILabel){            
+            if(ivupload1.on == false){
+                maketoast("Affirmation required before changing the status", type: "error")
+            }else{
             self.teammembers = statusarr.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.assigncontainer.hidden = false                
@@ -263,6 +266,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 self.assignokbtn.setTitle("Save", forState: UIControlState.Normal)
                 self.picker.reloadAllComponents()
             })
+            }
         }
     
     func imageWithImage(image:UIImage, scaledToSize newSize:CGSize) -> UIImage{
@@ -324,7 +328,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -386,7 +394,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
 
     
     func showactivityfeed(leedid: Int, creditID : String, shortcreditID : String){
-        let url = NSURL.init(string:String(format: "%@assets/activity/?type=credit&leed_id=%d&credit_id=%@&credit_short_id=%@",domain_url, leedid,creditID, shortcreditID))
+        let url = NSURL.init(string:String(format: "%@assets/activity/?type=credit&leed_id=%d&credit_short_id=%@",domain_url, leedid, shortcreditID))
         print(url?.absoluteURL)
         
         let request = NSMutableURLRequest.init(URL: url!)
@@ -399,7 +407,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -436,16 +448,16 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     print(jsonDictionary)
                     self.currentfeeds = jsonDictionary
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.spinner.hidden = true
                         //self.view.userInteractionEnabled = true
                         //self.performSegueWithIdentifier("gotofeeds", sender: nil)
                         if(self.currentfeeds.count > 0){
                             self.feedstable.hidden = false
                             //self.sview.contentSize = CGSizeMake(self.vv.frame.size.width, 1.1 * CGRectGetMaxY(self.feedstable.frame))
                         }else{
-                            self.feedstable.hidden = true
+                            //self.feedstable.hidden = true
                         }
                         self.feedstable.reloadData()
+                        self.spinner.hidden = true
                     })
                     
                 } catch {
@@ -476,7 +488,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -539,6 +555,10 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     @IBOutlet weak var ivupload1: UISwitch!
     
     func navigate(){
+        self.data.removeAll()
+        self.data2.removeAll()
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("data")
+        NSUserDefaults.standardUserDefaults().removeObjectForKey("data2")
         for request in download_requests
         {
             request.invalidateAndCancel()
@@ -653,28 +673,27 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
             self.navigationController?.setViewControllers(controllers, animated: false)
         }else if((currentarr["CreditDescription"] as! String).lowercaseString == "waste"){
             let c = credentials()
-            self.feedstable.hidden = true
+            //self.feedstable.hidden = true
             dispatch_async(dispatch_get_main_queue(), {
                 self.spinner.hidden = false
                 //self.view.userInteractionEnabled = true
+                self.getallwastedata(c.subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
             })
-            self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
-            getallwastedata(c.subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
+
         }
         else if((currentarr["CreditDescription"] as! String).lowercaseString == "transportation"){
             let c = credentials()
-            self.feedstable.hidden = true
+            //self.feedstable.hidden = true
             dispatch_async(dispatch_get_main_queue(), {
                 self.spinner.hidden = false
                 //self.view.userInteractionEnabled = true
+                self.getalltransitdata(c.subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
             })
-            self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
-            getalltransitdata(c.subscription_key, leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
         }else if((currentarr["CreditDescription"] as! String).lowercaseString == "human experience"){
             let c = credentials()
             //getalltransitdata(c.subscription_key, leedid: 1000137969)
             print("Human experience")
-            self.feedstable.hidden = true
+            //self.feedstable.hidden = true
             dispatch_async(dispatch_get_main_queue(), {
                 self.spinner.hidden = false
                 //self.view.userInteractionEnabled = true
@@ -717,7 +736,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -846,7 +869,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     
     func gethumansurveydata(leedid: Int, subscription_key: String){
         
-        let url = NSURL.init(string:String(format: "%@assets/LEED:%d/survey/environment/",domain_url, leedid))
+        let url = NSURL.init(string:String(format: "%@assets/LEED:%d/survey/environment/summarize/",domain_url, leedid))
         print(url?.absoluteURL)
         
         let request = NSMutableURLRequest.init(URL: url!)
@@ -859,7 +882,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -897,107 +924,17 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     self.satisfactionarr = [0,0,0,0,0,0,0,0,0,0]
                     self.dissatisfactionarr = [0,0,0,0,0,0,0,0,0,0]
                     self.currentmetersdict  = jsonDictionary as! [String:AnyObject]
-                    let temparr = jsonDictionary["results"]?.mutableCopy() as! NSMutableArray
+                    
                     self.spinner.hidden = true
                     //self.view.userInteractionEnabled = true
-                    for i in 0..<temparr.count{
-                        let dict = temparr.objectAtIndex(i) as! [String:AnyObject]
-                        let c = dict["complaints"] as! String
-                        var complaints = NSMutableArray()
-                        complaints = (c.componentsSeparatedByString(",") as NSArray).mutableCopy() as! NSMutableArray
-                        if(complaints.count == 1){
-                            complaints.removeAllObjects()
-                        }
-                        let satisfaction = dict["satisfaction"] as! Int
-                        print("complaints ",complaints)
-                        if(complaints.count == 0){
-                        self.satisfactionarr[satisfaction-1] = self.satisfactionarr[satisfaction-1]+1
-                        }else{
-                            _ = 0
-                            if(complaints.containsObject("dirty")){
-                                self.dissatisfactionarr[0] = self.dissatisfactionarr[0]+1
-                            }
-                            if(complaints.containsObject("smelly")){
-                                self.dissatisfactionarr[1] = self.dissatisfactionarr[1]+1
-                            }
-                            if(complaints.containsObject("stuffy")){
-                                self.dissatisfactionarr[2] = self.dissatisfactionarr[2]+1
-                            }
-                            if(complaints.containsObject("loud")){
-                                self.dissatisfactionarr[3] = self.dissatisfactionarr[3]+1
-                            }
-                            if(complaints.containsObject("hot")){
-                                self.dissatisfactionarr[4] = self.dissatisfactionarr[4]+1
-                            }
-                            if(complaints.containsObject("cold")){
-                                self.dissatisfactionarr[5] = self.dissatisfactionarr[5]+1
-                            }
-                            if(complaints.containsObject("dark")){
-                                self.dissatisfactionarr[6] = self.dissatisfactionarr[6]+1
-                            }
-                            if(complaints.containsObject("glare")){
-                                self.dissatisfactionarr[7] = self.dissatisfactionarr[7]+1
-                            }
-                            if(complaints.containsObject("privacy")){
-                                self.dissatisfactionarr[8] = self.dissatisfactionarr[8]+1
-                            }
-                            if(complaints.containsObject("other")){
-                                self.dissatisfactionarr[9] = self.dissatisfactionarr[9]+1
-                            }
-                        }
-                    }
-                    
+                    self.satisfactionarr = jsonDictionary["satisfaction"] as! [Int]
                     dispatch_async(dispatch_get_main_queue(), {
+                        NSUserDefaults.standardUserDefaults().setObject(self.satisfactionarr, forKey: "satisfaction")
                     print(self.satisfactionarr, self.dissatisfactionarr)
                         dispatch_async(dispatch_get_main_queue(), {
                             self.vv.hidden = false
-                            
-                            NSUserDefaults.standardUserDefaults().setObject(self.data, forKey: "voc")
-                            NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "co2")
-                            NSUserDefaults.standardUserDefaults().setObject(self.dissatisfactionarr, forKey: "dissatisfaction")
-                            NSUserDefaults.standardUserDefaults().setObject(self.satisfactionarr, forKey: "satisfaction")
-                            if(UIDevice.currentDevice().orientation == .Portrait){
-                                self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
-                            }else{
-                                self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
-                            }
-                            let view = satisfaction()
-                            
-                            self.vv.contentSize = CGSize(width: self.vv.frame.size.width,height:1.1 * (self.cc.frame.size.height+self.cc.frame.size.height+self.cc.frame.size.height+self.cc.frame.size.height+self.tableview.frame.size.height + self.feedstable.frame.size.height))
-                            self.cc.frame =  CGRect(x:0,y:0,width:self.vv.frame.size.width, height:self.vv.frame.size.width )
-                            
-                            if(self.cc.viewWithTag(23) != nil){
-                                self.cc.viewWithTag(23)?.removeFromSuperview()
-                            }
-                            view.frame = CGRect(x:0,y:0,width:self.cc.frame.width, height: self.cc.frame.size.width)
-                            view.tag = 23
-                            self.cc.addSubview(view)
-                            let view1 = dissatisfaction()
-                            if(self.cc.viewWithTag(24) != nil){
-                                self.cc.viewWithTag(24)?.removeFromSuperview()
-                            }
-                            view1.frame = CGRect(x:0,y:view.layer.frame.origin.y+view.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
-                            view1.tag = 24
-                            self.cc.addSubview(view1)
-                            
-                            
-                            let view2 = voc()
-                            if(self.cc.viewWithTag(25) != nil){
-                                self.cc.viewWithTag(25)?.removeFromSuperview()
-                            }
-                            view2.frame = CGRect(x:0,y:view1.layer.frame.origin.y+view1.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
-                            view2.tag = 25
-                            self.cc.addSubview(view2)
-                            let view3 = co2()                            
-                            if(self.cc.viewWithTag(26) != nil){
-                                self.cc.viewWithTag(26)?.removeFromSuperview()
-                            }
-                            view3.frame = CGRect(x:0,y:view2.layer.frame.origin.y+view2.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
-                            view3.tag = 26
-                            self.cc.addSubview(view3)
-                            self.feedstable.frame = CGRect(x:0,y:view3.frame.origin.y+view3.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.frame.size.height)
-                            self.spinner.hidden = false
-                            self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
+                            //self.spinner.hidden = false
+                            self.getsummarizedata(subscription_key, leedid: leedid)
                         })
                         
                     })
@@ -1023,6 +960,18 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if(UIScreen.mainScreen().bounds.size.width < UIScreen.mainScreen().bounds.size.height){
+            if(tableView == feedstable){
+                if(indexPath.section == 0){
+                    if((self.currentarr["CreditDescription"] as! String).lowercaseString == "waste"){
+                    return 0.107 * UIScreen.mainScreen().bounds.size.height;
+                    }else{
+                    return 0.197 * UIScreen.mainScreen().bounds.size.height;
+                    }
+                }else{
+                    
+                    return 0.107 * UIScreen.mainScreen().bounds.size.height;
+                }
+            }
             return 0.067 * UIScreen.mainScreen().bounds.size.height;
         }
         return 0.067 * UIScreen.mainScreen().bounds.size.width;
@@ -1030,7 +979,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     
     func getmeterdata() {
         if(self.meters.count == 0){
-                self.maketoast("No meters found")
+                self.maketoast("No data found",type: "error")
             self.spinner.hidden = true
         }
         for i in 0..<self.meters.count {
@@ -1068,7 +1017,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1129,7 +1082,16 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if(tableView == feedstable){
-            return "Activities"
+            if(section == 0){
+                if((self.currentarr["CreditDescription"] as! String).lowercaseString != "waste"){
+                return "SURVEYS(% OF PEOPLE RESPONDED)"
+                }
+                
+            }
+            if(currentfeeds.count > 0){
+                return "Activity feeds"
+            }
+            return "No activities present"
         }
         
         return ""
@@ -1150,7 +1112,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1179,6 +1145,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     
                 })
             }else{
+                dispatch_async(dispatch_get_main_queue(),{
                 print(data)
                 let jsonDictionary : NSDictionary
                 do {
@@ -1187,6 +1154,24 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     //self.graphPoints = jsonDictionary["results"] as! NSArray
                     //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"beginDate" ascending:TRUE];
                     //[myMutableArray sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+                        self.cc.frame =  CGRect(x:0,y:0,width:self.vv.frame.size.width, height:self.vv.frame.size.width )
+                        self.vv.contentSize = CGSize(width: self.vv.frame.size.width,height:1.2 * (self.cc.frame.size.height+self.tableview.frame.size.height + self.feedstable.frame.size.height))
+                        if(self.cc.viewWithTag(23) != nil){
+                            self.cc.viewWithTag(23)?.removeFromSuperview()
+                        }
+                        if(self.cc.viewWithTag(24) != nil){
+                            self.cc.viewWithTag(24)?.removeFromSuperview()
+                        }
+                        if(self.cc.viewWithTag(25) != nil){
+                            self.cc.viewWithTag(25)?.removeFromSuperview()
+                        }
+                        if(self.cc.viewWithTag(26) != nil){
+                            self.cc.viewWithTag(26)?.removeFromSuperview()
+                        }
+                        
+                        self.data2.removeAll()
+                        self.data.removeAll()
+                        
                     let startdatearr = NSMutableArray()
                     let enddatearr = NSMutableArray()
                     self.currentmetersdict  = jsonDictionary as! [String:AnyObject]
@@ -1222,11 +1207,8 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                             NSUserDefaults.standardUserDefaults().setObject(enddatearr.lastObject!["end_date"], forKey: "enddate")
                         }
                     }
-                    
-                    NSUserDefaults.standardUserDefaults().setObject(self.data, forKey: "data")
-                    NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "data2")
-                    
-                    dispatch_async(dispatch_get_main_queue(),{
+                        NSUserDefaults.standardUserDefaults().setObject(self.data, forKey: "data")
+                        NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "data2")           
                         if(UIDevice.currentDevice().orientation == .Portrait){
                             self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
                         }else{
@@ -1267,13 +1249,12 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                         }
                         
                         if(self.meters.count == 0){
-                            self.maketoast("No meters found")
+                            self.maketoast("No data found",type: "error")
                         }
-                self.feedstable.frame = CGRect(x:0,y:view.frame.origin.y+view.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.frame.size.height)
-                    })
-                    
-                    
-                    
+                self.feedstable.frame = CGRect(x:0,y:view.frame.origin.y+view.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.layer.frame.size.height)
+                        print(self.feedstable.frame.size.height,self.sview.contentSize.height)
+                        self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
+                        return
                     // self.buildingactions(subscription_key, leedid: leedid)
                     
                 } catch {
@@ -1283,6 +1264,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                         
                     })
                 }
+                    })
             }
             
         }
@@ -1295,21 +1277,22 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     
     @IBOutlet weak var backbtn: UIButton!
     func showalert(message:String, title:String, action:String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-                self.spinner.hidden = true
-                //self.view.userInteractionEnabled = true
-                self.navigationController?.popViewControllerAnimated(true)
-                
-            })
-            
-        }
-        let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
         
-        alertController.addAction(defaultAction)
+        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+        dispatch_async(dispatch_get_main_queue(), {
+            self.view.userInteractionEnabled = true
+            self.spinner.hidden = true
+            self.maketoast(message, type: "error")
+            //self.navigationController?.popViewControllerAnimated(true)
+        })
         
-        presentViewController(alertController, animated: true, completion: nil)
+        //        }
+        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
+        
+        //    alertController.addAction(defaultAction)
+        
+        //presentViewController(alertController, animated: true, completion: nil)
         
         
     }
@@ -1340,7 +1323,35 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 cell.assignedto.text = "Assigned to None"
             }
             return cell
-        }
+        }else{
+        
+            if(indexPath.section == 0){
+                if((self.currentarr["CreditDescription"] as! String).lowercaseString != "waste"){
+                var cell = tableView.dequeueReusableCellWithIdentifier("progresscell")! as! progresscell
+                var occupancy = 1
+                if let occ = building_dict["occupancy"] as? Int{
+                    occupancy = occ
+                }
+                    
+                    if((self.currentarr["CreditDescription"] as! String).lowercaseString == "transportation"){
+                        cell.vv.strokecolor = UIColor.lightGrayColor()
+                    }else{
+                        cell.vv.strokecolor = UIColor.init(red: 0.92, green: 0.609, blue: 0.236, alpha: 1)
+                    }
+                if let response = summarized_data["responses"] as? Int{
+                cell.vv.strokevalue = Double(response)/Double(occupancy)
+                    cell.percentagelbl.text = String(format: "%.2f%%",100 * Double(response)/Double(occupancy))
+                    if(occupancy < 500){
+                        cell.contextlbl.text = "A response rate of 25.00% for your project, will generate a score"
+                    }else{
+                        cell.contextlbl.text = "A response rate of \((0.25/sqrt(Double(occupancy)/500.0)) * 100) for your project, will generate a score"
+                    }
+                }
+                
+                cell.vv.addUntitled1Animation()
+                return cell
+                }
+            }
         
         var cell = tableView.dequeueReusableCellWithIdentifier("feedcell")! as! UITableViewCell
         
@@ -1353,18 +1364,34 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         var date = formatter.dateFromString(str)! as! NSDate
         formatter.dateFormat = "MMM dd, yyyy at HH:MM a"
         str = formatter.stringFromDate(date)
-        
+        cell.detailTextLabel?.numberOfLines = 5
+        cell.textLabel?.numberOfLines = 5
         cell.detailTextLabel?.text = "on \(str)"
         return cell
+            
+        }
         
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if(tableView == feedstable){
+            if((self.currentarr["CreditDescription"] as! String).lowercaseString == "waste"){
+             return 1
+            }
+         return 2
+        }
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(tableView == feedstable){
+            if(section == 0){
+                if((self.currentarr["CreditDescription"] as! String).lowercaseString != "waste"){
+                    return 1
+                }else{
+                    return currentfeeds.count
+                }
+            }
             return currentfeeds.count
         }
         return 1
@@ -1384,7 +1411,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     }
     
     func getalltransitdata(subscription_key:String, leedid: Int){
-        let url = NSURL.init(string:String(format: "%@assets/LEED:%d/survey/transit/",domain_url, leedid))
+        let url = NSURL.init(string:String(format: "%@assets/LEED:%d/survey/transit/summarize/",domain_url, leedid))
         print(url?.absoluteURL)
         
         let request = NSMutableURLRequest.init(URL: url!)
@@ -1397,7 +1424,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1433,33 +1464,34 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     print("Meters are",jsonDictionary)
                     //self.graphPoints = jsonDictionary["results"] as! NSArray
                     
-                    self.currentmetersdict  = jsonDictionary as! [String:AnyObject]
-                    self.meters = jsonDictionary["results"]?.mutableCopy() as! NSMutableArray
-                    if(self.meters.count>0){
-                        for i in 0...self.meters.count-1{
-                            let item = self.meters.objectAtIndex(i) as! [String:AnyObject]
-                            var f1 = 0.0234234
-                            var f2 = 0.0
-                            if(item["waste_diverted"] == nil){
-                                f1 = 0.0
-                            }else{
-                            f1 = item["waste_diverted"] as! Double
-                            }
-                            if(item["waste_generated"] == nil){
-                                f2 = 0.0
-                            }else{
-                                f2 = item["waste_generated"] as! Double
-                            }
+                        dispatch_async(dispatch_get_main_queue(),{
+                            var arr = [0,0,0,0,0,0,0,0]
+                            var modes = jsonDictionary["modes"] as! NSDictionary
                             
+                            for (item,value) in modes{
+                                var str = item as! String
+                                if(str == "car23"){
+                                    arr[0] = Int(value as! NSNumber)
+                                }else if(str == "light_rail"){
+                                    arr[1] = Int(value as! NSNumber)
+                                }else if(str == "motorcycle"){
+                                    arr[2] = Int(value as! NSNumber)
+                                }else if(str == "cars4"){
+                                    arr[3] = Int(value as! NSNumber)
+                                }else if(str == "car"){
+                                    arr[4] = Int(value as! NSNumber)
+                                }else if(str == "bus"){
+                                    arr[5] = Int(value as! NSNumber)
+                                }else if(str == "heavy_rail"){
+                                    arr[6] = Int(value as! NSNumber)
+                                }else if(str == "walk"){
+                                    arr[7] = Int(value as! NSNumber)
+                                }
+                            }
+                            var d = [0,0,0,0,0,0,0,0]
+                            NSUserDefaults.standardUserDefaults().setObject(arr, forKey: "data")
+                            NSUserDefaults.standardUserDefaults().setObject(d, forKey: "data2")
                             
-                            self.data.append(Int(f1))
-                            self.data2.append(0)
-                        }}
-                    //self.view.userInteractionEnabled = true
-                    NSUserDefaults.standardUserDefaults().setObject(self.data, forKey: "data")
-                    NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "data2")
-                    
-                    dispatch_async(dispatch_get_main_queue(),{
                         let view = chartview()
                         if(UIDevice.currentDevice().orientation == .Portrait){
                             self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
@@ -1499,8 +1531,9 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                         }
                     
                     self.feedstable.frame = CGRect(x:0,y:view.frame.origin.y+view.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.frame.size.height)
+                    self.getsummarizedata(subscription_key, leedid: leedid)
                     })
-                    self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
+
                     // self.buildingactions(subscription_key, leedid: leedid)
                     
                 } catch {
@@ -1592,8 +1625,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                 }else{
                     listofassets = mainstoryboard.instantiateViewControllerWithIdentifier("projectslist")
                 }
-                let dict = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("building_details") as! NSData) as! NSDictionary
-                listofassets.navigationItem.title = dict["name"] as? String
+                listofassets.navigationItem.title = building_dict["name"] as? String
                 controllers.append(listofassets)
                 controllers.append(listofactions)
                 controllers.append(datainput)
@@ -1601,6 +1633,8 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
             }
         }
     }
+    
+    var building_dict = NSDictionary()
     
     @IBAction func gotoprevious(sender: AnyObject) {
         if(currentindex>0){
@@ -1657,15 +1691,14 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
     }
     func checkcredit_type(tempdict:[String:AnyObject]) -> String {
         var temp = ""
-        if((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
+        if(tempdict["Mandatory"] as! String == "X"){
+            temp = "Pre-requisites"
+        }else if ((tempdict["Mandatory"] as! String != "X") && (tempdict["CreditcategoryDescrption"] as! String != "Performance Category") && (tempdict["CreditcategoryDescrption"] as! String != "Performance")){
             temp = "Base scores"
         }
-        else if(tempdict["CreditcategoryDescrption"] as! String == "Performance"){
+        else{
             temp = "Data input"
-        }else if(tempdict["Mandatory"] as! String == "X"){
-            temp = "Pre-requisites"
-        }
-        
+        }        
         return temp
     }
     
@@ -1693,7 +1726,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1752,7 +1789,155 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         
     }
     
+    func getsummarizedata(subscription_key:String, leedid: Int){
+        var url = NSURL()
+        if(actiontitle.text?.lowercaseString == "transportation"){
+        url = NSURL.init(string: String(format: "%@assets/LEED:%d/survey/transit/summarize/",domain_url,leedid))!
+        }else{
+            url = NSURL.init(string: String(format: "%@assets/LEED:%d/survey/environment/summarize/",domain_url,leedid))!
+        }
+        print(url.absoluteURL)
+        let request = NSMutableURLRequest.init(URL: url)
+        request.HTTPMethod = "GET"
+        request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
+        request.addValue("application/json", forHTTPHeaderField:"Content-type" )
+        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        let s = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        download_requests.append(s)
+        self.task = s.dataTaskWithRequest(request) { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                if((error?.description.containsString("cancelled")) != nil){
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
+                }else{
+                    print("error=\(error?.description)")
+                    print("response",response)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.tableview.hidden = false
+                        self.spinner.hidden = true
+                        self.tableview.frame = CGRectMake(self.tableview.layer.frame.origin.x, 1.02 * (self.affview.layer.frame.origin.y + self.affview.layer.frame.size.height), self.tableview.layer.frame.size.width,  50)
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
+                }
+                return
+            }
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode == 401 {           // check for http errors
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.spinner.hidden = true
+                    self.view.userInteractionEnabled = true
+                    NSNotificationCenter.defaultCenter().postNotificationName("renewtoken", object: nil, userInfo:nil)
+                })
+            } else
+                if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    print("response = \(response)")
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                        
+                    })
+                }else{
+                    print(data)
+                    let jsonDictionary : NSDictionary
+                    do {
+                        jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
+                        self.summarized_data = jsonDictionary
+                        print(jsonDictionary)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if(self.actiontitle.text?.lowercaseString != "transportation"){
+                                self.dissatisfactionarr.removeAll()
+                                var complaints = jsonDictionary["complaints"] as! NSDictionary
+                                self.dissatisfactionarr = [0,0,0,0,0,0,0,0,0,0]
+                                for (item,value) in complaints{
+                                    var str = item as! String
+                                    if(str == "dirty"){
+                                        self.dissatisfactionarr[0] = Int(value as! NSNumber)
+                                    }else if(str == "smelly"){
+                                        self.dissatisfactionarr[1] = Int(value as! NSNumber)
+                                    }else if(str == "stuffy"){
+                                        self.dissatisfactionarr[2] = Int(value as! NSNumber)
+                                    }else if(str == "loud"){
+                                        self.dissatisfactionarr[3] = Int(value as! NSNumber)
+                                    }else if(str == "hot"){
+                                        self.dissatisfactionarr[4] = Int(value as! NSNumber)
+                                    }else if(str == "cold"){
+                                        self.dissatisfactionarr[5] = Int(value as! NSNumber)
+                                    }else if(str == "dark"){
+                                        self.dissatisfactionarr[6] = Int(value as! NSNumber)
+                                    }else if(str == "glare"){
+                                        self.dissatisfactionarr[7] = Int(value as! NSNumber)
+                                    }else if(str == "privacy"){
+                                        self.dissatisfactionarr[8] = Int(value as! NSNumber)
+                                    }else if(str == "other"){
+                                        self.dissatisfactionarr[9] = Int(value as! NSNumber)
+                                    }
+                                }
+                                NSUserDefaults.standardUserDefaults().setObject(self.dissatisfactionarr, forKey: "dissatisfaction")
+                                NSUserDefaults.standardUserDefaults().setObject(self.data, forKey: "voc")
+                                NSUserDefaults.standardUserDefaults().setObject(self.data2, forKey: "co2")
+                                    if(UIDevice.currentDevice().orientation == .Portrait){
+                                        self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
+                                    }else{
+                                        self.vv.frame =  CGRect(x:self.affview.layer.frame.origin.x,y:self.vv.frame.origin.y,width:self.affview.frame.size.width, height:self.affview.frame.size.width )
+                                    }
+                                    let view = satisfaction()
+                                    
+                                    self.vv.contentSize = CGSize(width: self.vv.frame.size.width,height:1.1 * (self.cc.frame.size.height+self.cc.frame.size.height+self.cc.frame.size.height+self.cc.frame.size.height+self.tableview.frame.size.height + self.feedstable.frame.size.height))
+                                    self.cc.frame =  CGRect(x:0,y:0,width:self.vv.frame.size.width, height:self.vv.frame.size.width )
+                                    
+                                    if(self.cc.viewWithTag(23) != nil){
+                                        self.cc.viewWithTag(23)?.removeFromSuperview()
+                                    }
+                                    view.frame = CGRect(x:0,y:0,width:self.cc.frame.width, height: self.cc.frame.size.width)
+                                    view.tag = 23
+                                    self.cc.addSubview(view)
+                                    let view1 = dissatisfaction()
+                                    if(self.cc.viewWithTag(24) != nil){
+                                        self.cc.viewWithTag(24)?.removeFromSuperview()
+                                    }
+                                    view1.frame = CGRect(x:0,y:view.layer.frame.origin.y+view.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
+                                    view1.tag = 24
+                                    self.cc.addSubview(view1)
+                                    
+                                    
+                                    let view2 = voc()
+                                    if(self.cc.viewWithTag(25) != nil){
+                                        self.cc.viewWithTag(25)?.removeFromSuperview()
+                                    }
+                                    view2.frame = CGRect(x:0,y:view1.layer.frame.origin.y+view1.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
+                                    view2.tag = 25
+                                    self.cc.addSubview(view2)
+                                    let view3 = co2()
+                                    if(self.cc.viewWithTag(26) != nil){
+                                        self.cc.viewWithTag(26)?.removeFromSuperview()
+                                    }
+                                    view3.frame = CGRect(x:0,y:view2.layer.frame.origin.y+view2.layer.frame.size.height,width:self.cc.frame.width, height: self.cc.frame.size.width)
+                                    view3.tag = 26
+                                    self.cc.addSubview(view3)
+                                    self.feedstable.frame = CGRect(x:0,y:view3.frame.origin.y+view3.frame.size.height,width:self.feedstable.frame.width, height: self.feedstable.frame.size.height)
+                                
+                                }
+
+                            self.showactivityfeed(NSUserDefaults.standardUserDefaults().integerForKey("leed_id"), creditID: self.currentarr["CreditId"] as! String, shortcreditID: self.currentarr["CreditShortId"] as! String)
+                        })
+                    } catch {
+                        print(error)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                            
+                        })
+                    }
+            }
+            
+        }
+        task.resume()
+
+    }
     
+    var summarized_data = NSDictionary()
     
     
     func buildingactions(subscription_key:String, leedid: Int){
@@ -1768,7 +1953,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1807,9 +1996,6 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                         NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "actions_data")
                         NSUserDefaults.standardUserDefaults().synchronize()
                         self.spinner.hidden = true
-                        //self.view.userInteractionEnabled = true
-                        self.assignedto.text = String(format:"%@",self.currentarr["PersonAssigned"] as! String)
-                        self.maketoast("Updated successfully")
                     })
                 } catch {
                     print(error)
@@ -1868,7 +2054,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = s.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)
@@ -1978,7 +2168,11 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
                 if((error?.description.containsString("cancelled")) != nil){
-                    
+                    if(error?.code == -999){
+                        
+                    }else{
+                        self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    }
                 }else{
                     print("error=\(error?.description)")
                     print("response",response)

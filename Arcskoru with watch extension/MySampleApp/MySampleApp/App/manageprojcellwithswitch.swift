@@ -15,6 +15,7 @@ class manageprojcellwithswitch: UITableViewCell {
         self.selectionStyle = UITableViewCellSelectionStyle.None
         // Initialization code
     }
+    @IBOutlet weak var lbl: UILabel!
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
