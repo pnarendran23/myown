@@ -27,7 +27,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     </imageView>
                     <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" misplaced="YES" text="Title" lineBreakMode="middleTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Mhg-Y5-GYo">
-                        <rect key="frame" x="7.5" y="-10" width="304" height="69.5"/>
+                        <rect key="frame" x="8" y="0.0" width="304" height="66"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="16"/>
                         <nil key="textColor"/>

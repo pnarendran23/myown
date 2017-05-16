@@ -17,6 +17,7 @@ class totalanalysis2: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        overallscore.font = UIFont.init(name: "OpenSans-bold", size: 0.028 * UIScreen.mainScreen().bounds.size.height)        
         self.layer.cornerRadius = 7
         self.cview.frame.size.height = self.cview.frame.size.width
         self.selectionStyle = UITableViewCellSelectionStyle.None
@@ -39,6 +40,7 @@ class totalanalysis2: UITableViewCell {
     }*/
 
     
+    @IBOutlet weak var overallscore: UILabel!
     
     
     override func setSelected(selected: Bool, animated: Bool) {

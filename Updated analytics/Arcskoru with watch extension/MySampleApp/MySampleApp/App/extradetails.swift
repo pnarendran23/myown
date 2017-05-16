@@ -19,6 +19,8 @@ class extradetails: UITableViewCell {
         self.textLabel?.font = UIFont.init(name: "OpenSans-Semibold", size: 0.023 * height)
         self.detailTextLabel?.font = UIFont.init(name: "OpenSans-Semibold", size: 0.016 * height)
         print(String(format:"xxaasdd %.4f",f))
+        self.textLabel!.numberOfLines = 0;
+        self.textLabel!.lineBreakMode = .ByWordWrapping
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

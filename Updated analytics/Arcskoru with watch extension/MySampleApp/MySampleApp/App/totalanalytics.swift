@@ -36,8 +36,6 @@ class totalanalytics: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var innertitle1: UILabel!
     @IBOutlet weak var innerimg1: UIImageView!
     @IBOutlet weak var innerarrow1: UIImageView!
-    @IBOutlet weak var innerlbl1: UILabel!
-    @IBOutlet weak var innerview1: UIView!
     @IBOutlet weak var emissionsview: UIView!
     @IBOutlet weak var highestscoreimg: UIImageView!
     @IBOutlet weak var highestscorelbl: UILabel!
@@ -239,6 +237,7 @@ class totalanalytics: UIViewController, UITableViewDataSource, UITableViewDelega
     var certificationsdict = NSDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableview.rowHeight = UITableViewAutomaticDimension
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
         boolarr = [false,false,false,false,false,false,false,false,false,false]
         //[tableView setAutoresizingMask:UIViewAutoresizingMaskFelxibleHeight | UIViewAutoResizingMaskFlexibleWidth];
@@ -364,7 +363,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             ]
         }
         
-            //print(globaldata,localdata)
+            ////print(globaldata,localdata)
             globalavgarr.addObject(0)
             globalavgarr.addObject(0)
             globalavgarr.addObject(0)
@@ -395,7 +394,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             localavgarr.addObject(0)
             localavgarr.addObject(0)
             
-            //print("avg arrays",globaldata,localdata)
+            ////print("avg arrays",globaldata,localdata)
             
             for (key,value) in localdata{
                 if(value is NSNull){
@@ -415,7 +414,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             }
             
             
-            //print("compara",localavgarr,globalavgarr)
+            ////print("compara",localavgarr,globalavgarr)
             
             
             countries = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("countries") as! NSData) as! [String : AnyObject]
@@ -534,7 +533,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             
             
-            //print("Min score",currentscore,maxscore )
+            ////print("Min score",currentscore,maxscore )
             
             
             //tableview.reloadData()
@@ -549,7 +548,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var components = NSCalendar.currentCalendar().components(unitFlags, fromDate: date)
             
             for _ in (1...12).reverse() {
-                //print(components.year, components.month)
+                ////print(components.year, components.month)
                 components = NSCalendar.currentCalendar().components(unitFlags, fromDate: date)
                 datearray.addObject(String(format:"%d-%02d-01",components.year,components.month))
                 let monthAgo = NSCalendar.currentCalendar().dateByAddingUnit(.Month, value: -1, toDate: date, options: [])
@@ -557,7 +556,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             }
             
             
-            //print(datearray)
+            ////print(datearray)
             var date1 = NSDate()
             var date2 = NSDate()
             formatter.dateFormat = "yyyy-MM-dd"
@@ -607,7 +606,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     func getcomparablesdata(subscription_key:String, leedid: Int){
         let url = NSURL.init(string: String(format: "%@comparables/",credentials().domain_url))
-        print(url?.absoluteURL)
+        //print(url?.absoluteURL)
         let request = NSMutableURLRequest.init(URL: url!)
         request.HTTPMethod = "GET"
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
@@ -618,7 +617,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         download_requests.append(session)
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
-                print("error=\(error)")
+                //print("error=\(error)")
                 dispatch_async(dispatch_get_main_queue(), {
                     if (error?.code == -999){
                         
@@ -639,29 +638,29 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
-                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                    print("response = \(response)")
+                    //print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    //print("response = \(response)")
                     dispatch_async(dispatch_get_main_queue(), {
                         self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                         
                     })
                 }else{
-                    print(data)
+                    //print(data)
                     let jsonDictionary : NSDictionary
                     do {
                         jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                        print(jsonDictionary)
+                        //print(jsonDictionary)
                         let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
                         NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "comparable_data")
                         NSUserDefaults.standardUserDefaults().synchronize()
                         dispatch_async(dispatch_get_main_queue(), {
                             //self.getnotifications(subscription_key,leedid: NSUserDefaults.standardUserDefaults().integerForKey("leed_id"))
-                            print("State = ",self.buildingdetails["state"])
+                            //print("State = ",self.buildingdetails["state"])
                             if let s = self.buildingdetails["state"] as? String{
                                 dispatch_async(dispatch_get_main_queue(), {
-                                    print(s)
+                                    //print(s)
                                     if(s != ""){
-                                        print(String(format: "%@%@",self.buildingdetails["country"] as! String,s))
+                                        //print(String(format: "%@%@",self.buildingdetails["country"] as! String,s))
                                         let str = self.buildingdetails["country"] as! String
                                         let decimalCharacters = NSCharacterSet.decimalDigitCharacterSet()
                                         
@@ -695,9 +694,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             }else if let ss = self.buildingdetails["state"] as? Int{
                                 dispatch_async(dispatch_get_main_queue(), {
                                     var s = "\(ss as! Int)"
-                                    print(s)
+                                    //print(s)
                                     if(s != ""){
-                                        print(String(format: "%@%@",self.buildingdetails["country"] as! String,s))
+                                        //print(String(format: "%@%@",self.buildingdetails["country"] as! String,s))
                                         let str = self.buildingdetails["country"] as! String
                                         let decimalCharacters = NSCharacterSet.decimalDigitCharacterSet()
                                         
@@ -739,7 +738,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         })
                         
                     } catch {
-                        print(error)
+                        //print(error)
                         dispatch_async(dispatch_get_main_queue(), {
                             self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                             
@@ -755,9 +754,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     
     func getlocalcomparablesdata(subscription_key:String, leedid: Int, state: String){
-        print(state)
+        //print(state)
         let url = NSURL.init(string:"\(credentials().domain_url as String)comparables/?state=\(state)")
-        print(url?.absoluteURL)
+        //print(url?.absoluteURL)
         let request = NSMutableURLRequest.init(URL: url!)
         request.HTTPMethod = "GET"
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
@@ -768,7 +767,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         download_requests.append(session)
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
-                print("error=\(error)")
+                //print("error=\(error)")
                 dispatch_async(dispatch_get_main_queue(), {
                     if (error?.code == -999){
                         
@@ -789,18 +788,18 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
-                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                    print("response = \(response)")
+                    //print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    //print("response = \(response)")
                     dispatch_async(dispatch_get_main_queue(), {
                         self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                         
                     })
                 }else{
-                    print(data)
+                    //print(data)
                     let jsonDictionary : NSDictionary
                     do {
                         jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                        print(jsonDictionary)
+                        //print(jsonDictionary)
                         let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
                         NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "local_comparable_data")
                         NSUserDefaults.standardUserDefaults().synchronize()
@@ -816,7 +815,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         })
                         
                     } catch {
-                        print(error)
+                        //print(error)
                         dispatch_async(dispatch_get_main_queue(), {
                             self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                             
@@ -832,10 +831,10 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     func getscores(leedid:Int, token:String){
         performancescoresarr.removeAllObjects()
         for index in 0...11 {
-            //print("Loop index: \(index)")
+            ////print("Loop index: \(index)")
             
             let url = NSURL(string: "\(credentials().domain_url)assets/LEED:\(leedid)/scores/?at=\(datearr.objectAtIndex(index))&within=1")
-            print(url)
+            //print(url)
             let request = NSMutableURLRequest.init(URL: url!)
             request.HTTPMethod = "GET"
             request.addValue(credentials().subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
@@ -860,20 +859,20 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             let jsonDictionary : NSDictionary
                             do {
                                 jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                                //print("Data \(index)",jsonDictionary)
+                                ////print("Data \(index)",jsonDictionary)
                                 if(jsonDictionary["result"] == nil){
                                     self.scoresarr.addObject(jsonDictionary["scores"] as! [String:AnyObject])
                                 }
                                 self.reportedscores.addObject(jsonDictionary)
                             } catch {
-                                //print(error)
+                                ////print(error)
                             }
                             
                     }
                     
                     dispatch_sync(dispatch_get_main_queue()) {
                         if (taskerror == true){
-                            //print(taskerror)
+                            ////print(taskerror)
                             dispatch_async(dispatch_get_main_queue(), {
                                 self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                                 return
@@ -881,7 +880,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         } else {
                             
                             if(index == 11){
-                                //print("Scores arr",self.scoresarr)
+                                ////print("Scores arr",self.scoresarr)
                                 self.getanalysis(leedid, token: token)
                             }
                         }
@@ -942,11 +941,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
         request.addValue("application/json", forHTTPHeaderField:"Content-Type" )
         request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
-        print(url?.absoluteURL,token)
+        //print(url?.absoluteURL,token)
         let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
-                print("error=\(error)")
+                //print("error=\(error)")
                 dispatch_async(dispatch_get_main_queue(), {
                     self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                     
@@ -964,8 +963,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for httCALayer * individualforiphone = [CALayer layer];
                     //[self.layer addSublayer:individualforiphone];
-                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                    print("response = \(response)")
+                    //print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    //print("response = \(response)")
                     dispatch_async(dispatch_get_main_queue(), {
                         let jsonDictionary : NSDictionary
                         do {
@@ -985,11 +984,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         
                     })
                 }else{
-                    print(data)
+                    //print(data)
                     let jsonDictionary : NSDictionary
                     do {
                         jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                        print(jsonDictionary)
+                        //print(jsonDictionary)
                         let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
                         self.certificationsdict = jsonDictionary
                         dispatch_async(dispatch_get_main_queue(), {
@@ -1078,7 +1077,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 let jsonDictionary : NSDictionary
                 do {
                     jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as! NSDictionary
-                    //print("Data",jsonDictionary)
+                    ////print("Data",jsonDictionary)
                     self.tableview.alpha = 1
                     self.view.userInteractionEnabled = true
                     self.analysisdict = jsonDictionary
@@ -1096,7 +1095,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             str1.appendString(str)
                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                             str = str.stringByReplacingOccurrencesOfString("None", withString: "\"None\"")
-                            print(str1)
+                            //print(str1)
                             //str = str1.mutableCopy() as! String
                             var dict = NSDictionary()
                             var jsonData = str
@@ -1110,7 +1109,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             }
                             arr = []
                             if(dict.count > 0){
-                                print(dict["Scope1 Raw GHG (mtCO2e/day)"])
+                                //print(dict["Scope1 Raw GHG (mtCO2e/day)"])
                                 if(dict["Scope1 Raw GHG (mtCO2e/day)"] is NSNull || dict["Scope1 Raw GHG (mtCO2e/day)"] == nil){
                                     arr.addObject(0.00000)
                                 }else if(dict["Scope1 Raw GHG (mtCO2e/day)"] as? String == "None"){
@@ -1384,7 +1383,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                                 str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                                 str = str.stringByReplacingOccurrencesOfString("None", withString: "\"None\"")
-                                print(str1)
+                                //print(str1)
                                 //str = str1.mutableCopy() as! String
                                 var dict = NSDictionary()
                                 var jsonData = str
@@ -1422,7 +1421,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     }
                                     arr.addObject(0.00000)
                                 }
-                                print(arr)
+                                //print(arr)
                                 
                                 
                                 if(dict["Average Transit CO2e"] is NSNull || dict["Average Transit CO2e"] == nil){
@@ -1433,7 +1432,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     arr.addObject(dict["Average Transit CO2e"] as! Float * 365)
                                 }
                                 
-                                print(arr)
+                                //print(arr)
                                 
                                 
                                 self.transitannumarr = arr
@@ -1465,7 +1464,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     }
                                     arr.addObject(0.00000)
                                 }
-                                print(arr)
+                                //print(arr)
                                 
                                 
                                 if(dict["Average Transit CO2e"] is NSNull || dict["Average Transit CO2e"] == nil){
@@ -1476,7 +1475,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     arr.addObject(dict["Average Transit CO2e"] as! Float)
                                 }
                                 
-                                print(arr)
+                                //print(arr)
                                 //valuearr.addObject(arr)
                                 self.transitdailyarr = arr
                                 arr = NSMutableArray()
@@ -1576,7 +1575,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             str1.appendString(str)
                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                             str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                            print(str1)
+                            //print(str1)
                             //str = str1.mutableCopy() as! String
                             var dict = NSDictionary()
                             var jsonData = str
@@ -1683,7 +1682,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             }
                             currentarr.addObject(arr)
                             arr = NSMutableArray()
-                            print(currentarr)
+                            //print(currentarr)
                             self.tableview.reloadData()
                         }else{
                             arr = NSMutableArray()
@@ -1709,7 +1708,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             str1.appendString(str)
                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                             str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                            print(str1)
+                            //print(str1)
                             //str = str1.mutableCopy() as! String
                             var dict = NSDictionary()
                             var jsonData = str
@@ -1824,7 +1823,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             
                             currentarr.addObject(arr)
                             arr = NSMutableArray()
-                            print(currentarr)
+                            //print(currentarr)
                             self.tableview.reloadData()
                         }else{
                             arr = NSMutableArray()
@@ -1842,7 +1841,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     }
                     
                     self.energyarr = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     currentarr = NSMutableArray()
                     dict = self.analysisdict
                     
@@ -1864,7 +1863,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.appendString(str)
                                 str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                                 str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                                //print(str1)
+                                ////print(str1)
                                 str = str1.mutableCopy() as! String
                                 let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                                 do {
@@ -1898,7 +1897,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             }
                         }
                     }
-                    print(currentarr)
+                    //print(currentarr)
                     var temp = NSMutableArray()
                     var f1 = Float(currentarr.objectAtIndex(0).objectAtIndex(0) as! String)!
                     var f2 = Float(currentarr.objectAtIndex(0).objectAtIndex(1) as! String)!
@@ -1911,7 +1910,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     a.addObject(String(format:"%.5f",f2/365.0))
                     currentarr.addObject(a)
                     self.energyarrscope2 = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     
                     
                     currentarr = NSMutableArray()
@@ -1935,7 +1934,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.appendString(str)
                                 str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                                 str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                                //print(str1)
+                                ////print(str1)
                                 str = str1.mutableCopy() as! String
                                 let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                                 do {
@@ -1981,7 +1980,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     a.addObject(String(format:"%.5f",f2/365.0))
                     currentarr.addObject(a)
                     self.energyarrscope1 = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     
                     
                     currentarr = NSMutableArray()
@@ -2005,7 +2004,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.appendString(str)
                                 str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                                 str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                                //print(str1)
+                                ////print(str1)
                                 str = str1.mutableCopy() as! String
                                 let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                                 do {
@@ -2048,7 +2047,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     a.addObject(String(format:"%.5f",f2/365.0))
                     currentarr.addObject(a)
                     self.wastearray = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     currentarr = NSMutableArray()
                     
                     dict = self.analysisdict
@@ -2069,7 +2068,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.appendString(str!)
                                 str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str!.characters.count))
                                 str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str!.characters.count))
-                                //print(str1)
+                                ////print(str1)
                                 str = str1.mutableCopy() as? String
                                 let jsonData = (str!).dataUsingEncoding(NSUTF8StringEncoding)
                                 do {
@@ -2113,7 +2112,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     a.addObject(String(format:"%.5f",f2/365.0))
                     currentarr.addObject(a)
                     self.waterarray = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     currentarr = NSMutableArray()
                     arr = NSMutableArray()
                     
@@ -2124,7 +2123,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             str1.appendString(str)
                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                             str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                            print(str1)
+                            //print(str1)
                             //str = str1.mutableCopy() as! String
                             var dict = NSDictionary()
                             var jsonData = str
@@ -2193,7 +2192,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             currentarr.addObject(arr)
                             arr = NSMutableArray()
                             
-                            print(currentarr)
+                            //print(currentarr)
                             self.tableview.reloadData()
                         }else{
                             
@@ -2209,7 +2208,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         currentarr.addObject(arr)
                     }
                     self.transitarr = currentarr
-                    print(currentarr)
+                    //print(currentarr)
                     currentarr = NSMutableArray()
                         if(self.analysisdict["human"] != nil ){
                             if(self.analysisdict["human"]!["info_json"] != nil){
@@ -2218,7 +2217,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                 str1.appendString(str)
                                 str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                                 str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                                print(str1)
+                                //print(str1)
                                 //str = str1.mutableCopy() as! String
                                 var dict = NSDictionary()
                                 var jsonData = str
@@ -2240,7 +2239,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     var insidedict = dict["Human Experience Inputs"] as! [String:AnyObject]
                                     //str = str1.mutableCopy() as! String
                                     //insidedict = convertStringToDictionary(str)!
-                                    print(insidedict)
+                                    //print(insidedict)
                                     
                                     
                                     
@@ -2299,7 +2298,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                             str1.appendString(str)
                                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                                             str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                                            print(str1)
+                                            //print(str1)
                                             //str = str1.mutableCopy() as! String
                                             var dict = NSDictionary()
                                             var jsonData = str
@@ -2333,7 +2332,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     //scope2dailyarr = arr
                                     currentarr.addObject(arr)
                                     arr = NSMutableArray()
-                                    print(currentarr)
+                                    //print(currentarr)
                                     self.tableview.reloadData()
                                 }
                             }else{
@@ -2353,7 +2352,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             arr.addObject(0.00000)
                             currentarr.addObject(arr)
                         }
-                    print(currentarr)
+                    //print(currentarr)
                     self.humanarr = currentarr
                     currentarr = NSMutableArray()
                     
@@ -2365,7 +2364,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             str1.appendString(str)
                             str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
                             str = str.stringByReplacingOccurrencesOfString("None", withString: "")
-                            print(str1)
+                            //print(str1)
                             //str = str1.mutableCopy() as! String
                             var dict = NSDictionary()
                             var jsonData = str
@@ -2463,7 +2462,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             }
                             currentarr.addObject(arr)
                             arr = NSMutableArray()
-                            print(currentarr)
+                            //print(currentarr)
                             self.tableview.reloadData()
                         }else{
                             arr = NSMutableArray()
@@ -2479,32 +2478,32 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     }
 
                     self.waterarr = currentarr
-                    print(self.waterarr)
+                    //print(self.waterarr)
                     currentarr = NSMutableArray()
                     
                     arr = NSMutableArray()
-                    
-                    if(dict["energy"] is NSNull || dict["energy"] == nil){
+                    dict = NSDictionary()
+                    if(self.analysisdict["energy"] is NSNull || self.analysisdict["energy"] == nil){
                         
                     }else{
-                        if(dict["energy"]!["info_json"] is NSNull){
+                        if(self.analysisdict["energy"]!["info_json"] is NSNull){
                             let emissions = [Int]()
                             let values = [Int]()
                             self.energyemissions = emissions
                             self.energyvalues = values
                         }else{
-                            var str = dict["energy"]!["info_json"] as! String
+                            var str = self.analysisdict["energy"]!["info_json"] as! String
                             let str1 = NSMutableString()
                             str1.appendString(str)
-                            //print(str1)
+                            str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                             str = str1.mutableCopy() as! String
-                            str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
-                            str = str.stringByReplacingOccurrencesOfString("None", withString: "")
+                            //print(str)
                             let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                             do {
                                 if(self.convertStringToDictionary(str) != nil){
                                 dict = self.convertStringToDictionary(str)!
-                                
+                                //print(self.convertStringToDictionary(str))
                                 let sortedKeys = (dict.allKeys as! [String]).sort(<)
                                 var ans = sortedKeys.sort {
                                     (first, second) in
@@ -2544,7 +2543,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     }
                                     
                                 }
-                                //print("Tempdict",tempdict,values,emissions)
+                                ////print("Tempdict",tempdict,values,emissions)
                                 self.energyemissions = emissions
                                 self.energyvalues = values
                                 }
@@ -2573,8 +2572,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             var str = dict["water"]!["info_json"] as! String
                             let str1 = NSMutableString()
                             str1.appendString(str)
-                            str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
-                            str = str.stringByReplacingOccurrencesOfString("None", withString: "")
+                            str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str = str1.mutableCopy() as! String
                             do {
                                 if(self.convertStringToDictionary(str) != nil){
                                 dict = self.convertStringToDictionary(str)!
@@ -2620,7 +2620,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     }
                                     
                                 }
-                                //print("Tempdict",tempdict,values,emissions)
+                                ////print("Tempdict",tempdict,values,emissions)
                                 self.wateremissions = emissions
                                 self.watervalues = values
                                 }
@@ -2640,8 +2640,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             var str = dict["waste"]!["info_json"] as! String
                             let str1 = NSMutableString()
                             str1.appendString(str)
-                            str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
-                            str = str.stringByReplacingOccurrencesOfString("None", withString: "")
+                            str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str = str1.mutableCopy() as! String
                             let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                             do {
                                 if(self.convertStringToDictionary(str) != nil){
@@ -2686,7 +2687,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                         //self.wasteperformanceetexts.removeObjectAtIndex(self.wasteperformanceetexts.indexOfObject(key as! String))
                                     }
                                 }
-                                //print("Tempdict",tempdict,values,emissions)
+                                ////print("Tempdict",tempdict,values,emissions)
                                 self.wasteemissions = emissions
                                 self.wastevalues = values
                                 }
@@ -2707,8 +2708,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             var str = dict["transit"]!["info_json"] as! String
                             let str1 = NSMutableString()
                             str1.appendString(str)
-                            str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
-                            str = str.stringByReplacingOccurrencesOfString("None", withString: "")
+                            str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str = str1.mutableCopy() as! String
                             let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                             do {
                                 if(self.convertStringToDictionary(str) != nil){
@@ -2753,7 +2755,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                         //self.transitperformanceetexts.removeObjectAtIndex(self.transitperformanceetexts.indexOfObject(key as! String))
                                     }
                                 }
-                                //print("Tempdict",tempdict,values,emissions)
+                                ////print("Tempdict",tempdict,values,emissions)
                                 self.transitemissions = emissions
                                 self.transitvalues = values
                                 }
@@ -2773,8 +2775,9 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                             var str = dict["human"]!["info_json"] as! String
                             let str1 = NSMutableString()
                             str1.appendString(str)
-                            str = str.stringByReplacingOccurrencesOfString("'", withString: "\"")
-                            str = str.stringByReplacingOccurrencesOfString("None", withString: "")
+                            str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                            str = str1.mutableCopy() as! String
                             let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                             do {
                                 if(self.convertStringToDictionary(str) != nil){
@@ -2821,7 +2824,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     }
                                     
                                 }
-                                //print("Tempdict",tempdict,values,emissions)
+                                ////print("Tempdict",tempdict,values,emissions)
                                 self.humanemissions = emissions
                                 self.humanvalues = values
                                 }
@@ -2853,7 +2856,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         self.tableview.reloadData()
                     })
                 } catch {
-                    //print(error)
+                    ////print(error)
                 }
                 
                 
@@ -2884,7 +2887,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 let json = try NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers) as? [String:AnyObject]
                 return json
             } catch {
-                print("Something went wrong")
+                //print("Something went wrong")
             }
         }
         return nil
@@ -2905,8 +2908,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -2924,7 +2926,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     values.append(value as! Int)
                                 }
                             }
-                            //print("Tempdict",tempdict,values,emissions)
+                            ////print("Tempdict",tempdict,values,emissions)
                             self.energyemissions = emissions
                             self.energyvalues = values
                         }catch{
@@ -2952,8 +2954,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -2971,7 +2972,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     values.append(value as! Int)
                                 }
                             }
-                            //print("Tempdict",tempdict,values,emissions)
+                            ////print("Tempdict",tempdict,values,emissions)
                             self.wateremissions = emissions
                             self.watervalues = values
                         }catch{
@@ -2990,8 +2991,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -3009,7 +3009,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     values.append(value as! Int)
                                 }
                             }
-                            //print("Tempdict",tempdict,values,emissions)
+                            ////print("Tempdict",tempdict,values,emissions)
                             self.wasteemissions = emissions
                             self.wastevalues = values
                         }catch{
@@ -3030,8 +3030,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -3049,7 +3048,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     values.append(value as! Int)
                                 }
                             }
-                            //print("Tempdict",tempdict,values,emissions)
+                            ////print("Tempdict",tempdict,values,emissions)
                             self.transitemissions = emissions
                             self.transitvalues = values
                         }catch{
@@ -3069,8 +3068,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -3088,7 +3086,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                                     values.append(value as! Int)
                                 }
                             }
-                            //print("Tempdict",tempdict,values,emissions)
+                            ////print("Tempdict",tempdict,values,emissions)
                             self.humanemissions = emissions
                             self.humanvalues = values
                         }catch{
@@ -3151,7 +3149,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         var temparr = [Int]()
         if(arr.count > 0){
             for dict in arr{
-                //print(dict)
+                ////print(dict)
                 if(dict[type] is NSNull){
                     temparr.append(0)
                 }else{
@@ -3185,7 +3183,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         var tempp = 0 
         var fullarr = [Int]()
         for dict in arr{
-            //print(dict)
+            ////print(dict)
             let temp = dict as! [String:AnyObject]
             for (_,value) in temp{
                 if(value is NSNull){
@@ -3200,7 +3198,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             tempp = 0
         }
         
-        //print(fullarr)
+        ////print(fullarr)
         if(fullarr.count > 0){
             highduringreport = fullarr.maxElement()!
             lessduringreport = fullarr.minElement()!
@@ -3210,7 +3208,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     func getperformancedata(subscription_key:String, leedid: Int, date : String){
         let url = NSURL.init(string: String(format: "%@assets/LEED:%d/scores/",credentials().domain_url,leedid))
-        print(url?.absoluteURL)
+        //print(url?.absoluteURL)
         let request = NSMutableURLRequest.init(URL: url!)
         request.HTTPMethod = "GET"
         request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
@@ -3221,7 +3219,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         download_requests.append(session)
         self.task = session.dataTaskWithRequest(request) { data, response, error in
             guard error == nil && data != nil else {                                                          // check for fundamental networking error
-                print("error=\(error)")
+                //print("error=\(error)")
                 if (error?.code == -999){
                     
                 }else{
@@ -3239,17 +3237,17 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 return
             } else
                 if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
-                    print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                    print("response = \(response)")
+                    //print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    //print("response = \(response)")
                     dispatch_async(dispatch_get_main_queue(), {
                         self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                     })
                 }else{
-                    print(data)
+                    //print(data)
                     let jsonDictionary : NSMutableDictionary
                     do {
                         jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()).mutableCopy() as! NSMutableDictionary
-                        print(jsonDictionary)
+                        //print(jsonDictionary)
                         let datakeyed = NSKeyedArchiver.archivedDataWithRootObject(jsonDictionary)
                         if(jsonDictionary["scores"] != nil){
                             NSUserDefaults.standardUserDefaults().setObject(datakeyed, forKey: "performance_data")
@@ -3333,7 +3331,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         
                         
                     } catch {
-                        print(error)
+                        //print(error)
                         dispatch_async(dispatch_get_main_queue(), {
                             self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
                             
@@ -3407,7 +3405,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         if(indexPath.section == 0){
             return 0.135 * height//0.095 * height
         }else if(indexPath.section == 2){
-            return 0.33 * height
+            return 0.228 * height
         }else if(indexPath.section == 1){
             return 0.069 * height
         }
@@ -3417,31 +3415,31 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             }
             if(indexPath.section == 7){
                 if(indexPath.row >= 1 && indexPath.row <= 4){
-                    return 0.069 * height
+                    return 0.099 * height
                 }
             }
             if(indexPath.section == 6){
                 if(indexPath.row >= 1 && indexPath.row <= 4){
-                    return 0.069 * height
+                    return 0.099 * height
                 }
             }
             if(indexPath.section == 5){
                 if(indexPath.row >= 2 && indexPath.row <= 7){
-                    return 0.089 * height
+                    return 0.099 * height
                 }
             }
             if(indexPath.section == 4){
                 if(indexPath.row >= 2 && indexPath.row <= 7){
-                    return 0.089 * height
+                    return 0.099 * height
                 }
             }
             if(indexPath.section == 3){
                 if(indexPath.row >= 2 && indexPath.row <= 10){
-                    return 0.089 * height
+                    return 0.099 * height
                 }
             }
             if(indexPath.section == 8){
-                    return 0.089 * height
+                    return 0.099 * height
             }
             return 0.34 * height
             
@@ -3513,16 +3511,15 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let str1 = NSMutableString()
                     str1.appendString(str)
                     str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                    str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                    //print(str1)
+                    str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                     str = str1.mutableCopy() as! String
                     let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                     do {
-                        //print("dictsss ",dict)
+                        ////print("dictsss ",dict)
                         var temp = dict[key] as! [NSString:AnyObject]
                         temp["info_json"] = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions()) as! NSDictionary
                         dict.setValue(temp, forKey: key)
-                        //print(dict[key])
+                        ////print(dict[key])
                         var getkey = "\(dict[key]!["category"]!! as! String) Plaque Score with 10% Lower Emissions"
                         if (dict[key]!["info_json"]!![getkey] != nil) {
                             // action is not nil, is a String type, and is now stored in actionString
@@ -3574,7 +3571,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var tempostring = NSMutableAttributedString()
             cell.details.textColor = UIColor.darkGrayColor()
             tempostring = NSMutableAttributedString(string:(self.buildingdetails["name"] as? String)!)
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -3622,7 +3619,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
             tempostring = NSMutableAttributedString(string:".")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
+            //print(actualstring)
             cell.details.attributedText = actualstring
             cell.leedid.numberOfLines = 3
             cell.details.numberOfLines = 4
@@ -3682,39 +3679,45 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             cell.accessoryType = UITableViewCellAccessoryType.None
             cell.cview.current = Double(currentscore)
             cell.cview.max = Double(maxscore)
+            if(cell.cview.frame.size.width > cell.cview.frame.size.height){
+                cell.cview.frame.size.width = cell.cview.frame.size.height
+            }else{
+                cell.cview.frame.size.height = cell.cview.frame.size.width
+            }
             if(cell.cview.max == 0.0){
                 cell.cview.max = 100.0
-            }            
+            }
+            cell.cview.center = CGPointMake(cell.contentView.frame.size.width/2, cell.contentView.frame.size.height/2)
             cell.cview.addUntitled1Animation()
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
             
             
             tempostring = NSMutableAttributedString(string:"/100")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 17)! , range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
+            //print(actualstring)
             cell.lowestscorelbl.attributedText = actualstring
             
             
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(highduringreport as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
             
             
             tempostring = NSMutableAttributedString(string:"/100")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans", size: 17)! , range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
+            //print(actualstring)
             
             cell.highestscorelbl.attributedText = actualstring
             
@@ -3725,7 +3728,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             cell.highscore.adjustsFontSizeToFitWidth = true
             cell.highscore.text = tempstring as String
             cell.highscore.frame.origin.x = cell.textLabel!.frame.origin.x
-            cell.layoutSubviews()
+            
             //view.center = CGPointMake(cell.contentView.bounds.size.width/2,cell.contentView.bounds.size.height/2.5);
             cell.clipsToBounds = true
                     return cell
@@ -3932,11 +3935,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 let tempArray: NSMutableArray = NSMutableArray()
                 for i in 0..<reportedscores.count{
                     let dic: NSMutableDictionary = reportedscores[i].mutableCopy() as! NSMutableDictionary
-                    print(dic)
+                    //print(dic)
                     if(dic["effective_at"] is String){
-                        print("String",dic["effective_at"])
+                        //print("String",dic["effective_at"])
                     }else{
-                        print("date")
+                        //print("date")
                     }
                     if(dic["effective_at"] != nil){
                         let dateConverted: NSDate = dateFormatter.dateFromString(dic["effective_at"] as! String)!
@@ -3957,7 +3960,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
 
                 
                 for dict in tempreportedscores{
-                    print(dict["scores"])
+                    //print(dict["scores"])
                     if let scores = dict["scores"] as? [String:AnyObject] {
                         // action is not nil, is a String type, and is now stored in actionString
                         if(scores[type] is NSNull || scores[type] == nil){
@@ -3989,7 +3992,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         }
                     }
                     cell.maxlbl.text = "\(num as! Int)"
-                    print(num)
+                    //print(num)
                     cell.vv.startColor = UIColor.init(red: 0.776, green: 0.859, blue: 0.122, alpha: 1)
                     cell.vv.endColor = UIColor.init(red: 0.776, green: 0.859, blue: 0.122, alpha: 1)
                     cell.layoutSubviews()
@@ -4204,11 +4207,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let tempArray: NSMutableArray = NSMutableArray()
                     for i in 0..<reportedscores.count{
                         let dic: NSMutableDictionary = reportedscores[i].mutableCopy() as! NSMutableDictionary
-                        print(dic)
+                        //print(dic)
                         if(dic["effective_at"] is String){
-                            print("String",dic["effective_at"])
+                            //print("String",dic["effective_at"])
                         }else{
-                            print("date")
+                            //print("date")
                         }
                         if(dic["effective_at"] != nil){
                             let dateConverted: NSDate = dateFormatter.dateFromString(dic["effective_at"] as! String)!
@@ -4229,7 +4232,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     
                     
                     for dict in tempreportedscores{
-                        print(dict["scores"])
+                        //print(dict["scores"])
                         if let scores = dict["scores"] as? [String:AnyObject] {
                             // action is not nil, is a String type, and is now stored in actionString
                             if(scores[type] is NSNull || scores[type] == nil){
@@ -4261,7 +4264,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         }
                     }
                     //cell.maxlbl1.text = "\(num as! Int)"
-                    print(num)
+                    //print(num)
                     cell.vv.startColor = UIColor.init(red: 0.303, green: 0.751, blue: 0.94, alpha: 1)
                     cell.vv.endColor = UIColor.init(red: 0.303, green: 0.751, blue: 0.94, alpha: 1)
                     cell.layoutSubviews()
@@ -4431,11 +4434,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let tempArray: NSMutableArray = NSMutableArray()
                     for i in 0..<reportedscores.count{
                         let dic: NSMutableDictionary = reportedscores[i].mutableCopy() as! NSMutableDictionary
-                        print(dic)
+                        //print(dic)
                         if(dic["effective_at"] is String){
-                            print("String",dic["effective_at"])
+                            //print("String",dic["effective_at"])
                         }else{
-                            print("date")
+                            //print("date")
                         }
                         if(dic["effective_at"] != nil){
                             let dateConverted: NSDate = dateFormatter.dateFromString(dic["effective_at"] as! String)!
@@ -4456,7 +4459,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     
                     
                     for dict in tempreportedscores{
-                        print(dict["scores"])
+                        //print(dict["scores"])
                         if let scores = dict["scores"] as? [String:AnyObject] {
                             // action is not nil, is a String type, and is now stored in actionString
                             if(scores[type] is NSNull || scores[type] == nil){
@@ -4488,7 +4491,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         }
                     }
                     //cell.maxlbl2.text = "\(num as! Int)"
-                    print(num)
+                    //print(num)
                     cell.vv.startColor = UIColor.init(red: 0.461, green: 0.76, blue: 0.629, alpha: 1)
                     cell.vv.endColor = UIColor.init(red: 0.461, green: 0.76, blue: 0.629, alpha: 1)
                     cell.layoutSubviews()
@@ -4657,11 +4660,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let tempArray: NSMutableArray = NSMutableArray()
                     for i in 0..<reportedscores.count{
                         let dic: NSMutableDictionary = reportedscores[i].mutableCopy() as! NSMutableDictionary
-                        print(dic)
+                        //print(dic)
                         if(dic["effective_at"] is String){
-                            print("String",dic["effective_at"])
+                            //print("String",dic["effective_at"])
                         }else{
-                            print("date")
+                            //print("date")
                         }
                         if(dic["effective_at"] != nil){
                             let dateConverted: NSDate = dateFormatter.dateFromString(dic["effective_at"] as! String)!
@@ -4682,7 +4685,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     
                     
                     for dict in tempreportedscores{
-                        print(dict["scores"])
+                        //print(dict["scores"])
                         if let scores = dict["scores"] as? [String:AnyObject] {
                             // action is not nil, is a String type, and is now stored in actionString
                             if(scores[type] is NSNull || scores[type] == nil){
@@ -4713,7 +4716,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         }
                     }
                     //cell.maxlbl3.text = "\(num as! Int)"
-                    print(num)
+                    //print(num)
                     cell.vv.startColor = UIColor.init(red: 0.572, green: 0.556, blue: 0.505, alpha: 1)
                     cell.vv.endColor = UIColor.init(red: 0.572, green: 0.556, blue: 0.505, alpha: 1)
                     cell.layoutSubviews()
@@ -4834,11 +4837,11 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let tempArray: NSMutableArray = NSMutableArray()
                     for i in 0..<reportedscores.count{
                         let dic: NSMutableDictionary = reportedscores[i].mutableCopy() as! NSMutableDictionary
-                        print(dic)
+                        //print(dic)
                         if(dic["effective_at"] is String){
-                            print("String",dic["effective_at"])
+                            //print("String",dic["effective_at"])
                         }else{
-                            print("date")
+                            //print("date")
                         }
                         if(dic["effective_at"] != nil){
                             let dateConverted: NSDate = dateFormatter.dateFromString(dic["effective_at"] as! String)!
@@ -4859,7 +4862,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     
                     
                     for dict in tempreportedscores{
-                        print(dict["scores"])
+                        //print(dict["scores"])
                         if let scores = dict["scores"] as? [String:AnyObject] {
                             // action is not nil, is a String type, and is now stored in actionString
                             if(scores[type] is NSNull || scores[type] == nil){
@@ -4893,7 +4896,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         }
                     }
                     //cell.maxlbl4.text = "\(num as! Int)"
-                    print(num)
+                    //print(num)
                     cell.layoutSubviews()
                     cell.setNeedsDisplay()
                     cell.setNeedsLayout()
@@ -4958,6 +4961,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     cell.textLabel?.numberOfLines = 2
                     let f = Float(arr[indexPath.row - 1 ].firstObject as! Int)
                     cell.detailTextLabel?.text = String(format:"%.2f",f)
+                    cell.textLabel!.numberOfLines = 0;
+                    cell.textLabel!.lineBreakMode = .ByWordWrapping
                     cell.clipsToBounds = true
                     return cell
                  }else if(indexPath.row == 2){
@@ -4968,6 +4973,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                     let f = Float(arr[indexPath.row - 1 ].firstObject as! Int)
                     cell.detailTextLabel?.text = String(format:"%.2f",f)
                     cell.clipsToBounds = true
+                    cell.textLabel!.numberOfLines = 0;
+                    cell.textLabel!.lineBreakMode = .ByWordWrapping
                     return cell
                  }else if(indexPath.row == 3){
                     let cell = tableView.dequeueReusableCellWithIdentifier("extradetails")! as! extradetails
@@ -5078,7 +5085,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if(section == 3){
-            print("SCoresssss ",scoresarr)
+            //print("SCoresssss ",scoresarr)
             let vieww = UIView.init(frame: dualsliderview.frame)
             let inset: CGFloat = 10
             var frame = vieww.frame
@@ -5404,7 +5411,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(globalavgarr.objectAtIndex(0) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5412,8 +5419,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(energymaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            globalscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            globalscore.font = UIFont.init(name: "OpenSans", size: 17)
             globalscore.attributedText = actualstring
             globalscore.textAlignment = NSTextAlignment.Center
             //globalscore.textColor = UIColor.whiteColor()
@@ -5423,7 +5430,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(localavgarr.objectAtIndex(0) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5431,8 +5438,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(energymaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            localscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            localscore.font = UIFont.init(name: "OpenSans", size: 17)
             localscore.attributedText = actualstring
             //localscore.textColor = UIColor.whiteColor()
             localscore.textAlignment = NSTextAlignment.Center
@@ -5453,7 +5460,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(sum/12 as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5461,8 +5468,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(energymaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            avgscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            avgscore.font = UIFont.init(name: "OpenSans", size: 17)
             avgscore.attributedText = actualstring
             
             
@@ -5491,7 +5498,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(energymax as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5499,8 +5506,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(energymaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            highest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            highest.font = UIFont.init(name: "OpenSans", size: 17)
             highest.attributedText = actualstring
             highest.textAlignment = highestscore.textAlignment
             
@@ -5528,7 +5535,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5536,8 +5543,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(energymaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            lowest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            lowest.font = UIFont.init(name: "OpenSans", size: 17)
             lowest.attributedText = actualstring
             lowest.textAlignment = lowestscore.textAlignment
             vieww.addSubview(highest)
@@ -5872,7 +5879,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(globalavgarr.objectAtIndex(1) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5880,8 +5887,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(watermaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            globalscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            globalscore.font = UIFont.init(name: "OpenSans", size: 17)
             globalscore.attributedText = actualstring
             globalscore.textAlignment = NSTextAlignment.Center
             //globalscore.textColor = UIColor.whiteColor()
@@ -5891,7 +5898,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(localavgarr.objectAtIndex(1) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5899,8 +5906,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(watermaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            localscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            localscore.font = UIFont.init(name: "OpenSans", size: 17)
             localscore.attributedText = actualstring
             //localscore.textColor = UIColor.whiteColor()
             localscore.textAlignment = NSTextAlignment.Center
@@ -5921,7 +5928,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(sum/12 as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5929,8 +5936,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(watermaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            avgscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            avgscore.font = UIFont.init(name: "OpenSans", size: 17)
             avgscore.attributedText = actualstring
             //avgscore.textColor = UIColor.whiteColor()
             avgscore.textAlignment = NSTextAlignment.Center
@@ -5958,7 +5965,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(watermax as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -5966,8 +5973,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(watermaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            highest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            highest.font = UIFont.init(name: "OpenSans", size: 17)
             highest.attributedText = actualstring
             highest.textAlignment = highestscore.textAlignment
             
@@ -5995,7 +6002,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6003,8 +6010,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(watermaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            lowest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            lowest.font = UIFont.init(name: "OpenSans", size: 17)
             lowest.attributedText = actualstring
             lowest.textAlignment = lowestscore.textAlignment
             vieww.addSubview(highest)
@@ -6340,7 +6347,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(globalavgarr.objectAtIndex(2) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6348,8 +6355,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(wastemaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            globalscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            globalscore.font = UIFont.init(name: "OpenSans", size: 17)
             globalscore.attributedText = actualstring
             globalscore.textAlignment = NSTextAlignment.Center
             //globalscore.textColor = UIColor.whiteColor()
@@ -6359,7 +6366,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(localavgarr.objectAtIndex(2) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6367,8 +6374,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(wastemaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            localscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            localscore.font = UIFont.init(name: "OpenSans", size: 17)
             localscore.attributedText = actualstring
             //localscore.textColor = UIColor.whiteColor()
             localscore.textAlignment = NSTextAlignment.Center
@@ -6389,7 +6396,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(sum/12 as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6397,8 +6404,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(wastemaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            avgscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            avgscore.font = UIFont.init(name: "OpenSans", size: 17)
             avgscore.attributedText = actualstring
             //avgscore.textColor = UIColor.whiteColor()
             avgscore.textAlignment = NSTextAlignment.Center
@@ -6425,7 +6432,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(wastemax as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6433,8 +6440,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(wastemaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            highest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            highest.font = UIFont.init(name: "OpenSans", size: 17)
             highest.attributedText = actualstring
             highest.textAlignment = highestscore.textAlignment
             
@@ -6462,7 +6469,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6470,8 +6477,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(wastemaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            lowest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            lowest.font = UIFont.init(name: "OpenSans", size: 17)
             lowest.attributedText = actualstring
             lowest.textAlignment = lowestscore.textAlignment
             vieww.addSubview(highest)
@@ -6805,7 +6812,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(globalavgarr.objectAtIndex(3) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6813,8 +6820,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(transportmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            globalscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            globalscore.font = UIFont.init(name: "OpenSans", size: 17)
             globalscore.attributedText = actualstring
             globalscore.textAlignment = NSTextAlignment.Center
             //globalscore.textColor = UIColor.whiteColor()
@@ -6824,7 +6831,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(localavgarr.objectAtIndex(3) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6832,8 +6839,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(transportmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            localscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            localscore.font = UIFont.init(name: "OpenSans", size: 17)
             localscore.attributedText = actualstring
             //localscore.textColor = UIColor.whiteColor()
             localscore.textAlignment = NSTextAlignment.Center
@@ -6854,7 +6861,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(sum/12 as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6862,8 +6869,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(transportmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            avgscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            avgscore.font = UIFont.init(name: "OpenSans", size: 17)
             avgscore.attributedText = actualstring
             //avgscore.textColor = UIColor.whiteColor()
             avgscore.textAlignment = NSTextAlignment.Center
@@ -6891,7 +6898,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(transportmax as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6899,8 +6906,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(transportmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            highest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            highest.font = UIFont.init(name: "OpenSans", size: 17)
             highest.attributedText = actualstring
             highest.textAlignment = highestscore.textAlignment
             
@@ -6928,7 +6935,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -6936,8 +6943,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(transportmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            lowest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            lowest.font = UIFont.init(name: "OpenSans", size: 17)
             lowest.attributedText = actualstring
             lowest.textAlignment = lowestscore.textAlignment
             vieww.addSubview(highest)
@@ -7270,7 +7277,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             var actualstring = NSMutableAttributedString()
             var tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(globalavgarr.objectAtIndex(4) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -7278,8 +7285,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(humanmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            globalscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            globalscore.font = UIFont.init(name: "OpenSans", size: 17)
             globalscore.attributedText = actualstring
             globalscore.textAlignment = NSTextAlignment.Center
             //globalscore.textColor = UIColor.whiteColor()
@@ -7289,7 +7296,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(localavgarr.objectAtIndex(4) as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -7297,8 +7304,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(humanmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            localscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            localscore.font = UIFont.init(name: "OpenSans", size: 17)
             localscore.attributedText = actualstring
             //localscore.textColor = UIColor.whiteColor()
             localscore.textAlignment = NSTextAlignment.Center
@@ -7320,7 +7327,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(sum/12 as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -7328,8 +7335,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(humanmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            avgscore.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            avgscore.font = UIFont.init(name: "OpenSans", size: 17)
             avgscore.attributedText = actualstring
             avgscore.textAlignment = NSTextAlignment.Center
             decorvv.addSubview(avgscore)
@@ -7356,7 +7363,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"\(humanmax as! Int)")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -7364,8 +7371,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(humanmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            highest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            highest.font = UIFont.init(name: "OpenSans", size: 17)
             highest.attributedText = actualstring
             highest.textAlignment = highestscore.textAlignment
             
@@ -7393,7 +7400,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             actualstring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString()
             tempostring = NSMutableAttributedString(string:"0")
-            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 13)! , range: NSMakeRange(0, tempostring.length))
+            tempostring.addAttribute(NSFontAttributeName, value: UIFont.init(name: "OpenSans-Bold", size: 17)! , range: NSMakeRange(0, tempostring.length))
             tempostring.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, tempostring.length))
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
             tempostring.deleteCharactersInRange(NSMakeRange(0, tempostring.length))
@@ -7401,8 +7408,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             
             tempostring = NSMutableAttributedString(string:"/\(humanmaxscore as! Int)")
             actualstring.appendAttributedString(tempostring.mutableCopy() as! NSAttributedString)
-            print(actualstring)
-            lowest.font = UIFont.init(name: "OpenSans", size: 13)
+            //print(actualstring)
+            lowest.font = UIFont.init(name: "OpenSans", size: 17)
             lowest.attributedText = actualstring
             lowest.textAlignment = lowestscore.textAlignment
             vieww.addSubview(highest)
@@ -7425,27 +7432,20 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
             emissionstitle.text = "CARBON EMISSIONS"
             vieww.addSubview(emissionstitle)
             
-            let subview = UIView.init(frame: innerview1.frame)
+            
             let innerimage1 = UIImageView.init(frame: innerimg.frame)
-            innerimage1.image = innerarrow1.image
+            innerimage1.image = innerimg.image
             
             
-            let innerlbl = UILabel.init(frame: innerlbl1.frame)
-            if(boolarr[section] == false){
-            innerlbl.text = "Show data"
-            }else{
-            innerlbl.text = "Hide data"
-            }
-            innerlbl.font = innerlbl1.font
+            
             innerlbl.textAlignment = .Right
-            subview.addSubview(innerlbl)
-            vieww.addSubview(subview)
+            
             vieww.backgroundColor = UIColor.whiteColor()
             vieww.addSubview(innerimage1)
             let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTap:")
             gestureRecognizer.delegate = self
-            subview.tag = section
-            subview.addGestureRecognizer(gestureRecognizer)
+            vieww.tag = section
+            vieww.addGestureRecognizer(gestureRecognizer)
             return vieww
         }
         
@@ -7467,14 +7467,14 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
         self.tableview.endUpdates()
         //self.tableview.reloadData()
             })
-     print("tap")
+     //print("tap")
     }
     
     
     func slider1Changed(sender: UISlider) {
         let roundedValue = round(sender.value / step) * step
         sender.value = roundedValue
-        print(sender.value,sender.tag)
+        //print(sender.value,sender.tag)
         if(sender.tag == 10){
             //1st energy slider1
             var temparr = NSMutableArray()
@@ -7498,8 +7498,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                 c.l2.text = "My new energy score will be \(Int(tempvalue as! NSNumber))"
                 (self.view.viewWithTag(1001) as! UILabel).text = "If I reduce my emissions by \(tempstr as! String)"
                 (self.view.viewWithTag(1002) as! UILabel).text = "My new energy score will be \(Int(tempvalue as! NSNumber))"
-                print(Int(sender.value))
-                print(temparr.count)
+                //print(Int(sender.value))
+                //print(temparr.count)
             }else{
                 
                 var tempstr = temparr.objectAtIndex(Int(sender.value)).allKeys.first as! String
@@ -7781,7 +7781,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
     /*func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if(indexPath.section == 0){
-            print("Anslysis dict",analysisdict)
+            //print("Anslysis dict",analysisdict)
             if(analysisdict.count > 0){
             self.performSegueWithIdentifier("overalldetails", sender: nil)
             }
@@ -7913,8 +7913,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
@@ -7968,9 +7967,8 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str!)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str!.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str!.characters.count))
-                        //print(str1)
-                        str = str1.mutableCopy() as? String
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str!.characters.count))
+                        str = str1.mutableCopy() as! String
                         let jsonData = (str!).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
                             dict = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions()) as! NSDictionary
@@ -8021,8 +8019,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.
                         let str1 = NSMutableString()
                         str1.appendString(str)
                         str1.replaceOccurrencesOfString("'", withString: "\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        str1.replaceOccurrencesOfString("None", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
-                        //print(str1)
+                        str1.replaceOccurrencesOfString("None", withString: "\"None\"", options: NSStringCompareOptions.CaseInsensitiveSearch, range: NSMakeRange(0, str.characters.count))
                         str = str1.mutableCopy() as! String
                         let jsonData = (str).dataUsingEncoding(NSUTF8StringEncoding)
                         do {
