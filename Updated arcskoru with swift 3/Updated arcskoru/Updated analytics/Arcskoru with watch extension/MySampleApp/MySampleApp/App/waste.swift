@@ -1063,6 +1063,8 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
         }else{
         self.navigationController?.navigationBar.backItem?.title = "Credits/Actions"
         }
+        let dict = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary
+        self.navigationItem.title = dict["name"] as? String
         navigate()
     }
     
@@ -1645,8 +1647,10 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                     if(occupancy < 500){
                         cell.contextlbl.text = "A response rate of 25.00% for your project, will generate a score"
                     }else{
-                        cell.contextlbl.text = "A response rate of \((0.25/sqrt(Double(occupancy)/500.0)) * 100) for your project, will generate a score"
+                        cell.contextlbl.text = String(format:"A response rate of %.2f%% for your project, will generate a score",(0.25/sqrt(Double(occupancy)/500.0)) * 100)
                     }
+                    cell.selectionStyle = .none
+                    
                 }
                 
                 cell.vv.addUntitled1Animation()
@@ -2413,6 +2417,7 @@ class waste: UIViewController,UITabBarDelegate, UIPickerViewDataSource, UIPicker
                         UserDefaults.standard.set(datakeyed, forKey: "actions_data")
                         UserDefaults.standard.synchronize()
                         self.spinner.isHidden = true
+                          self.maketoast("Updated successfully",type: "message")
                         self.navigate()
                     })
                 } catch {

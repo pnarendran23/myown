@@ -43,7 +43,7 @@ var token = UserDefaults.standard.object(forKey: "token") as! String
             self.tableView.deselectRow(at: indexPath!, animated:true)
         }
         
-        
+        self.navigationController?.navigationBar.backItem?.title = "More"
     }
     
     @IBAction func add(_ sender: AnyObject) {

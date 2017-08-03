@@ -86,6 +86,8 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
         }else{
             self.navigationController?.navigationBar.backItem?.title = "Credits/Actions"
         }
+        let dict = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary        
+        self.navigationItem.title = dict["name"] as? String
         navigate()
     }
     
@@ -555,7 +557,50 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
     var edit = 0
     func editcurrentmeter(_ sender:UIButton){
         self.edit = 1
+        let t = [["Generated onsite - solar","Purchased from Grid"],["Municipality supplied potable water","Municipality supplied reclaimed water","Reclaimed onsite"],["District Strem","District Hot water","District chilled water (Electric driven chiller)","District chilled water(Absorption chiller using natural gas)","District chilled water(Engine driven chiller using natural gas)","Natural gas","Fuel oil (No.2)","Wood","Propane","Liquid propane","Kerosene","Fuel oil (No.1)","Fuel oil (No.5 & No.6)","Coal (anthracite)","Coal (bituminous)","Coke","Fuel oil (No.4)","Diesel"]]
+        
         currentmeter = self.meters.object(at: sender.tag - 10) as! NSDictionary
+        var n = ""
+        for i in t{
+            var v = i as! NSArray
+            if let dict = currentmeter["fuel_type"] as? NSDictionary{
+                if let type = currentmeter["subtype"] as? String{
+                    if(v.contains(type)){
+                        n = type
+                        break
+                    }
+                }
+            }
+        }
+        
+        if(n == ""){
+            currentmeter = ["id": 11156,
+            "partner_details": NSNull(),
+            "partner_meter_id": NSNull(),
+            "name": "styuu",
+            "included": true,
+            "native_unit": "kWh",
+            "type": 39,
+            "updated_at": "2017-07-21T09:38:06.889853Z",
+            "updated_by": NSNull(),
+            "status": "synced",
+            "area_choice": NSNull(),
+            "responsibility": NSNull(),
+            "data_coverage_area": NSNull(),
+            "max_coverage_area": NSNull(),
+            "fuel_type": [
+                "id": 25,
+                "type": "Purchased from Grid",
+                "subtype": "",
+                "kind": "electricity",
+                "include_in_dropdown_list": true,
+                "resource": "Non-Renewable",
+                ],
+            "area_unit": NSNull()] as! NSDictionary
+                
+        }
+        
+        
         self.performSegue(withIdentifier: "gotoaddmeter", sender: nil)
     }
     
@@ -577,8 +622,8 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
             })
             
                 }
-        let defaultAction = UIAlertAction(title: "Yes", style: .default , handler:callActionHandler)
-        let cancelAction = UIAlertAction(title: "No", style: .destructive, handler:nil)
+        let defaultAction = UIAlertAction(title: "Yes", style: .destructive , handler:callActionHandler)
+        let cancelAction = UIAlertAction(title: "No", style: .default, handler:nil)
         alertController.addAction(cancelAction)
         alertController.addAction(defaultAction)
         alertController.view.subviews.first?.backgroundColor = UIColor.white
@@ -598,6 +643,9 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
         
         //print("dict is selected ",dict["id"] as! Int, selectedreading)
         //  tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        var tempdict = (graphPoints.object(at: sender.view!.tag) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        sel_title = tempdict["name"] as! String
+        
        self.performSegue(withIdentifier: "gotoreadings", sender: nil)
 
     }
@@ -1965,7 +2013,12 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if(indexPath.section > 0){            
+        if(tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) is customcellwithgraph){
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! customcellwithgraph
+                sel_title = cell.heading.text!
+        }
+        if(indexPath.section > 0){
+            
         if(indexPath.section == meters.count+1){
             
         }
@@ -2062,6 +2115,7 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation*/
+    var sel_title = ""
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         /*if(segue.identifier == "gotoreadings"){
         NSUserDefaults.standardUserDefaults().setInteger(id, forKey: "meterID")
@@ -2071,6 +2125,7 @@ class datainput: UIViewController, UITableViewDataSource,UITableViewDelegate,UIT
             let vc = segue.destination  as! listall
             vc.dataarr = selectedreading.mutableCopy() as! NSMutableArray
             vc.id = id
+            vc.meter_name = sel_title
         }else if(segue.identifier == "gotoaddmeter"){
             let vc = segue.destination as! addnewmetervc
             vc.type = self.type

@@ -662,15 +662,18 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     // 2. Force the device in landscape mode when the view controller gets loaded
+    
     if([[NSMutableArray arrayWithArray:[prefs objectForKey:@"experiencearr"]] count] > 0){
         experiencearr=[[[NSMutableArray arrayWithArray:[prefs objectForKey:@"experiencearr"]] objectAtIndex:1]mutableCopy];
     }
     NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
-    self.navigationController.navigationBar.backItem.title = dict[@"name"];
+    self.navigationItem.title = dict[@"name"];
     if([[NSUserDefaults standardUserDefaults] integerForKey:@"closeboth"] == 1){
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"closeboth"];
         [self.navigationController popViewControllerAnimated:YES];
     }
+    self.navigationItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = dict[@"More"];
 }
 
 

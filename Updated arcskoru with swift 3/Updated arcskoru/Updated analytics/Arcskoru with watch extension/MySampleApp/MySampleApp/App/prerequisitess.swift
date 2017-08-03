@@ -221,7 +221,12 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
             if(creditDescription.lowercased() == "under review"){
                 self.showalert("Updation is not allowed when the credit is under review", title: "Error", action: "OK")
             }else{
-        self.performSegue(withIdentifier: "addnew", sender: nil)
+                if((currentarr["CreditDescription"] as! String).lowercased() == "additional details" || (currentarr["CreditDescription"] as! String).lowercased() == "additional data"){
+                    edit = 0
+                    
+                self.performSegue(withIdentifier: "addnew", sender: nil)
+                    
+                }
             }
         }
     }
@@ -239,6 +244,8 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
         }else{
             self.navigationController?.navigationBar.backItem?.title = "Credits/Actions"
         }
+        var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        self.navigationItem.title = buildingdetails["name"] as? String
         navigate()
     }
     
@@ -428,7 +435,7 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
             textView.text = ""
         }else if(textView.text == "Project Team. Identify the names of individual stakeholders within the \(s) who will work on the LEED for \(t) certification and describe their role."){
             textView.text = ""
-        }else if(textView.text == "Project Engagement. Identify key stakeholders within the \(s) who the \(s) has engaged or will engage as part of the certification."){
+        }else if(textView.text == "\(s.capitalized) Engagement. Identify key stakeholder groups within the \(s) who the \(s) has engaged or will engage as part of its planning."){
             textView.text = ""
         }else if (textView.text == "For \(t) with existing plans:Upload or link to relevant planning documents, upload a crosswalk between goals or strategies in the relevant planning documents and categories in the performance score. \n For \(t) that are developing plans: Upload a document that: Lists goals, lists strategies under each goal, and lists the performance score metric associated with each strategy"){
             textView.text = ""
@@ -437,7 +444,7 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        //print(textView.tag)
+        //print(textView.tag)x5
         //print(textView.text)
         var s = ""
         var t = ""
@@ -479,7 +486,7 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
                 }
             }else if(textView.tag == 1){
                 if(textView.text.characters.count == 0){
-                    textView.text = "Project Engagement. Identify key stakeholders within the \(s) who the \(s) has engaged or will engage as part of the certification."
+                    textView.text = "\(s.capitalized) Engagement. Identify key stakeholder groups within the \(s) who the \(s) has engaged or will engage as part of its planning."
                 }
             }
         }else if(currentarr["CreditDescription"] as! String != "Roadmap"){
@@ -795,6 +802,14 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
         if(tableView ==  feedstable){
             if(building_dict["project_type"] as! String == "city" || building_dict["project_type"] as! String == "community"){
                 if(section == 0){
+                    
+                    if((currentarr["CreditDescription"] as! String).lowercased() == "additional details" || (currentarr["CreditDescription"] as! String).lowercased() == "additional data"){
+                        
+                        if(elementarr.count > 0){
+                            return "Requirements (Please swipe left the below to explore data)"
+                        }
+                        return "No Requirements Present."
+                    }
                     return "Requirements"
                 }else if(section == 1){
                     return "Assigned to"
@@ -1172,12 +1187,13 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
                             }
                         }
                     }
+                    return cell
                 }else{
                     let cell = tableView.dequeueReusableCell(withIdentifier: "textcell")! as! textcell
                     if(building_dict["project_type"] as! String == "city"){
-                        cell.tview.text = "Project Engagement. Identify key stakeholders within the \(s) who the \(s) has engaged or will engage as part of the certification."
+                        cell.tview.text = "\(s.capitalized) Engagement. Identify key stakeholder groups within the \(s) who the \(s) has engaged or will engage as part of its planning."
                     }else{
-                        cell.tview.text = "Project Engagement. Identify key stakeholders within the \(s) who the \(s) has engaged or will engage as part of the certification."
+                        cell.tview.text = "\(s.capitalized) Engagement. Identify key stakeholder groups within the \(s) who the \(s) has engaged or will engage as part of its planning."
                     }
                     cell.tview.font = UIFont.init(name: "OpenSans", size: 12)
                     cell.tview.tag = 1
@@ -1198,8 +1214,9 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
                             }
                         }
                     }
+                    return cell
                 }
-                return cell
+                
             }
             
         }
@@ -1499,30 +1516,32 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
     }
     
     @IBAction func previous(_ sender: AnyObject) {
-        if(currentindex>0){
+        DispatchQueue.main.async(execute: {
+        if(self.currentindex>0){
             /*if(task.currentRequest != nil){
              if (task.state == NSURLSessionTaskState.Running) {
              task.cancel()
              }
              }*/
-            currentindex = currentindex-1
-            UserDefaults.standard.set(currentindex, forKey: "selected_action")
-            currentarr = (currentcategory[currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-            if(checkcredit_type(currentarr) == "Data input"){
-                navigate()
+            self.currentindex = self.currentindex-1
+            UserDefaults.standard.set(self.currentindex, forKey: "selected_action")
+            self.currentarr = (self.currentcategory[self.currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            if(self.checkcredit_type(self.currentarr) == "Data input"){
+                self.navigate()
             }else{
-                navigate()
+                self.navigate()
             }
         }else{
-            currentindex = currentcategory.count - 1
-            UserDefaults.standard.set(currentindex, forKey: "selected_action")
-            currentarr = (currentcategory[currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            self.currentindex = self.currentcategory.count - 1
+            UserDefaults.standard.set(self.currentindex, forKey: "selected_action")
+            self.currentarr = (self.currentcategory[self.currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
             var datakeyed = Data()
-            datakeyed  = NSKeyedArchiver.archivedData(withRootObject: currentcategory)
+            datakeyed  = NSKeyedArchiver.archivedData(withRootObject: self.currentcategory)
                 UserDefaults.standard.set(datakeyed, forKey: "currentcategory")
-            navigate()
+            self.navigate()
             
         }
+        })
     }
     @IBOutlet weak var ivupload2: UISwitch!
     
@@ -1534,6 +1553,67 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
     @IBOutlet weak var ivattached2: UISwitch!
     
     @IBOutlet weak var ivupload1: UISwitch!
+    
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let shareAction  = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
+            let data = (self.elementarr[indexPath.row] as! NSArray).mutableCopy() as! NSMutableArray
+            self.sel_field = data[0] as! String
+            self.sel_index = indexPath.row
+            self.edit = 1
+            self.performSegue(withIdentifier: "addnew", sender: nil)
+        }
+        let deleteAction  = UITableViewRowAction(style: .default, title: "Delete") { (rowAction, indexPath) in
+            
+            
+            DispatchQueue.main.async(execute: {
+                let alertController = UIAlertController(title: "Delete data", message: "Would you like to delete the selected data?", preferredStyle: .alert)
+                let callActionHandler = { (action:UIAlertAction!) -> Void in
+                    DispatchQueue.main.async(execute: {
+                        var dict = (self.uploadsdata.firstObject as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                        self.spinner.isHidden = false
+                        self.view.isUserInteractionEnabled = false
+                        self.delactiondata(credentials().subscription_key, leedid: UserDefaults.standard.integer(forKey: "leed_id"), ID: self.currentarr["CreditShortId"] as! String, payload: "", year: Int(dict["year"] as! String)!)
+                        
+                    })
+                    
+                }
+                
+                let cancelActionHandler = { (action:UIAlertAction!) -> Void in
+                    DispatchQueue.main.async(execute: {
+                      tableView.setEditing(false, animated: true)
+                    })
+                    
+                }
+                let cancelAction = UIAlertAction(title: "No", style: .default, handler:cancelActionHandler)
+                
+                let defaultAction = UIAlertAction(title: "Yes", style: .destructive, handler:callActionHandler)
+                
+                alertController.addAction(cancelAction)
+                alertController.addAction(defaultAction)
+                
+                alertController.view.subviews.first?.backgroundColor = UIColor.white
+                alertController.view.layer.cornerRadius = 10
+                alertController.view.layer.masksToBounds = true
+                self.present(alertController, animated: true, completion: nil)
+            
+            })
+        }
+        deleteAction.backgroundColor = UIColor.init(red: 0.858, green: 0.211, blue: 0.196, alpha: 1)
+        shareAction.backgroundColor = UIColor.init(red: 0.756, green: 0.756, blue: 0.756, alpha: 1)
+        return [deleteAction,shareAction]
+    }
+    var sel_field = ""
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+                if ((currentarr["CreditDescription"] as! String).lowercased() == "additional details" || (currentarr["CreditDescription"] as! String).lowercased() == "additional data"){
+        if(indexPath.section == 0){
+            return indexPath.row >= 0 ? true : false
+        }
+        }
+        return false
+    }
+    
+    
     func navigate(){
         self.statusswitch.isHidden = false
         self.creditstatus.isHidden = false
@@ -1726,19 +1806,24 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
                 controllers.append(listofactions)
                 controllers.append(datainput)
                 //self.navigationController?.setViewControllers(controllers, animated: false)*/
-                navigate()
+                DispatchQueue.main.async(execute: {
+                self.navigate()
+                })
             }else{
-                navigate()
+                DispatchQueue.main.async(execute: {
+                self.navigate()
+                })
             }
         }else{
-            currentindex = 0
-            UserDefaults.standard.set(currentindex, forKey: "selected_action")
-            currentarr = (currentcategory[currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            DispatchQueue.main.async(execute: {
+            self.currentindex = 0
+            UserDefaults.standard.set(self.currentindex, forKey: "selected_action")
+            self.currentarr = (self.currentcategory[self.currentindex] as! NSDictionary).mutableCopy() as! NSMutableDictionary
             var datakeyed = Data()
-            datakeyed  = NSKeyedArchiver.archivedData(withRootObject: currentcategory)
+            datakeyed  = NSKeyedArchiver.archivedData(withRootObject: self.currentcategory)
             UserDefaults.standard.set(datakeyed, forKey: "currentcategory")
-            navigate()
-            
+            self.navigate()
+            })
         }
     }
     
@@ -1897,7 +1982,6 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
                                     var arr = NSMutableArray()
                                     var d = data["data"] as! NSDictionary
                                     print("\(token[0] as! String)_num_name")
-                                    print()
                                     arr.add(d["\(token[0] as! String)_num_name"] as! String)
                                     arr.add(d["\(token[0] as! String)_num"] as! String)
                                     arr.add(d["\(token[0] as! String)_num_unit"] as! String)
@@ -2005,6 +2089,81 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
         
     }
 
+    func delactiondata(_ subscription_key:String, leedid: Int, ID : String, payload : String, year : Int){
+        let url = URL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@/data/%d/",credentials().domain_url, leedid,ID,year))
+        ////print(url?.absoluteURL)
+        var subscription_key = credentials().subscription_key
+        var token = UserDefaults.standard.object(forKey: "token") as! String
+        DispatchQueue.main.async(execute: {
+            self.view.isUserInteractionEnabled = false
+        })
+        let request = NSMutableURLRequest.init(url: url!)
+        request.httpMethod = "DELETE"
+        request.addValue(subscription_key, forHTTPHeaderField:"Ocp-Apim-Subscription-Key" )
+        request.addValue("application/json", forHTTPHeaderField:"Content-type" )
+        request.addValue(String(format:"Bearer %@",token), forHTTPHeaderField:"Authorization" )
+        var httpbody = "{}"
+        request.httpBody = httpbody.data(using: String.Encoding.utf8)
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        download_requests.append(session)
+        var task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                //print("error=\(error)")
+                DispatchQueue.main.async(execute: {
+                    self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    
+                })
+                return
+            }
+            if let httpStatus = response as? HTTPURLResponse{
+                print(httpStatus.statusCode)
+            }
+            
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode == 401{
+                DispatchQueue.main.async(execute: {
+                    //self.showalert("Please check your internet connection or try again later", title: "Device in offline", action: "OK")
+                    self.spinner.isHidden = true
+                    self.view.isUserInteractionEnabled = true
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: "renewtoken"), object: nil, userInfo:nil)
+                    
+                })
+                return
+            } else
+                if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 && httpStatus.statusCode != 201{           // check for http errors
+                    //print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                    //print("response = \(response)")
+                    DispatchQueue.main.async(execute: {
+                        self.spinner.isHidden = true
+                        self.view.isUserInteractionEnabled = true
+                    })
+                }else{
+                    var jsonDictionary : NSDictionary
+                    do {
+                        jsonDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions()) as! NSDictionary
+                        //print(jsonDictionary)
+                        //self.tableview.reloadData()
+                        // self.buildingactions(subscription_key, leedid: leedid)
+                    } catch {
+                        //print(error)
+                    }
+                    if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode == 200{
+                        DispatchQueue.main.async(execute: {
+                            self.view.isUserInteractionEnabled = true
+                            self.maketoast("Deleted successfully", type: "message")
+                            //self.navigationController?.popViewControllerAnimated(true)
+                            self.navigate()
+                        })
+                    }
+                    
+            }
+            
+        })
+        task.resume()
+        
+        
+    }
+
+    
     
     func getcreditformsuploadsdata(_ subscription_key:String, leedid: Int, actionID: String){
         
@@ -2121,6 +2280,7 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
      // Pass the selected object to the new view controller.
      }
      */
+    var sel_index = 0
     var index = 0
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "gotofeeds"){
@@ -2148,8 +2308,14 @@ class prerequisitess: UIViewController, UITableViewDataSource,UITableViewDelegat
             let vc = segue.destination as! addnew
             vc.currentarr = currentarr as NSDictionary
             vc.listofdata = elementarr
+            vc.edit = edit
+            if(edit == 1){
+            vc.currentfield = sel_field
+            vc.sel_index = sel_index                
+            }
         }
     }
+    var edit = 0
     
     @IBAction func assignclose(_ sender: AnyObject) {
         self.assigncontainer.isHidden = true

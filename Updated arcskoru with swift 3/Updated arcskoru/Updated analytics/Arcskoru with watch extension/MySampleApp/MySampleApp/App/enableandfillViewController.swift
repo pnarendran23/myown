@@ -8,7 +8,7 @@
 
 import UIKit
 
-class enableandfillViewController: UIViewController, UITextFieldDelegate, UITabBarDelegate {
+class enableandfillViewController: UIViewController, UITextFieldDelegate, UITabBarDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var spinner: UIView!
     var download_requests = [URLSession]()
     var enabled = Bool()
@@ -24,18 +24,23 @@ class enableandfillViewController: UIViewController, UITextFieldDelegate, UITabB
     
     func rightbuttonclick(_ sender : UIBarButtonItem){
         if(context == "Previously LEED Certified?"){
-            data_dict["PrevCertProdId"] = txtfld.text
+            data_dict["PrevCertProdId"] = Int(txtfld.text!)
         }else if(context == "Contains residential units?"){
-            data_dict["noOfResUnits"] = txtfld.text
+            data_dict["noOfResUnits"] = Int(txtfld.text!)!
         }else if(context == "Project affiliated?"){
             data_dict["nameOfSchool"] = txtfld.text
         }
-        
+        if(switchh.isOn){
+            data_dict["ldp_old"] = 1
+        }else{
+            data_dict["ldp_old"] = 0
+        }
         
         DispatchQueue.main.async(execute: {
-            self.spinner.isHidden = false
-            self.view.isUserInteractionEnabled = false
-            self.saveproject(0)
+            //self.spinner.isHidden = false
+            //self.view.isUserInteractionEnabled = false
+            //self.saveproject(0)
+            self.navigationController?.popViewController(animated: true)
         })
 
     }
@@ -50,8 +55,16 @@ class enableandfillViewController: UIViewController, UITextFieldDelegate, UITabB
         }
     }
     
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if(viewController is manageproj){
+            let v = viewController as! manageproj
+            v.data_dict = data_dict
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         self.navigationItem.title = buildingdetails["name"] as? String
         self.navigationController?.navigationBar.backItem?.title = buildingdetails["name"] as? String

@@ -46,6 +46,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var currenttitle = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableview.isHidden = true
         self.spinner.layer.cornerRadius = 5
         self.spinner.isHidden = false
         titlelbl.text = currenttitle.capitalized
@@ -54,7 +55,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
         dict["water"] = ["Enter gallons of water per year per person"] 
         dict["waste"] = ["Enter solid waste generated per year per person","Enter solid waste diversion rate"]
         dict["transportation"] = ["Enter number of miles traveled per vehicle per person"] 
-        dict["water"] = ["Enter gallons of water per year per person"] 
+        dict["water"] = ["Water consumption per person (Please swipe left the below data to edit duration and unit. Please tap the below data to edit the reading)"]
         dict["education"] = ["Population with (at least) High School degree (%)", "Population with (at least) Bachelor's degree (%)"] 
         dict["equitablity"] = ["Median gross rent as % of household income","Gini coefficient (for income distribution)"]
         dict["prosperity"] = ["Median household income (USD per Year)","Unemployment rate (%)"]
@@ -68,14 +69,20 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    var sel_year = ""
+    var sel_reading = ""
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let cell = self.tableview.cellForRow(at: indexPath)! as! yearlycell
         //print(cell.detailTextLabel?.text)
         if(cell.detailTextLabel?.text == nil || cell.detailTextLabel?.text != nil){
-        let str = self.tableView(tableview, titleForHeaderInSection: indexPath.section)?.capitalized
+        var str = self.tableView(tableview, titleForHeaderInSection: indexPath.section)?.capitalized
         let year = (self.actiondata[indexPath.row] as! NSDictionary)["year"] as! String
         self.currentyear = year
+        if(self.currenttitle == "water"){
+                str = "Water consumption per person. Please note that this will consider the reading in an existing duration and unit. In order to change this, please swipe left the data and edit it after updation."
+        }
         let alertController = UIAlertController(title: "Update data", message: str, preferredStyle: UIAlertControllerStyle.alert)
         let saveAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.default, handler: {
             alert -> Void in
@@ -181,15 +188,64 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                     tempstring.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
                     tempstring.append("}\"}")
                  }
-                 }
-                 else if(self.currenttitle == "water"){
-                 if(indexPath.section == 0){
-                    tempstring.append("'water_consumption_num':'\(secondTextField.text! )',")
-                    var str = tempstring as String
-                    tempstring.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
-                    tempstring.append("}\"}")
-                 }
-                 }else if(self.currenttitle == "energy"){
+                }else if(self.currenttitle == "water"){
+                    if(indexPath.section == 0){
+                        
+                        var value = Float(secondTextField.text!)!
+                        
+                        var dict = (self.actiondata[indexPath.row] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                        if(dict["data"] != nil){
+                            var tempdata = dict["data"] as! String
+                            tempdata = tempdata.replacingOccurrences(of: "'", with: "\"")
+                            //print(tempdata)
+                            dict["data"] = self.convertStringToDictionary(tempdata)
+                            if let json = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                // here `json` is your JSON data
+                                if let jsonDictionary = try? JSONSerialization.jsonObject(with: json, options: JSONSerialization.ReadingOptions()) as? NSDictionary {
+                                    ////print(jsonDictionary["data"]!!["air_quality_index_num"])
+                                    dict = jsonDictionary?.mutableCopy() as! NSMutableDictionary
+                                }
+                            }
+                            let d = dict["data"] as! NSDictionary
+                        
+                        if(d["unit"] as! String == "Gallons")
+                        {
+                            //no conversion for unit
+                        }
+                        if(d["duration"] as! String == "Per Day")
+                        {
+                            //no conversion for duration
+                        }
+                        
+                        if(d["unit"] as! String == "Litres")
+                        {
+                            value = value * 0.264172;
+                        }
+                        
+                        if(d["duration"] as! String == "Per Year")
+                        {
+                            value = value / Float(365.0);
+                        }
+                        else if(d["duration"] as! String == "Per Week")
+                        {
+                            value = value / Float(7.0)
+                        }
+                        else if(d["duration"] as! String == "Per Month")
+                        {
+                            value = value / 31.0
+                        }
+                        value = value / Float(1000.0)
+                        
+                        
+                            tempstring.append("'water_consumption_num':'\(String(format:"%f",value))',")
+                            tempstring.append("'duration':'\(d["duration"] as! String)',")
+                            tempstring.append("'unit':'\(d["unit"] as! String)',")
+                     var str = tempstring as String
+                     tempstring.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
+                     tempstring.append("}\"}")
+                     }
+                    }
+                }else if(self.currenttitle == "energy"){
                  if(indexPath.section == 0){
                     tempstring.append("'ghg_emissions_num':'\(secondTextField.text! )',")
                     var str = tempstring as String
@@ -199,6 +255,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                  }
                  //
             }
+            
             self.spinner.isHidden = false
             self.addactiondata(credentials().subscription_key, leedid: UserDefaults.standard.integer(forKey: "leed_id"), ID: self.currentdict["CreditShortId"] as! String, payload: tempstring as String)
             //print(tempstring)
@@ -359,7 +416,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
             }
         else if(currenttitle == "water"){
             if(indexPath.section == 0){
-                cell.textLabel?.text = dict["year"] as? String
+                cell.textLabel?.text = "\(dict["year"] as! String) (\(d["duration"] as! String)|\(d["unit"] as! String))"
                 if(d["water_consumption_num"] != nil){
                     cell.detailTextLabel?.text = self.getvalue(key: "water_consumption_num", d: d)
                 }
@@ -382,19 +439,160 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if(listdata == actiondata){
+            self.tableview.reloadData()
+        }else{
+            DispatchQueue.main.async(execute: {
+            self.spinner.isHidden = false
+            self.listdata.removeAllObjects()
+            self.actiondata.removeAllObjects()
+            self.tableview.reloadData()
+            self.getactiondata(credentials().subscription_key, leedid: UserDefaults.standard.integer(forKey: "leed_id"), ID: self.currentdict["CreditShortId"] as! String)
+            })
+        }
+        var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        self.navigationItem.title = buildingdetails["name"] as? String
+        self.navigationController?.navigationBar.backItem?.title = (currentdict["CreditDescription"] as! String).capitalized
+    }
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let shareAction  = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
+            self.selected = indexPath.row
+            self.performSegue(withIdentifier: "gotoedit", sender: nil)
+        }
+        let deleteAction  = UITableViewRowAction(style: .default, title: "Delete") { (rowAction, indexPath) in                        
+            DispatchQueue.main.async(execute: {
+             
+                
+            })
+        }
+        deleteAction.backgroundColor = UIColor.init(red: 0.858, green: 0.211, blue: 0.196, alpha: 1)
+        shareAction.backgroundColor = UIColor.init(red: 0.756, green: 0.756, blue: 0.756, alpha: 1)
+        return [deleteAction,shareAction]
+    }
+    var sel_field = ""
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if ((currentdict["CreditDescription"] as! String).lowercased() == "water"){
+            if(indexPath.section == 0){
+                return indexPath.row >= 0 ? true : false
+            }
+        }
+        return false
+    }
     
     func getvalue(key:String,d:NSDictionary) -> String{
-        var str = ""
-        if let s = d[key] as? String{
-            str = s
-        }else if let s = d[key] as? Int{
-            str = "\(s as! Int)"
+        var str = "0.00"
+        if(currenttitle == "water"){
+            print(d["duration"])
+            if let s = d[key] as? Float{
+                var value = s
+                
+                value *= 1000.0
+                if(d["unit"] as! String == "Litres")
+                {
+                    value /= 0.264172;
+                }
+                
+                if(d["duration"] as! String == "Per Year")
+                {
+                    value *= 365.0;
+                }
+                if(d["duration"] as! String == "Per Week")
+                {
+                    value *= 7.0
+                }
+                if(d["duration"] as! String == "Per Month")
+                {
+                    value *= 31.0
+                }
+                str = String(format:"%.2f",value)
+            }else if let s = d[key] as? Int{
+                var value = Float(s)
+                value *= 1000.0
+                if(d["unit"] as! String == "Litres")
+                {
+                    value /= 0.264172;
+                }
+                
+                if(d["duration"] as! String == "Per Year")
+                {
+                    value *= 365.0;
+                }
+                else if(d["duration"] as! String == "Per Week")
+                {
+                    value *= 7.0
+                }
+                else if(d["duration"] as! String == "Per Month")
+                {
+                    value *= 31.0
+                }
+                str = String(format:"%.2f",value)
+            }else if let s = d[key] as? Float{
+                var value = s
+                value *= 1000.0
+                if(d["unit"] as! String == "Litres")
+                {
+                    value /= 0.264172;
+                }
+                
+                if(d["duration"] as! String == "Per Year")
+                {
+                    value *= 365.0;
+                }
+                else if(d["duration"] as! String == "Per Week")
+                {
+                    value *= 7.0
+                }
+                else if(d["duration"] as! String == "Per Month")
+                {
+                    value *= 31.0
+                }
+                str = String(format:"%.2f",value)
+            }else if let s = d[key] as? String{
+                print(s)
+                if(Float(s) != nil){
+                    if(Float(s)! >= 0){
+                        var value = Float(s)!
+                        value *= 1000.0
+                        if(d["unit"] as! String == "Litres")
+                        {
+                            value /= 0.264172;
+                        }
+                        
+                        if(d["duration"] as! String == "Per Year")
+                        {
+                            value *= 365.0;
+                        }
+                        else if(d["duration"] as! String == "Per Week")
+                        {
+                            value *= 7.0
+                        }
+                        else if(d["duration"] as! String == "Per Month")
+                        {
+                            value *= 31.0
+                        }
+                        str = String(format:"%.2f",value)
+                    }
+                }
+            }
+            return str
+        }else{
+    if let s = d[key] as? Double{
+        str = "\(s)"
+    }else if let s = d[key] as? Int{
+            str = String(format:"%.2f",Float(s))
         }else if let s = d[key] as? Float{
-            str = "\(s as! Float)"
-        }else if let s = d[key] as? Double{
-            str = "\(s as! Double)"
+            str = String(format:"%.2f",s)
+        }else if let s = d[key] as? String{
+            print(s)
+            if(Float(s) != nil){
+                if(Float(s)! >= 0){
+                    str = String(format:"%.2f",Float(s)!)
+                }
+            }
         }
         return str
+        }
     }
     
     
@@ -428,8 +626,10 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func previous(_ sender:UIButton){
         //print(sender.tag)
-        let str = self.tableView(tableview, titleForHeaderInSection: sender.tag)?.capitalized
-        
+        var str = self.tableView(tableview, titleForHeaderInSection: sender.tag)?.capitalized
+        if(self.currenttitle == "water"){
+         str = "Water consumption per person. Please note that the default duration is Per Year and unit is Gallons. So, enter the data accordingly. In order to change this, please swipe left the data and edit it after creation."
+        }
         let alertController = UIAlertController(title: "Add new data", message: str, preferredStyle: UIAlertControllerStyle.alert)
         
         let saveAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.default, handler: {
@@ -572,7 +772,12 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
                 else if(self.currenttitle == "water"){
                     if(sender.tag == 0){
-                        tempstring.append("'water_consumption_num':'\(secondTextField.text! )',")
+                        var value = Float(secondTextField.text!)!
+                            value = value / Float(365.0); // Per Year
+                        value = value / Float(1000.0)
+                        tempstring.append("'water_consumption_num':'\(String(format:"%f",value))',")
+                        tempstring.append("'duration':'Per Year',")
+                        tempstring.append("'unit':'Gallons',")
                         var str = tempstring as String
                         tempstring.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
                         tempstring.append("}\"}")
@@ -631,8 +836,10 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var data_arr = NSMutableArray()
     func next(_ sender:UIButton){
         //print(sender.tag)
-        let str = self.tableView(tableview, titleForHeaderInSection: sender.tag)?.capitalized
-        
+        var str = self.tableView(tableview, titleForHeaderInSection: sender.tag)?.capitalized
+        if(self.currenttitle == "water"){
+            str = "Water consumption per person. Please note that the default duration is Per Year and unit is Gallons. So, enter the data accordingly. In order to change this, please swipe left the data and edit it after creation."
+        }
         let alertController = UIAlertController(title: "Add new data", message: str, preferredStyle: UIAlertControllerStyle.alert)
         let saveAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.default, handler: {
             alert -> Void in
@@ -776,7 +983,12 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
                 else if(self.currenttitle == "water"){
                     if(sender.tag == 0){
-                        tempstring.append("'water_consumption_num':'\(secondTextField.text! )',")
+                        var value = Float(secondTextField.text!)!
+                        value = value / Float(365.0); // Per Year
+                        value = value / Float(1000.0)
+                        tempstring.append("'water_consumption_num':'\(String(format:"%f",value))',")
+                        tempstring.append("'duration':'Per Year',")
+                        tempstring.append("'unit':'Gallons',")
                         var str = tempstring as String
                         tempstring.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
                         tempstring.append("}\"}")
@@ -881,6 +1093,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         //self.tableview.reloadData()
                         // self.buildingactions(subscription_key, leedid: leedid)
                         DispatchQueue.main.async(execute: {
+                            self.tableview.isHidden = false
                             self.maketoast("Reading added successfully", type: "message")
                             self.getactiondata(credentials().subscription_key, leedid: UserDefaults.standard.integer(forKey: "leed_id"), ID: self.currentdict["CreditShortId"] as! String)
                         })
@@ -907,6 +1120,9 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(section == 0){
+            if(currenttitle == "water"){
+                return 55
+            }
             return 33
         }
         
@@ -970,6 +1186,7 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         self.no_of_records = self.actiondata.count
                         self.listdata = self.actiondata
                         self.spinner.isHidden = true
+                        self.tableview.isHidden = false
                         //self.view.userInteractionEnabled = true
                         UserDefaults.standard.synchronize()
                       //  self.navigate()
@@ -990,31 +1207,27 @@ class yearlydata: UIViewController, UITableViewDataSource, UITableViewDelegate {
         task.resume()
     }
     
-    func showalert(_ message:String, title:String, action:String){
-        
-        //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        //let callActionHandler = { (action:UIAlertAction!) -> Void in
+    func showalert(_ message:String, title:String, action:String){        
         DispatchQueue.main.async(execute: {
+            self.tableview.isHidden = false
             self.view.isUserInteractionEnabled = true
             self.spinner.isHidden = true
             self.maketoast(message, type: "error")
-            //self.navigationController?.popViewControllerAnimated(true)
         })
-        
-        //        }
-        //      let defaultAction = UIAlertAction(title: action, style: .Default, handler:callActionHandler)
-        
-        //    alertController.addAction(defaultAction)
-        
-        //presentViewController(alertController, animated: true, completion: nil)
-        
         
     }
     @IBOutlet weak var spinner: UIView!
     
     //https://api.usgbc.org/stg/leed/
-    
-    
+    var selected = 0
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "gotoedit"){
+            let v = segue.destination as! editwater            
+            v.d = (self.actiondata[selected] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            v.selected = selected
+            v.shortID = self.currentdict["CreditShortId"] as! String
+        }
+    }
     /*
     // MARK: - Navigation
 

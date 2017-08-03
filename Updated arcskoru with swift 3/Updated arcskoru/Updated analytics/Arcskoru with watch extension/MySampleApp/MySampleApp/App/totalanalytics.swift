@@ -280,104 +280,10 @@ class totalanalytics: UIViewController, UITableViewDataSource, UITableViewDelega
 
         
         DispatchQueue.main.async(execute: {
-            
-            if(UserDefaults.standard.object(forKey: "certification_details") == nil){
                 self.spinner.isHidden = false
                 self.tableview.alpha = 0.3
             self.getscores(UserDefaults.standard.integer(forKey: "leed_id"),token: UserDefaults.standard.object(forKey: "token") as! String)
-            }else{
-                self.performancedata  = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "performance_data") as! Data) as! NSDictionary
-                
-                if(self.performancedata["scores"] != nil){
-                    var temparr = (self.performancedata["scores"] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-                    if(temparr["energy"] is NSNull){
-                        self.currentscore += 0
-                        self.energyscore = 0
-                    }else{
-                        self.currentscore += temparr["energy"] as! Int
-                        self.energyscore = temparr["energy"] as! Int
-                    }
-                    if(temparr["water"] is NSNull){
-                        self.currentscore += 0
-                        self.waterscore = 0
-                    }else{
-                        self.currentscore += temparr["water"] as! Int
-                        self.waterscore = temparr["water"] as! Int
-                    }
-                    if(temparr["waste"] is NSNull){
-                        self.currentscore += 0
-                        self.wastescore = 0
-                    }else{
-                        self.currentscore += temparr["waste"] as! Int
-                        self.wastescore = temparr["waste"] as! Int
-                    }
-                    if(temparr["transport"] is NSNull){
-                        self.currentscore += 0
-                        self.transportscore = 0
-                    }else{
-                        self.currentscore += temparr["transport"] as! Int
-                        self.transportscore = temparr["transport"] as! Int
-                    }
-                    if(temparr["human_experience"] is NSNull){
-                        self.currentscore += 0
-                        self.humanscore = 0
-                    }else{
-                        self.currentscore += temparr["human_experience"] as! Int
-                        self.humanscore = temparr["human_experience"] as! Int
-                    }
-                    if(temparr["base"] is NSNull){
-                        self.currentscore += 0
-                    }else{
-                        self.currentscore += temparr["base"] as! Int
-                    }
-                }
-                
-                if(self.performancedata["maxima"] != nil){
-                    var temparr = (self.performancedata["maxima"] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-                    if(temparr["energy"] is NSNull){
-                        self.maxscore += 0
-                        self.energymaxscore = 0
-                    }else{
-                        self.maxscore += temparr["energy"] as! Int
-                        self.energymaxscore = temparr["energy"] as! Int
-                    }
-                    if(temparr["water"] is NSNull){
-                        self.maxscore += 0
-                        self.watermaxscore = 0
-                    }else{
-                        self.watermaxscore = temparr["water"] as! Int
-                        self.maxscore += temparr["water"] as! Int
-                    }
-                    if(temparr["waste"] is NSNull){
-                        self.maxscore += 0
-                        self.wastemaxscore = 0
-                    }else{
-                        self.maxscore += temparr["waste"] as! Int
-                        self.wastemaxscore = temparr["waste"] as! Int
-                    }
-                    if(temparr["transport"] is NSNull){
-                        self.maxscore += 0
-                        self.transportmaxscore = 0
-                    }else{
-                        self.maxscore += temparr["transport"] as! Int
-                        self.transportmaxscore = temparr["transport"] as! Int
-                    }
-                    if(temparr["human_experience"] is NSNull){
-                        self.maxscore += 0
-                        self.humanmaxscore = 0
-                    }else{
-                        self.maxscore += temparr["human_experience"] as! Int
-                        self.humanmaxscore = temparr["human_experience"] as! Int
-                    }
-                    if(temparr["base"] is NSNull){
-                        self.maxscore += 0
-                    }else{
-                        self.maxscore += temparr["base"] as! Int
-                    }
-                }
-                self.spinner.isHidden = true
-                self.view.isUserInteractionEnabled = true
-            }
+            
         })
         
         
@@ -2912,7 +2818,7 @@ var emptydict = ["count": 1,"created_at_max": "2016-12-30T14:02:41.260478Z","cre
         if(certificationsdict["certificates"] != nil){
             let d = certificationsdict["certificates"] as! NSArray
             if(d.count > 0){
-            return 8 + d.count
+            return 7 + d.count
             }
             return 8
         }
@@ -3409,6 +3315,7 @@ var emptydict = ["count": 1,"created_at_max": "2016-12-30T14:02:41.260478Z","cre
         }
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+            cell.selectionStyle = .none
             if(certificationsdict["certificates"] != nil){
                 
                 let d = certificationsdict["certificates"] as! NSArray

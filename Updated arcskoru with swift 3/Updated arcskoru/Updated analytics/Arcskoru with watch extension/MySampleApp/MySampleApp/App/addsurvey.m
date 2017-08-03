@@ -41,7 +41,9 @@
     
     edit = 0;
     NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
-    self.navigationController.navigationBar.backItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = dict[@"name"];    
+    self.navigationItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = @"More";
     [self viewDidLoad];
     opened=NO;
     width=[UIScreen mainScreen].bounds.size.width;
@@ -489,10 +491,13 @@
         
         
         UIAlertAction* modify = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [tableView setEditing:NO animated:YES];                
+            });
             
         }];
         
-        UIAlertAction* submit = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction* submit = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
                 int row=(int)[ind row];
                 [mainarr removeObjectAtIndex:row];
                 [jsonarray removeObjectAtIndex:row];

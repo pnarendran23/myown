@@ -196,9 +196,12 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         if(searchbar.becomeFirstResponder()){
             searchbar.resignFirstResponder()
         }
-        let d = NSKeyedArchiver.archivedData(withRootObject: tobefiltered)
-        UserDefaults.standard.set(d, forKey: "tobefiltered")
-        UserDefaults.standard.set(searchbar.text!, forKey: "searchtext")
+        if(segue.identifier == "gotologin"){
+            
+        }else{
+            let d = NSKeyedArchiver.archivedData(withRootObject: tobefiltered)
+            UserDefaults.standard.set(d, forKey: "tobefiltered")
+            UserDefaults.standard.set(searchbar.text!, forKey: "searchtext")
         if(segue.identifier == "filterproj"){
             let v = segue.destination as! filterprojects
             v.filterarr = filterarr            
@@ -216,7 +219,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             let v = segue.destination as! newproject
             v.type = type
             
-        }
+            }}
         
     }
     
@@ -307,8 +310,8 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         self.navigationItem.title = "Projects"
         let navItem = UINavigationItem(title: "All projects");        
         self.nav.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "OpenSans", size: 13)!]
-        let doneItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(sayHello(_:)))
-        let filteritem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(filter(_:)))
+        let doneItem = UIBarButtonItem(title: nil, style: .plain, target: self, action: #selector(sayHello(_:)))
+        let filteritem = UIBarButtonItem(title: nil, style: .plain, target: self, action: #selector(filter(_:)))
         navItem.leftBarButtonItem = doneItem;
         navItem.rightBarButtonItem = filteritem;
         self.navigationItem.leftBarButtonItem?.title = ""
@@ -360,6 +363,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         super.viewDidAppear(true)
         //plaque
         self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true        
         UserDefaults.standard.removeObject(forKey: "performance_data")
         UserDefaults.standard.removeObject(forKey: "comparable_data")
         UserDefaults.standard.removeObject(forKey: "local_comparable_data")
@@ -393,6 +397,8 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         }
         if(UserDefaults.standard.object(forKey: "tobefiltered") != nil){
         tobefiltered = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "tobefiltered") as! Data) as! NSMutableArray
+        }else{
+            
         }
         for arr in tobefiltered{
             var a = arr as! NSArray
@@ -505,6 +511,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             }
             DispatchQueue.main.async(execute: {
                 self.tableview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
                 self.spinner.isHidden = false
             })
             if(timer.isValid){
@@ -547,6 +554,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 }
                 
                 self.tableview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
                 self.spinner.isHidden = false
                 self.notfound.isHidden = true
                 if(self.project_type == "all"){
@@ -585,6 +593,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     UserDefaults.standard.removeObject(forKey: "token")
                     UserDefaults.standard.removeObject(forKey: "username")
                     UserDefaults.standard.removeObject(forKey: "password")
+                    UserDefaults.standard.removeObject(forKey: "tobefiltered")
                     if let bid = Bundle.main.bundleIdentifier {
                         UserDefaults.standard.removePersistentDomain(forName: bid)
                     }
@@ -606,8 +615,9 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             
             let defaultAction = UIAlertAction(title: "Yes", style: .default, handler:callActionHandler)
             
-            alertController.addAction(defaultAction)
             alertController.addAction(cancelAction)
+            alertController.addAction(defaultAction)
+            
             alertController.view.subviews.first?.backgroundColor = UIColor.white
         alertController.view.layer.cornerRadius = 10
         alertController.view.layer.masksToBounds = true
@@ -666,6 +676,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         DispatchQueue.main.async(execute: {
             
             self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
             self.view.isUserInteractionEnabled = true
             self.spinner.isHidden = true
             self.view.isUserInteractionEnabled = true
@@ -1027,6 +1038,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             var project_type = ""
             if(currentbuilding["project_type"] != nil){
                 project_type = currentbuilding["project_type"] as! String
+                typ = project_type
             }
             if let update = currentbuilding["building_status"] as? String {
                 if(update == "activated_payment_done" || update == "activated_under_review"){
@@ -1612,7 +1624,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     UserDefaults.standard.set(datakeyed, forKey: "comparable_data")
                     UserDefaults.standard.synchronize()
                     DispatchQueue.main.async(execute: {
-                        self.getnotifications(subscription_key,leedid: UserDefaults.standard.integer(forKey: "leed_id"))
+                        self.getnotifications(subscription_key,leedid: UserDefaults.standard.integer(forKey: "leed_id"),type:self.typ)
                     })
                     
                 } catch {
@@ -1627,6 +1639,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
         }) 
         task.resume()
     }
+    var typ = ""
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if(searchbar.text?.characters.count > 0){
@@ -1893,7 +1906,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         jsonDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions()) as! NSDictionary
                         //print(jsonDictionary)
                         DispatchQueue.main.async(execute: {
-                            self.getnotifications(credentials().subscription_key, leedid: leedid)
+                            self.getnotifications(credentials().subscription_key, leedid: leedid, type: self.typ)
                         })
                         
                     } catch {
@@ -2248,6 +2261,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                 filterok(filterbtn)
             }
             self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
             self.spinner.isHidden = true
             self.tableview.reloadData()
             
@@ -2280,6 +2294,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         }
                         
                         self.tableview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
                         self.spinner.isHidden = false
                         if(self.project_type == "all"){
                             self.loadMoreDataFromServer("\(credentials().domain_url)assets/?page=\(self.page)&page_size=30", subscription_key: c.subscription_key)
@@ -2352,6 +2367,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             
             DispatchQueue.main.async(execute: {
                 self.tableview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
                 self.spinner.isHidden = false
                 self.notfound.isHidden = true
             })
@@ -2483,6 +2499,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                     DispatchQueue.main.async(execute: {
                         self.spinner.isHidden = true
                         self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                         self.view.isUserInteractionEnabled = true
                     })
                     DispatchQueue.main.async(execute: {
@@ -2493,6 +2510,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                             self.tableview.reloadData()
                         }
                         self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                     })
                     }else{
                         DispatchQueue.main.async(execute: {
@@ -2501,6 +2519,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         self.buildingarr = building
                         self.searcharr = jsonDictionary.mutableCopy() as! NSMutableDictionary
                             self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                         self.tableview.reloadData()
                         })
                     }
@@ -2689,6 +2708,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         self.view.isUserInteractionEnabled = true
                         self.spinner.isHidden = true
                         self.tableview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                         self.tableview.reloadData()
                     })
                     
@@ -2726,7 +2746,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
     @IBOutlet weak var nav: UINavigationBar!
     
     
-    func getnotifications(_ subscription_key:String, leedid:Int){
+    func getnotifications(_ subscription_key:String, leedid:Int, type: String){
         let url = URL.init(string:String(format: "%@assets/LEED:%d/notifications/",credentials().domain_url,UserDefaults.standard.integer(forKey: "leed_id")))
         print(url?.absoluteURL)        
         let request = NSMutableURLRequest.init(url: url!)
@@ -2790,6 +2810,41 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         for i in jsonDictionary{
                             let d = i as! NSDictionary
                         let foreign_id = d["foreign_id"] as! String
+                            if (self.typ != "parksmart")
+                            {
+                                if (foreign_id == "registration_expired")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_strategy_review")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_strategy")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_fuel")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_operating_hours" && self.typ != "building" && self.typ != "transit")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_density" && self.typ != "building" && self.typ != "transit")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_occupancy" && self.typ != "building" && self.typ != "transit")
+                                {
+                                    // remove from array
+                                }
+                                if (foreign_id == "data_input_gfa" && self.typ != "building" && self.typ != "transit")
+                                {
+                                    // remove from array
+                                }
+                            }else{
                         if(foreign_id == "updated_userManual")
                         {
                             
@@ -2853,6 +2908,7 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
                         else if(foreign_id == "review_Completed")
                         {
                             
+                        }
                         }
                         }
                         let data = NSKeyedArchiver.archivedData(withRootObject: temparr)
@@ -3092,49 +3148,6 @@ class listofassets: UIViewController, UITableViewDataSource,UITableViewDelegate,
             timer.invalidate()
         }
     }
-    
-    @IBAction func logout(_ sender: AnyObject) {
-        timer.invalidate()
-        DispatchQueue.main.async(execute: {
-            let alertController = UIAlertController(title: "Logout", message: "Would you like to logout from the current user?", preferredStyle: .alert)
-            let callActionHandler = { (action:UIAlertAction!) -> Void in
-                DispatchQueue.main.async(execute: {
-                    UserDefaults.standard.removeObject(forKey: "token")
-                    UserDefaults.standard.removeObject(forKey: "username")
-                    UserDefaults.standard.removeObject(forKey: "password")
-                    let noinstructions = UserDefaults.standard.integer(forKey: "noinstructions")
-                    if let bid = Bundle.main.bundleIdentifier {
-                        UserDefaults.standard.removePersistentDomain(forName: bid)
-                    }
-                    UserDefaults.standard.set(noinstructions, forKey: "noinstructions")
-                    UserDefaults.standard.synchronize()
-                    self.performSegue(withIdentifier: "gotologin", sender: nil)
-                    self.navigationController?.popViewController(animated: true)
-                })
-                
-            }
-            
-            let cancelActionHandler = { (action:UIAlertAction!) -> Void in
-                DispatchQueue.main.async(execute: {
-                    self.navigationController?.popViewController(animated: true)
-                })
-                
-            }
-            let cancelAction = UIAlertAction(title: "No", style: .default, handler:cancelActionHandler)
-            
-            let defaultAction = UIAlertAction(title: "Yes", style: .default, handler:callActionHandler)
-            
-            alertController.addAction(defaultAction)
-            alertController.addAction(cancelAction)
-            alertController.view.subviews.first?.backgroundColor = UIColor.white
-        alertController.view.layer.cornerRadius = 10
-        alertController.view.layer.masksToBounds = true
-            self.present(alertController, animated: true, completion: nil)
-            
-        })
-        
-    }
-    
     
     
     func imageWithImage(_ image: UIImage, scaledToSize newSize: CGSize) -> UIImage {

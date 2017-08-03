@@ -36,6 +36,7 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
     var years = NSMutableArray()
     var download_requests = [URLSession]()
     var listarray = NSArray()
+    var sel_index = 0
     var currentyeararray = NSMutableArray()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,8 +89,34 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
             years.add("\(i)")
         }
         
+        var temp = 0
+        if(edit == 1){
+            let data = (listofdata[sel_index] as! NSArray).mutableCopy() as! NSMutableArray
+            unit.text = "\(data[2] as! String)"
+            value.text = "\(data[1] as! String)"
+            //currentfield = data[0] as! String
+            selected_field = currentfield
+            for i in 0 ..< years.count{
+                let str = years[i] as! String
+                if(data[3] as! String == str){
+                    temp = i
+                    break
+                }
+            }
+            selected_year = years[temp] as! String
+            dpicker.selectRow(temp, inComponent: 0, animated: true)
+        }else{
+            currentfield = "2017"
+            selected_field = currentfield
+        }
         
         
+    }
+    var edit = 0
+    override func viewDidAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.backItem?.title = (currentarr["CreditDescription"] as! String).capitalized
+        var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        self.navigationItem.title = buildingdetails["name"] as? String
     }
     var selected_year = ""
     var currentfield = ""
@@ -127,6 +154,7 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(value.text,unit.text)
         if(value.text?.characters.count > 0 && unit.text?.characters.count > 0 && selected_year != "" && currentfield != ""){
             self.addbtn.isEnabled = true
             self.addbtn.backgroundColor = bgcolor
@@ -157,6 +185,12 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
         }else{
             cell.accessoryType = UITableViewCellAccessoryType.none
         }
+        
+        if(indexPath.row == 0){
+            cell.selectionStyle = .none
+        }else{
+            cell.selectionStyle = .default
+        }
         return cell
     }
     
@@ -184,13 +218,6 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
     var selected_field = ""
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if(value.text?.characters.count > 0 && unit.text?.characters.count > 0 && selected_year != "" && currentfield != ""){
-            self.addbtn.isEnabled = true
-            self.addbtn.backgroundColor = bgcolor
-        }else{
-            self.addbtn.isEnabled = false
-            self.addbtn.backgroundColor = UIColor.gray
-        }
         if(indexPath.row > 0){
             let cell = tableView.cellForRow(at: indexPath)
             selected_field = (cell?.textLabel?.text)!
@@ -200,13 +227,23 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
             if(dict["name"] as! String == selected_field){
                 let tempstring = dict["field"] as! String
                 let arr = tempstring.components(separatedBy: "_num")
+                print(arr)
                 currentfield = arr[0]
+                //selected_field = currentfield
                 break
             }
         }
         //print(currentfield,selected_field)
         tableView.reloadData()
+            if(value.text?.characters.count > 0 && unit.text?.characters.count > 0 && selected_year != "" && currentfield != ""){
+                self.addbtn.isEnabled = true
+                self.addbtn.backgroundColor = bgcolor
+            }else{
+                self.addbtn.isEnabled = false
+                self.addbtn.backgroundColor = UIColor.gray
+            }
         }
+        
     }
     
     
@@ -217,20 +254,40 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
     @IBAction func submit(_ sender: AnyObject) {
         if(value.text?.characters.count > 0 && unit.text?.characters.count > 0 && selected_year != "" && currentfield != ""){
         currentyeararray = NSMutableArray()
-        for i in listofdata{
-            let item = i as! NSArray
-            let dict = item.mutableCopy() as! NSMutableArray
-            if(dict[3] as! String == selected_year){
+            print(listofdata)
+            if(edit == 0){
+                for i in listofdata{
+                    let item = i as! NSArray
+                    let dict = item.mutableCopy() as! NSMutableArray
+                    if(dict[3] as! String == selected_year){
+                        currentyeararray.add(dict)
+                    }
+                }
+                let dict = NSMutableArray()
+                dict.add(selected_field)
+                dict.add(value.text!)
+                dict.add(unit.text!)
+                dict.add(selected_year)
+                dict.add(currentfield)
                 currentyeararray.add(dict)
+            }else{
+                let dict = NSMutableArray()
+                dict.add(selected_field)
+                dict.add(value.text!)
+                dict.add(unit.text!)
+                dict.add(selected_year)
+                dict.add(currentfield)
+                var t = NSMutableArray.init(array: listofdata)
+                t.replaceObject(at: sel_index, with: dict)
+                listofdata = NSArray.init(array: t)
+                for i in listofdata{
+                    let item = i as! NSArray
+                    let dict = item.mutableCopy() as! NSMutableArray
+                    if(dict[3] as! String == selected_year){
+                        currentyeararray.add(dict)
+                    }
+                }
             }
-        }
-        let dict = NSMutableArray()
-        dict.add(selected_field)
-        dict.add(value.text!)
-        dict.add(unit.text!)
-        dict.add(selected_year)
-        dict.add(currentfield)
-        currentyeararray.add(dict)
         //print("Updated array",currentyeararray)
             addnewyearlydata(currentyeararray, actionID: currentarr["CreditShortId"] as! String)
         }else{
@@ -276,7 +333,7 @@ class addnew: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPi
         payload.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
         payload.append("}\"}")
         str = payload as String
-        
+        print(str)
         var leedid = UserDefaults.standard.integer(forKey: "leed_id")
         
         let url = URL.init(string:String(format: "%@assets/LEED:%d/actions/ID:%@/data/%@/?recompute_score=1",credentials().domain_url, leedid,actionID,selected_year))

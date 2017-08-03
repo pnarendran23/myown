@@ -55,6 +55,11 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
+        var  sortDescriptor = NSSortDescriptor.init(key: "end_date", ascending: true)
+        self.meters.sort(using: NSArray.init(object: sortDescriptor) as! [NSSortDescriptor])
+        print(self.meters.lastObject)
+        self.navigationItem.title = "Waste readings"
+        self.navigationController?.navigationBar.backItem?.title = (currentarr["CreditDescription"] as! String).capitalized
         self.tableview.reloadData()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -104,7 +109,7 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
             let favorite = UITableViewRowAction(style: .default, title: "Delete") { action, index in
                 let alertController = UIAlertController(title: "Delete reading", message: "Would you like to delete this reading?", preferredStyle: .alert)
                 
-                let yesAction = UIAlertAction(title: "Yes", style: .default, handler: {
+                let yesAction = UIAlertAction(title: "Yes", style: .destructive, handler: {
                     action in
                     DispatchQueue.main.async(execute: {
                         if let creditDescription = self.currentarr["CreditStatus"] as? String{
@@ -124,7 +129,7 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 
                 let noaction = UIAlertAction(title: "No", style: .cancel, handler: {
                     action in
-                    
+                        self.tableview.setEditing(false, animated: true)
                     }
                 )
                 alertController.addAction(noaction)
@@ -142,7 +147,7 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
             share.backgroundColor = UIColor.init(red: 0.756, green: 0.756, blue: 0.756, alpha: 1)
             favorite.backgroundColor = UIColor.init(red: 0.858, green: 0.211, blue: 0.196, alpha: 1)
-            return [share, favorite]
+            return [favorite,share]
         }
         
         
@@ -266,9 +271,9 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if(UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height){
-            return 0.05 * UIScreen.main.bounds.size.height;
+            return 0.07 * UIScreen.main.bounds.size.height;
         }
-        return 0.05 * UIScreen.main.bounds.size.width;
+        return 0.07 * UIScreen.main.bounds.size.width;
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -284,6 +289,9 @@ class wastereadings: UIViewController, UITableViewDelegate, UITableViewDataSourc
             let v = segue.destination as! wastereadingdetail
             v.meters = meters
             v.adding = adding
+            if(meters.count > 0){
+            v.dataarr = (meters[row] as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            }
             v.row = row
         }
     }

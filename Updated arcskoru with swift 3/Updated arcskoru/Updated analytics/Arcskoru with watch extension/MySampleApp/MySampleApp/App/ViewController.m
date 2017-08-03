@@ -20,7 +20,7 @@ BOOL clicked=NO;
     [self.spinner.layer setMasksToBounds: YES];
     self.navigationController.delegate = self;
     NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
-    self.navigationController.navigationBar.backItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = dict[@"More"];
     NSString *plaquebaseURL = @"https://stg.app.arconline.io";    
     NSString *urlstring = [NSString stringWithFormat:@"%@/plaque/%@/%@",plaquebaseURL,dict[@"leed_id"],dict[@"key"]];
     NSLog(@"%@",urlstring);

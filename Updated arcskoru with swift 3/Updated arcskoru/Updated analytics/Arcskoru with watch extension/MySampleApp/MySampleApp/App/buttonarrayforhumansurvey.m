@@ -20,7 +20,8 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
-    self.navigationController.navigationBar.backItem.title = dict[@"name"];
+    self.navigationItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = @"Back";
 }
 
 -(void)maketoast:(NSString *)message withbackground:(UIColor *)color withdelay:(double)delay{

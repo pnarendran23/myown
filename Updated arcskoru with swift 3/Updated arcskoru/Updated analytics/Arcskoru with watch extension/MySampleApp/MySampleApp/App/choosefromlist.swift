@@ -8,7 +8,7 @@
 
 import UIKit
 
-class choosefromlist: UIViewController, UITableViewDataSource , UITableViewDelegate, UITabBarDelegate {
+class choosefromlist: UIViewController, UITableViewDataSource , UITableViewDelegate, UITabBarDelegate, UINavigationControllerDelegate {
 var data_dict = NSMutableDictionary()
     var currentcontext = ""
     var leedid = UserDefaults.standard.integer(forKey: "leed_id")
@@ -20,6 +20,7 @@ var data_dict = NSMutableDictionary()
     var download_requests = [URLSession]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         self.titlefont()
         var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         self.navigationItem.title = buildingdetails["name"] as? String
@@ -32,17 +33,25 @@ var data_dict = NSMutableDictionary()
         for i in 0..<pickerarr.count {
             let str = pickerarr.object(at: i) as! String
             if(currentcontext == "Space Type"){
+            if(data_dict["spaceType"] is NSNull){
+                
+            }else{
             if(str == data_dict["spaceType"] as! String){
                 currentselected = i
                 break
             }
             }
+            }
             if(currentcontext == "Other certification programs pursued"){
                 if(data_dict["OtherCertProg"] is NSNull){
                 }else{
+                    if(data_dict["OtherCertProg"] is NSNull){
+                        
+                    }else{
                     if(str == data_dict["OtherCertProg"] as! String){
                         currentselected = i
                         break
+                    }
                     }
                 }
             }
@@ -63,6 +72,14 @@ var data_dict = NSMutableDictionary()
         self.tabbar.selectedItem = self.tabbar.items![3]
         // Do any additional setup after loading the view.
     }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if(viewController is manageproj){
+            let v = viewController as! manageproj
+            v.data_dict = data_dict
+        }
+    }
+    
     @IBOutlet weak var tabbar: UITabBar!
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
@@ -329,8 +346,9 @@ var data_dict = NSMutableDictionary()
                 self.data_dict["OtherCertProg"] = self.pickerarr.object(at: self.currentselected) as! String
             }
             
-            self.spinner.isHidden = false
-            self.saveproject(indexPath.row)
+            //self.spinner.isHidden = false
+            //self.saveproject(indexPath.row)
+            self.navigationController?.popViewController(animated: true)
         })
         tableView.reloadData()
     }

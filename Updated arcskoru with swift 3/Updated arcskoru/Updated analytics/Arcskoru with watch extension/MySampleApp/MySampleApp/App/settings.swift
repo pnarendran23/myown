@@ -73,7 +73,7 @@ class settings: UIViewController,UITableViewDelegate,UITableViewDataSource,UITab
     }
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
-        self.navigationController?.navigationBar.backItem?.title = "Manage"
+        self.navigationController?.navigationBar.backItem?.title = "More"
     }
     
     func sayHello(_ sender: UIBarButtonItem) {

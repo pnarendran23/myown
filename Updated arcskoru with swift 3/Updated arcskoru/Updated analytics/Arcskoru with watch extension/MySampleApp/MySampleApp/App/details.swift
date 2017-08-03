@@ -178,7 +178,9 @@ class details: UIViewController, UITableViewDataSource, UITableViewDelegate, UIT
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
+        let dict = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary
+        self.navigationItem.title = dict["name"] as? String
+        self.navigationController?.navigationBar.backItem?.title = "Analytics"
     }
     
     

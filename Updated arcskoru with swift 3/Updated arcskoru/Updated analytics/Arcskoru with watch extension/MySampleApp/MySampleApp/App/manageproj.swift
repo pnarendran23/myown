@@ -42,10 +42,17 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
         token = UserDefaults.standard.object(forKey: "token") as! String
         var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         self.navigationItem.title = buildingdetails["name"] as? String
-        self.navigationController?.navigationBar.backItem?.title = "Manage"
+        self.navigationController?.navigationBar.backItem?.title = "More"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -54,9 +61,13 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         self.navigationItem.title = buildingdetails["name"] as? String
         self.navigationController?.navigationBar.backItem?.title = buildingdetails["name"] as? String
     }
-    
+    var bgcolor = UIColor()
+    var tempdata_dict = NSMutableDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
+        bgcolor = self.savebtn.backgroundColor!
+        self.savebtn.isEnabled = false
+        self.savebtn.backgroundColor = UIColor.gray
         self.navigationController?.delegate = self
         self.titlefont()
         self.spinner.layer.cornerRadius = 5
@@ -107,6 +118,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             self.tabbar.items![3].badgeValue = nil
         }
         self.tabbar.selectedItem = self.tabbar.items![3]
+        self.tempdata_dict = self.data_dict
         // Do any additional setup after loading the view.
     }
     
@@ -140,6 +152,9 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         NotificationCenter.default.post(name: Notification.Name(rawValue: "performsegue"), object: nil, userInfo: ["seguename":"manage"])
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if(section == 2){
+            return 30
+        }
         return 15
     }
     
@@ -463,9 +478,13 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                     if let s = data_dict["PrevCertProdId"] as? String{
                         //cell.valuetxtfld.text = s
                         cell.detailTextLabel?.text = s
+                    }else if let s = data_dict["PrevCertProdId"] as? Int{
+                        //cell.valuetxtfld.text = s
+                        cell.detailTextLabel?.text = "\(s as! Int)"
                     }else{
                         //cell.valuetxtfld.text = ""
-                        cell.detailTextLabel?.text = "Not available"
+                     
+                        cell.detailTextLabel?.text = ""
                     }
                     ////cell.valuetxtfld.enabled = true
                 }else{
@@ -566,7 +585,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             ////cell.valuetxtfld.enabled = true
             if(data_dict["year_constructed"] is NSNull || data_dict["year_constructed"] as? String == "" || data_dict["year_constructed"] == nil){
                 //cell.valuetxtfld.text = ""
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
             }else{
                 //cell.valuetxtfld.text = String(format:"%d",data_dict["year_constructed"] as! Int)
                 cell.detailTextLabel?.text = "\(data_dict["year_constructed"]!)"
@@ -578,7 +597,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             ////cell.valuetxtfld.enabled = true
             if(data_dict["noOfFloors"] is NSNull || data_dict["noOfFloors"] as? String == ""){
                 //cell.valuetxtfld.text = ""
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
             }else{
                 cell.detailTextLabel?.text = "\(data_dict["noOfFloors"]!)"
                 //cell.valuetxtfld.text = String(format:"%d",data_dict["noOfFloors"] as! Int)
@@ -618,7 +637,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             cell.isUserInteractionEnabled = true
             if(data_dict["gross_area"] is NSNull || data_dict["gross_area"] as? String == ""){
                 //cell.valuetxtfld.text = ""
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
             }else{
                 cell.detailTextLabel?.text = "\(data_dict["gross_area"]!)"
                 //cell.valuetxtfld.text = String(format:"%d",data_dict["noOfFloors"] as! Int)
@@ -632,7 +651,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             ////cell.valuetxtfld.enabled = true            
             if(data_dict["targetCertDate"] is NSNull || data_dict["targetCertDate"] as? String == ""){
                 //cell.valuetxtfld.text = ""
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
             }else{
                 let dateFormatter: DateFormatter = DateFormatter()                
                 dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -649,9 +668,10 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             ////cell.valuetxtfld.enabled = true
             if(data_dict["operating_hours"] is NSNull || data_dict["operating_hours"] as? String == ""){
                 //cell.valuetxtfld.text = ""
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
                 
             }else{
+                print(data_dict["operating_hours"])
                 cell.detailTextLabel?.text = String(format:"%d",data_dict["operating_hours"] as! Int)
             }
             //cell.yesnoswitch.hidden = true
@@ -661,7 +681,7 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             cell.isUserInteractionEnabled = true
             ////cell.valuetxtfld.enabled = true
             if(data_dict["occupancy"] is NSNull || data_dict["occupancy"] as? String == ""){
-                cell.detailTextLabel?.text = "Not available"
+                cell.detailTextLabel?.text = ""
             }else{
                 //cell.valuetxtfld.text = String(format:"%d",data_dict["occupancy"] as! Int)
                 cell.detailTextLabel?.text = String(format:"%d",data_dict["occupancy"] as! Int)
@@ -821,6 +841,18 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
                         DispatchQueue.main.async(execute: {
                             self.spinner.isHidden = true
                             self.view.isUserInteractionEnabled = true
+                            self.savebtn.isEnabled = false
+                            self.savebtn.backgroundColor = UIColor.gray
+                            self.data_dict = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+                            self.tempdata_dict = self.data_dict
+                            if(self.tempdata_dict == self.data_dict){
+                                self.savebtn.isEnabled = false
+                                self.savebtn.backgroundColor = UIColor.gray
+                            }else{
+                                self.savebtn.isEnabled = true
+                                self.savebtn.backgroundColor = self.bgcolor
+                            }                            
+                            self.tableview.reloadData()
                         })
                         //self.tableview.reloadData()
                         // self.buildingactions(subscription_key, leedid: leedid)
@@ -867,11 +899,13 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }else{
             data_dict["intentToPrecertify"] = 0
         }
-        DispatchQueue.main.async(execute: {
-            self.spinner.isHidden = false
-            self.saveproject(0)
-        })
-        
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
     }
     
     func plaquepublic(_ sender: UISwitch){
@@ -880,11 +914,13 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
             }else{
                 data_dict["plaque_public"] = 0
             }
-        DispatchQueue.main.async(execute: {
-        self.spinner.isHidden = false
-        self.saveproject(0)
-        })
-        
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
     }
     
     func affleedlab(_ sender: UISwitch){
@@ -893,11 +929,13 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }else{
             data_dict["affiliatedWithLeedLab"] = 0
         }
-        DispatchQueue.main.async(execute: {
-            self.spinner.isHidden = false
-            self.saveproject(0)
-        })
-        
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {        
@@ -906,12 +944,19 @@ class manageproj: UIViewController, UITableViewDataSource, UITableViewDelegate, 
         }
         return 0.082 * UIScreen.main.bounds.size.width;
     }
+    @IBOutlet weak var savebtn: UIButton!
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func save(_ sender: Any) {
+        DispatchQueue.main.async(execute: {
+            self.spinner.isHidden = false
+            self.saveproject(0)
+        })
+    }
 
     /*
     // MARK: - Navigation

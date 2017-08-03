@@ -8,7 +8,7 @@
 
 import UIKit
 
-class adddatechoose: UIViewController, UITabBarDelegate {
+class adddatechoose: UIViewController, UITabBarDelegate, UINavigationControllerDelegate {
     var leedid = UserDefaults.standard.integer(forKey: "leed_id")
     var token = UserDefaults.standard.object(forKey: "token") as! String
     var startdate = Date()
@@ -19,6 +19,7 @@ class adddatechoose: UIViewController, UITabBarDelegate {
     var context = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         self.titlefont()
         self.spinner.isHidden = true
         self.spinner.layer.cornerRadius = 5
@@ -53,6 +54,8 @@ class adddatechoose: UIViewController, UITabBarDelegate {
     }
     
     
+    
+    
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if(item.title == "Score"){
             //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"plaque"])
@@ -81,10 +84,18 @@ class adddatechoose: UIViewController, UITabBarDelegate {
             self.data_dict["targetCertDate"] = datef.string(from: self.currentdate) 
             self.spinner.isHidden = false
             self.view.isUserInteractionEnabled = false
-            self.saveproject(0)
+            self.navigationController?.popViewController(animated: true)
+            //self.saveproject(0)
         })
-        
     }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if(viewController is manageproj){
+            let v = viewController as! manageproj
+            v.data_dict = data_dict
+        }
+    }
+    
     @IBOutlet weak var lbl: UILabel!
     
     @IBOutlet weak var dtpicker: UIDatePicker!

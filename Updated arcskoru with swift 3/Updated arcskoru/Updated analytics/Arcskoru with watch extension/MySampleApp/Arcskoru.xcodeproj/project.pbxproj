@@ -611,6 +611,7 @@
 		56505EA71E1D1759003A548E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56505EA51E1D1759003A548E /* Main.storyboard */; };
 		56505EA91E1D1832003A548E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56505EA81E1D1832003A548E /* Assets.xcassets */; };
 		56505EAB1E1D35D1003A548E /* all projects.png in Resources */ = {isa = PBXBuildFile; fileRef = 56505EAA1E1D35D1003A548E /* all projects.png */; };
+		565A51851F32FE5A0051F236 /* gotocountries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565A51841F32FE5A0051F236 /* gotocountries.swift */; };
 		565D96C01E955D030078B6C3 /* chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = 565D96BF1E955D030078B6C3 /* chimes.caf */; };
 		565D96C11E955D030078B6C3 /* chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = 565D96BF1E955D030078B6C3 /* chimes.caf */; };
 		565D96C21E955D030078B6C3 /* chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = 565D96BF1E955D030078B6C3 /* chimes.caf */; };
@@ -619,6 +620,7 @@
 		565E13BE1E49D234000211A8 /* manageproj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565E13BD1E49D234000211A8 /* manageproj.swift */; };
 		565E13C01E49EA54000211A8 /* nameedit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565E13BF1E49EA54000211A8 /* nameedit.swift */; };
 		565E13C21E49F98B000211A8 /* choosefromlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565E13C11E49F98B000211A8 /* choosefromlist.swift */; };
+		5660BC391F29082D00BA9453 /* nameeditforparking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660BC381F29082D00BA9453 /* nameeditforparking.swift */; };
 		5667A95A1EBA106E002C95E6 /* alerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 5667A9591EBA106E002C95E6 /* alerts.png */; };
 		566A71661E1E221A00776485 /* signout.png in Resources */ = {isa = PBXBuildFile; fileRef = 566A71651E1E221A00776485 /* signout.png */; };
 		566D633D1E2CAC0100403945 /* arcload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566D633C1E2CAC0100403945 /* arcload.swift */; };
@@ -655,6 +657,7 @@
 		568FAD451E76BB2300BCB933 /* CustomCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 568FAD421E76BB2300BCB933 /* CustomCollectionViewCell.xib */; };
 		568FAD461E76BB2300BCB933 /* CustomCollectionViews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 568FAD431E76BB2300BCB933 /* CustomCollectionViews.xib */; };
 		56939CA71EC445DB0020707C /* CO2_emissions-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 56939CA61EC445DB0020707C /* CO2_emissions-512.png */; };
+		569676A21F2700EF0084EF26 /* nameeditforcity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569676A11F2700EF0084EF26 /* nameeditforcity.swift */; };
 		56A00DC41E85267C004BC2A3 /* prerequisitess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A00DC31E85267C004BC2A3 /* prerequisitess.swift */; };
 		56A00DC61E85338C004BC2A3 /* requirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A00DC51E85338C004BC2A3 /* requirements.swift */; };
 		56A4B2A01E2DF52E006E3887 /* intermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A4B29F1E2DF52E006E3887 /* intermediate.swift */; };
@@ -683,6 +686,7 @@
 		56A8A9A71EF3C969009943D3 /* white_edited_waste.png in Resources */ = {isa = PBXBuildFile; fileRef = 56A8A9A11EF3C969009943D3 /* white_edited_waste.png */; };
 		56A8A9A81EF3C969009943D3 /* white_edited_water.png in Resources */ = {isa = PBXBuildFile; fileRef = 56A8A9A21EF3C969009943D3 /* white_edited_water.png */; };
 		56A8A9A91EF3C969009943D3 /* white_edited_dot.png in Resources */ = {isa = PBXBuildFile; fileRef = 56A8A9A31EF3C969009943D3 /* white_edited_dot.png */; };
+		56AB9E8E1F308AEB00A29D11 /* parkchoosefromlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56AB9E8D1F308AEB00A29D11 /* parkchoosefromlist.swift */; };
 		56B06A051E6844240097CBAE /* wastereadings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B06A041E6844240097CBAE /* wastereadings.swift */; };
 		56B06A081E6845250097CBAE /* wastereadingscell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B06A061E6845250097CBAE /* wastereadingscell.swift */; };
 		56B06A091E6845250097CBAE /* wastereadingscell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56B06A071E6845250097CBAE /* wastereadingscell.xib */; };
@@ -691,6 +695,7 @@
 		56BDAAA71EC06B01009984A0 /* more_data.png in Resources */ = {isa = PBXBuildFile; fileRef = 56BDAAA51EC06B01009984A0 /* more_data.png */; };
 		56C28D901EC19EEB003FDD8F /* graph.png in Resources */ = {isa = PBXBuildFile; fileRef = 56C28D8F1EC19EEB003FDD8F /* graph.png */; };
 		56D131131E37571800DFB26F /* feeds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D131121E37571800DFB26F /* feeds.swift */; };
+		56DE23E81F2F3CDD0051A26E /* editwater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DE23E71F2F3CDD0051A26E /* editwater.swift */; };
 		56E0BEE71E8CE75500642DEC /* AWBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E0BEE61E8CE75500642DEC /* AWBanner.swift */; };
 		56E0BEE91E8D3AAC00642DEC /* manageparking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E0BEE81E8D3AAC00642DEC /* manageparking.swift */; };
 		56E0BEEB1E8D3CED00642DEC /* tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 56E0BEEA1E8D3CED00642DEC /* tile.png */; };
@@ -1385,12 +1390,14 @@
 		56505EA51E1D1759003A548E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		56505EA81E1D1832003A548E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = MySampleApp/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		56505EAA1E1D35D1003A548E /* all projects.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "all projects.png"; sourceTree = "<group>"; };
+		565A51841F32FE5A0051F236 /* gotocountries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = gotocountries.swift; sourceTree = "<group>"; };
 		565D96BF1E955D030078B6C3 /* chimes.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = chimes.caf; sourceTree = "<group>"; };
 		565DE19D1EF7A8C200A767CB /* totalanalysis2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = totalanalysis2.swift; sourceTree = "<group>"; };
 		565DE19E1EF7A8C200A767CB /* totalanalysis2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = totalanalysis2.xib; sourceTree = "<group>"; };
 		565E13BD1E49D234000211A8 /* manageproj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = manageproj.swift; sourceTree = "<group>"; };
 		565E13BF1E49EA54000211A8 /* nameedit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = nameedit.swift; sourceTree = "<group>"; };
 		565E13C11E49F98B000211A8 /* choosefromlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = choosefromlist.swift; sourceTree = "<group>"; };
+		5660BC381F29082D00BA9453 /* nameeditforparking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = nameeditforparking.swift; sourceTree = "<group>"; };
 		5667A9591EBA106E002C95E6 /* alerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alerts.png; sourceTree = "<group>"; };
 		566A71611E1E0BE000776485 /* Bulleted-list-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Bulleted-list-icon.png"; sourceTree = "<group>"; };
 		566A71651E1E221A00776485 /* signout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = signout.png; sourceTree = "<group>"; };
@@ -1438,6 +1445,7 @@
 		568FAD421E76BB2300BCB933 /* CustomCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCollectionViewCell.xib; sourceTree = "<group>"; };
 		568FAD431E76BB2300BCB933 /* CustomCollectionViews.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCollectionViews.xib; sourceTree = "<group>"; };
 		56939CA61EC445DB0020707C /* CO2_emissions-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CO2_emissions-512.png"; sourceTree = "<group>"; };
+		569676A11F2700EF0084EF26 /* nameeditforcity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = nameeditforcity.swift; sourceTree = "<group>"; };
 		56A00DC31E85267C004BC2A3 /* prerequisitess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = prerequisitess.swift; sourceTree = "<group>"; };
 		56A00DC51E85338C004BC2A3 /* requirements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = requirements.swift; sourceTree = "<group>"; };
 		56A4B29F1E2DF52E006E3887 /* intermediate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = intermediate.swift; path = MySampleApp/App/intermediate.swift; sourceTree = SOURCE_ROOT; };
@@ -1466,6 +1474,7 @@
 		56A8A9A11EF3C969009943D3 /* white_edited_waste.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = white_edited_waste.png; sourceTree = "<group>"; };
 		56A8A9A21EF3C969009943D3 /* white_edited_water.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = white_edited_water.png; sourceTree = "<group>"; };
 		56A8A9A31EF3C969009943D3 /* white_edited_dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = white_edited_dot.png; sourceTree = "<group>"; };
+		56AB9E8D1F308AEB00A29D11 /* parkchoosefromlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parkchoosefromlist.swift; sourceTree = "<group>"; };
 		56B06A041E6844240097CBAE /* wastereadings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = wastereadings.swift; sourceTree = "<group>"; };
 		56B06A061E6845250097CBAE /* wastereadingscell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = wastereadingscell.swift; sourceTree = "<group>"; };
 		56B06A071E6845250097CBAE /* wastereadingscell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = wastereadingscell.xib; sourceTree = "<group>"; };
@@ -1474,6 +1483,7 @@
 		56BDAAA51EC06B01009984A0 /* more_data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_data.png; sourceTree = "<group>"; };
 		56C28D8F1EC19EEB003FDD8F /* graph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = graph.png; sourceTree = "<group>"; };
 		56D131121E37571800DFB26F /* feeds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = feeds.swift; sourceTree = "<group>"; };
+		56DE23E71F2F3CDD0051A26E /* editwater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = editwater.swift; sourceTree = "<group>"; };
 		56E0BEE61E8CE75500642DEC /* AWBanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBanner.swift; sourceTree = "<group>"; };
 		56E0BEE81E8D3AAC00642DEC /* manageparking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = manageparking.swift; sourceTree = "<group>"; };
 		56E0BEEA1E8D3CED00642DEC /* tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile.png; sourceTree = "<group>"; };
@@ -1951,6 +1961,10 @@
 				56505D571E1D16D9003A548E /* logincell.xib */,
 				56505D581E1D16D9003A548E /* manage.swift */,
 				565E13BD1E49D234000211A8 /* manageproj.swift */,
+				561C46241E94EFDB00FB29F8 /* manageacity.swift */,
+				56E0BEE81E8D3AAC00642DEC /* manageparking.swift */,
+				569676A11F2700EF0084EF26 /* nameeditforcity.swift */,
+				5660BC381F29082D00BA9453 /* nameeditforparking.swift */,
 				56505D591E1D16D9003A548E /* manageproject.swift */,
 				56A7D7B71F1534D900D5EF24 /* manageprojectdatacell.swift */,
 				56A7D7B81F1534D900D5EF24 /* manageprojectdatacell.xib */,
@@ -2093,9 +2107,7 @@
 				562B063F1E8A579E00E7109C /* yearlycell.swift */,
 				562B06401E8A579E00E7109C /* yearlycell.xib */,
 				561A559B1E922C8E009BCC61 /* progressbar.swift */,
-				56E0BEE81E8D3AAC00642DEC /* manageparking.swift */,
 				5648A88A1E939EDB004E66DA /* managecity.swift */,
-				561C46241E94EFDB00FB29F8 /* manageacity.swift */,
 				563524631E78FCB900CD8DE7 /* navclass.m */,
 				5648A88C1E93BB16004E66DA /* segmentcell.swift */,
 				5648A88D1E93BB16004E66DA /* segmentcell.xib */,
@@ -2283,6 +2295,9 @@
 			children = (
 				56505EA41E1D1759003A548E /* LaunchScreen.storyboard */,
 				56505EA51E1D1759003A548E /* Main.storyboard */,
+				565A51841F32FE5A0051F236 /* gotocountries.swift */,
+				56DE23E71F2F3CDD0051A26E /* editwater.swift */,
+				56AB9E8D1F308AEB00A29D11 /* parkchoosefromlist.swift */,
 				561F54C51ED550EB001404F4 /* showpdf.swift */,
 				56BDAAA41EC06B01009984A0 /* less_data.png */,
 				56BDAAA51EC06B01009984A0 /* more_data.png */,
@@ -3168,7 +3183,9 @@
 				561A559F1E922EC6009BCC61 /* progresscell.swift in Sources */,
 				564186471E5F16F200CC3900 /* addenableandfillViewControllertoadd.swift in Sources */,
 				561873B91E3322440042A499 /* individualplaque.swift in Sources */,
+				5660BC391F29082D00BA9453 /* nameeditforparking.swift in Sources */,
 				56505E5D1E1D16D9003A548E /* listall.swift in Sources */,
+				569676A21F2700EF0084EF26 /* nameeditforcity.swift in Sources */,
 				5641864A1E5F16F200CC3900 /* choosefromlisttoadd.swift in Sources */,
 				56505E6A1E1D16D9003A548E /* morecell.swift in Sources */,
 				563560C61E53179E0009E039 /* addenableandfillViewController.swift in Sources */,
@@ -3181,7 +3198,9 @@
 				563524641E78FCB900CD8DE7 /* navclass.m in Sources */,
 				563560C21E5317230009E039 /* addnameedit.swift in Sources */,
 				563560C81E5317BD0009E039 /* addselectvalue.swift in Sources */,
+				56DE23E81F2F3CDD0051A26E /* editwater.swift in Sources */,
 				568FAD3D1E76B8C100BCB933 /* CustomCollectionViewCells.m in Sources */,
+				565A51851F32FE5A0051F236 /* gotocountries.swift in Sources */,
 				562B063B1E8A266300E7109C /* textcell.swift in Sources */,
 				56505DAC1E1D16D9003A548E /* billing.swift in Sources */,
 				56A8A9921EF3C488009943D3 /* totalanalysis3.swift in Sources */,
@@ -3190,6 +3209,7 @@
 				56505E791E1D16D9003A548E /* prerequisitescell1.swift in Sources */,
 				56A4B2A21E2E00CF006E3887 /* emissions.swift in Sources */,
 				56EBEC441E275EFF005E1749 /* detailedanimview.swift in Sources */,
+				56AB9E8E1F308AEB00A29D11 /* parkchoosefromlist.swift in Sources */,
 				56E76EE51E81460F00A40342 /* managecell.swift in Sources */,
 				561A559C1E922C8E009BCC61 /* progressbar.swift in Sources */,
 				56505E841E1D16D9003A548E /* settings.swift in Sources */,
@@ -3300,7 +3320,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
 				CODE_SIGN_ENTITLEMENTS = MySampleApp/Arcskoru.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				COMPRESS_PNG_FILES = YES;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				ENABLE_BITCODE = NO;
@@ -3316,8 +3336,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7fe7b5a3-4c9a-454c-b8b9-6840a6474800";
-				PROVISIONING_PROFILE_SPECIFIER = "Arc app development";
+				PROVISIONING_PROFILE = "3815c6ef-c54e-43b8-9d5b-5820c7b19047";
+				PROVISIONING_PROFILE_SPECIFIER = "Arc adhoc";
 				STRIP_PNG_TEXT = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -3384,7 +3404,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
 				CODE_SIGN_ENTITLEMENTS = MySampleApp/Arcskoru.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				COMPRESS_PNG_FILES = YES;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				ENABLE_BITCODE = NO;
@@ -3400,8 +3420,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "7fe7b5a3-4c9a-454c-b8b9-6840a6474800";
-				PROVISIONING_PROFILE_SPECIFIER = "Arc app development";
+				PROVISIONING_PROFILE = "3815c6ef-c54e-43b8-9d5b-5820c7b19047";
+				PROVISIONING_PROFILE_SPECIFIER = "Arc adhoc";
 				STRIP_PNG_TEXT = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -3418,16 +3438,16 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				INFOPLIST_FILE = "arcskoru watch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6b763be1-bed4-4029-8536-52330b69ca61";
-				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit extn develop";
+				PROVISIONING_PROFILE = "0738ec63-82bf-45d1-94ed-118aa7311d20";
+				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit extn distribute";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -3443,15 +3463,15 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				INFOPLIST_FILE = "arcskoru watch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "6b763be1-bed4-4029-8536-52330b69ca61";
-				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit extn develop";
+				PROVISIONING_PROFILE = "0738ec63-82bf-45d1-94ed-118aa7311d20";
+				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit extn distribute";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -3467,15 +3487,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				IBSC_MODULE = arcskoru_watch_Extension;
 				INFOPLIST_FILE = "arcskoru watch/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3b2d5e87-4405-43e7-8efe-9b427356a42e";
-				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit development";
+				PROVISIONING_PROFILE = "8acca6b6-21b9-46b8-8e55-d11f7fcc31c4";
+				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watch distribute";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -3492,14 +3512,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				IBSC_MODULE = arcskoru_watch_Extension;
 				INFOPLIST_FILE = "arcskoru watch/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = com.arc.mobile.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3b2d5e87-4405-43e7-8efe-9b427356a42e";
-				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watchkit development";
+				PROVISIONING_PROFILE = "8acca6b6-21b9-46b8-8e55-d11f7fcc31c4";
+				PROVISIONING_PROFILE_SPECIFIER = "Arcskoru watch distribute";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;

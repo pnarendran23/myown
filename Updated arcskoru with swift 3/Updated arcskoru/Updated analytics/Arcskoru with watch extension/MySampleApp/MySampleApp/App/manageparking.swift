@@ -72,11 +72,13 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
             //self.savebtn.alpha = 1;
             self.savebtn.backgroundColor = bgcolor
         }
+        self.tableview.reloadData()
+        self.navigationController?.navigationBar.backItem?.title = "Projects";
     }
     var bgcolor = UIColor()
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if(textField.tag == 13 || textField.tag == 14){
+        if(textField.tag == 13 || textField.tag == 14 || textField.tag == 15){
         let aSet = NSCharacterSet(charactersIn:"0123456789").inverted
         let compSepByCharInSet = string.components(separatedBy: aSet)
         let numberFiltered = compSepByCharInSet.joined(separator: "")
@@ -88,6 +90,7 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
     var country = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.savebtn.setTitle("Submit", for: .normal)
         bgcolor = self.savebtn.backgroundColor!
         self.savebtn.clearsContextBeforeDrawing = false
         savebtn.isEnabled = false
@@ -336,8 +339,8 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
             return cell
         }else if(indexPath.row == 8){
             let cell = tableView.dequeueReusableCell(withIdentifier: "manageprojcell")! as! manageprojcell
-            cell.alpha = 0.6
-            cell.accessoryType = UITableViewCellAccessoryType.none
+            cell.alpha = 1.0
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             cell.contentView.alpha = cell.alpha
             cell.textLabel?.text = "Owner Type"
             cell.detailTextLabel?.textColor = UIColor.black
@@ -629,11 +632,18 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
                         UserDefaults.standard.synchronize()
                         UserDefaults.standard.set(0, forKey: "row")
                         DispatchQueue.main.async(execute: {
+                            
                             self.spinner.isHidden = true
                             self.view.isUserInteractionEnabled = true
                             self.dict = jsontemp_dictionary.mutableCopy() as! NSMutableDictionary
                             self.temp_dict = NSMutableDictionary.init(dictionary: jsontemp_dictionary)
-                            print()
+                            if(self.temp_dict == self.dict){
+                                self.savebtn.isEnabled = false
+                                self.savebtn.backgroundColor = UIColor.gray
+                            }else{
+                                self.savebtn.isEnabled = true
+                                self.savebtn.backgroundColor = self.bgcolor
+                            }
                             self.tableview.reloadData()
                         })
                         //self.tableview.reloadData()
@@ -691,18 +701,24 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
     
     
     @IBOutlet weak var dateview: UIView!
-    
+    var name = ""
+    var currentcontext = ""
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.main.async(execute: {
             //dateview.hidden = false
             
             if(indexPath.row == 0){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                 self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                 self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
+                
             }else if(indexPath.row == 1){
                 
             }else if(indexPath.row == 2){
@@ -721,7 +737,7 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
                 cell.textLabel?.numberOfLines = 3
                 //return cell
             }else if(indexPath.row == 8){
-                
+                self.performSegue(withIdentifier: "gotochoose", sender: nil)
             }else if(indexPath.row == 9){
                 
             }else if(indexPath.row == 10){
@@ -730,8 +746,8 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
                 
             }else if(indexPath.row == 12){
                 let dateformat = DateFormatter()
-                dateformat.dateFormat = "dd/MM/yyyy"
-                //print(self.temp_dict["year_constructed"])
+                dateformat.dateFormat = "yyyy-MM-dd"
+                print(self.temp_dict["year_constructed"])
                 if(self.temp_dict["year_constructed"] != nil && self.temp_dict["year_constructed"] as! String != ""){
                     self.datepicker.date = dateformat.date(from: self.temp_dict["year_constructed"] as! String)!
                 }else{
@@ -742,27 +758,36 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
                 self.dateview.isHidden = false
             }else if(indexPath.row == 13){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 14){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 15){
                 
             }else if(indexPath.row == 16){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 17){
                 let cell = tableView.dequeueReusableCell(withIdentifier: "textcell")! as! textcell
                 cell.tview.text = "projectInfo"
@@ -784,6 +809,16 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
                 self.showalert(sender.tag, title: "Enter your previous LEED ID", value:  "")
             }
         }
+        if(temp_dict == dict){
+            savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+            //self.savebtn.alpha = 0.2;
+        }else{
+            savebtn.isEnabled = true
+            //self.savebtn.alpha = 1;
+            self.savebtn.backgroundColor = bgcolor
+        }
+        
         self.tableview.reloadData()
     }
     
@@ -834,9 +869,13 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
     
     func showalert(_ index: Int, title : String, value : String){
         DispatchQueue.main.async(execute: {
-        self.alert = UIAlertController(title: "", message: "Enter the \(title )", preferredStyle: UIAlertControllerStyle.alert)
+            if(index == 15){
+                self.alert = UIAlertController(title: "", message: "\(title)", preferredStyle: UIAlertControllerStyle.alert)
+            }else{
+                self.alert = UIAlertController(title: "", message: "Enter the \(title )", preferredStyle: UIAlertControllerStyle.alert)
+            }
         self.alert.addTextField(configurationHandler: self.configurationTextField)
-            if(index == 13 || index == 14){
+            if(index == 13 || index == 14 || index == 15){
                 self.alert.textFields?[0].keyboardType = .numberPad
             }
             self.alert.textFields?[0].delegate = self
@@ -888,7 +927,7 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
     @IBAction func datedone(_ sender: AnyObject) {
         selected_date = datepicker.date
         let dateformat = DateFormatter()
-        dateformat.dateFormat = "dd/MM/yyyy"
+        dateformat.dateFormat = "yyyy-MM-dd"
         temp_dict["year_constructed"] = dateformat.string(from: selected_date)
         dateview.isHidden = true
         DispatchQueue.main.async(execute: {
@@ -902,7 +941,25 @@ class manageparking: UIViewController,UITableViewDelegate, UITableViewDataSource
         }
         return 50
     }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "gotoname"){
+            let dest = segue.destination as! nameeditforparking
+            dest.data_dict = temp_dict
+            dest.currenttitle = currentcontext
+            dest.name = name
+        }else if(segue.identifier == "gotochoose"){
+            let dest = segue.destination as! parkchoosefromlist
+            dest.dict = temp_dict            
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

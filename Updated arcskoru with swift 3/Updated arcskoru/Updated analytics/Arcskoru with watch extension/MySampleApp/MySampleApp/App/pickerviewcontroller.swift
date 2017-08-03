@@ -74,6 +74,7 @@ var statesarr  = NSArray()
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.navigationController?.delegate = self
+        self.navigationController?.navigationBar.backItem?.title = "Manage project"
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -109,11 +110,11 @@ var statesarr  = NSArray()
             
             // 6 - country, 12 - state, 12 - country 22 - state, 23 - country
             if(indx == 6 || indx == 12){
-            controller.building_dict["state"] = self.currentstate
-            controller.building_dict["country"] = self.currentcountry
+            controller.data_dict["state"] = self.currentstate
+            controller.data_dict["country"] = self.currentcountry
             }else if(indx == 22 || indx == 23){
-                controller.building_dict["manageEntityState"] = self.currentstate
-                controller.building_dict["manageEntityCountry"] = self.currentcountry
+                controller.data_dict["manageEntityState"] = self.currentstate
+                controller.data_dict["manageEntityCountry"] = self.currentcountry
             }
         }
     }

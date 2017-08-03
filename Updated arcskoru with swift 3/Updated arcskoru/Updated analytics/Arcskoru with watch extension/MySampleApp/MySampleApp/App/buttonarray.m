@@ -195,7 +195,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     UIAlertAction* yesButton = [UIAlertAction
                                 actionWithTitle:@"Yes"
-                                style:UIAlertActionStyleDefault
+                                style:UIAlertActionStyleDestructive
                                 handler:^(UIAlertAction * action)
                                 {
                                     int row=(int)[ind row];
@@ -229,8 +229,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
                                    
                                }];
     
-    [alert addAction:yesButton];
     [alert addAction:noButton];
+    [alert addAction:yesButton];
+    
     [[[[alert view]subviews] objectAtIndex:0] setBackgroundColor:[UIColor whiteColor]];
     [[[alert view] layer] setCornerRadius:10];
     [[[alert view] layer] setMasksToBounds:YES];
@@ -626,7 +627,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-
+    NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"building_details"]];
+    self.navigationItem.title = dict[@"name"];
+    self.navigationController.navigationBar.backItem.title = @"Back";
 }
 
 

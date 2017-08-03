@@ -131,6 +131,7 @@ class readingvc: UIViewController, UINavigationControllerDelegate, UITableViewDe
             dateFormat.dateFormat = "MMM dd,yyyy"
             date2 = newenddate!
             str = dateFormat.string(from: newenddate!)
+                
             enddate.text = str
             }else{
                 if(listofreadings.count > 0){
@@ -313,6 +314,13 @@ class readingvc: UIViewController, UINavigationControllerDelegate, UITableViewDe
             dateFormat.dateFormat = "MMM dd,yyyy"
             if(startdate.text?.characters.count > 0){
             startdatepicker.setDate(dateFormat.date(from: startdate.text!)!, animated: true)
+            }
+            
+            
+            if(enddate.text?.characters.count > 0){
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "MMM dd,yyyy"
+                startdatepicker.maximumDate = dateFormat.date(from: enddate.text!)//.setDate(dateFormat.date(from: enddate.text!)!, animated: true)
             }
             date1 = startdatepicker.date
         }else if(indexPath.row == 1){

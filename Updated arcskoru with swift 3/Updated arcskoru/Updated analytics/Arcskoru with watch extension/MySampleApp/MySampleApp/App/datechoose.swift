@@ -8,7 +8,7 @@
 
 import UIKit
 
-class datechoose: UIViewController, UITabBarDelegate {
+class datechoose: UIViewController, UITabBarDelegate, UINavigationControllerDelegate {
     var leedid = UserDefaults.standard.integer(forKey: "leed_id")
     var token = UserDefaults.standard.object(forKey: "token") as! String
     var startdate = Date()
@@ -19,6 +19,7 @@ class datechoose: UIViewController, UITabBarDelegate {
     var context = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         self.titlefont()
         var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         self.navigationItem.title = buildingdetails["name"] as? String
@@ -45,7 +46,7 @@ class datechoose: UIViewController, UITabBarDelegate {
             self.tabbar.items![3].badgeValue = nil
         }
         self.tabbar.selectedItem = self.tabbar.items![3]
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false        
         // Do any additional setup after loading the view.
     }
     
@@ -86,10 +87,19 @@ class datechoose: UIViewController, UITabBarDelegate {
             self.data_dict["targetCertDate"] = datef.string(from: self.currentdate) 
             self.spinner.isHidden = false
             self.view.isUserInteractionEnabled = false
-            self.saveproject(0)
+            //self.saveproject(0)
+            self.navigationController?.popViewController(animated: true)
         })
         
     }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if(viewController is manageproj){
+            let v = viewController as! manageproj
+            v.data_dict = data_dict
+        }
+    }
+    
     @IBOutlet weak var lbl: UILabel!
 
     @IBOutlet weak var dtpicker: UIDatePicker!

@@ -113,7 +113,7 @@ class listofteams: UIViewController, UITableViewDelegate, UITableViewDataSource,
     @IBOutlet weak var rolepicker: UIPickerView!
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
-        self.navigationController?.navigationBar.backItem?.title = "Manage"
+        self.navigationController?.navigationBar.backItem?.title = "More"
         if(refresh == 1){
             leedid = UserDefaults.standard.integer(forKey: "leed_id")
             self.spinner.isHidden = false

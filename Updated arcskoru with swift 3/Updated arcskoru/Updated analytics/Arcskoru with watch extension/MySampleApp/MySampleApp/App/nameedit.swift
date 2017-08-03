@@ -9,7 +9,7 @@
 
 import UIKit
 
-class nameedit: UIViewController, UITextFieldDelegate, UITabBarDelegate {
+class nameedit: UIViewController, UITextFieldDelegate, UITabBarDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var txtfld: UITextField!
     var name = ""
     var download_requests = [URLSession]()
@@ -19,6 +19,7 @@ class nameedit: UIViewController, UITextFieldDelegate, UITabBarDelegate {
     var token = UserDefaults.standard.object(forKey: "token") as! String
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         self.titlefont()
         txtfld.text = name
         context.text = currenttitle        
@@ -86,19 +87,25 @@ class nameedit: UIViewController, UITextFieldDelegate, UITabBarDelegate {
             if(self.currenttitle == "Name"){
                 self.data_dict["name"] = self.name
             }else if(self.currenttitle == "Operating hours"){
-                self.data_dict["operating_hours"] = self.name
+                self.data_dict["operating_hours"] = Int(self.name)
             }
             else if(self.currenttitle == "Gross floor area(square foot)"){
-                self.data_dict["gross_area"] = self.name
+                self.data_dict["gross_area"] = Int(self.name)
             }else if(self.currenttitle == "Occupancy"){
-                self.data_dict["occupancy"] = self.name
+                self.data_dict["occupancy"] = Int(self.name)
             }
             
-            self.spinner.isHidden = false
-            self.view.isUserInteractionEnabled = false
-            self.saveproject(0)
+            self.navigationController?.popViewController(animated: true)
+            //self.saveproject(0)
         })
 
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if(viewController is manageproj){
+            let v = viewController as! manageproj
+            v.data_dict = data_dict
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

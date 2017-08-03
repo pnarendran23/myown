@@ -55,7 +55,7 @@ class billing: UIViewController, UITabBarDelegate,UITableViewDelegate, UITableVi
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backItem?.title = "Manage";
+        self.navigationController?.navigationBar.backItem?.title = "More";
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -248,10 +248,10 @@ class billing: UIViewController, UITabBarDelegate,UITableViewDelegate, UITableVi
             }
         }else if(indexPath.row == 3){
             cell.textLabel?.text = "Total"
-            if(dict["amount_paid"] is NSNull || dict["amount_paid"] == nil){
+            if(dict["Netwr"] is NSNull || dict["Netwr"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
-            cell.detailTextLabel?.text = String(format:"$ %@",dict["amount_paid"] as! String)
+            cell.detailTextLabel?.text = String(format:"$ %.2f",Float(dict["Netwr"] as! String)!)
             }
         }else if(indexPath.row == 4){
             cell.textLabel?.text = "Status"

@@ -44,7 +44,7 @@ fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UITextFieldDelegate {
-    var building_dict = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+    var data_dict = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
     @IBOutlet weak var tableview: UITableView!
     var type = ""
     var s = ""
@@ -56,13 +56,15 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     var state = ""
     var managecountry = ""
     var managestate = ""
+    var tempdata_dict = NSMutableDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
+        bgcolor = self.savebtn.backgroundColor!
         self.spinner.layer.cornerRadius = 5
         self.spinner.isHidden = true
         self.tabbar.delegate = self
         dateview.isHidden = true
-        /* building_dict = [
+        /* data_dict = [
          "name": "sample city iOS",
          "partners": [],
          "certifications": [],
@@ -107,16 +109,16 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         }
         self.tabbar.selectedItem = self.tabbar.items![3]
         
-        if((building_dict["project_type"]as! String).lowercased() == "city"){
+        if((data_dict["project_type"]as! String).lowercased() == "city"){
             s = "city"
             t = "cities"
-        }else if((building_dict["project_type"]as! String).lowercased() == "community"){
+        }else if((data_dict["project_type"]as! String).lowercased() == "community"){
             s = "community"
             t = "communities"
         }
         var countries = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "countries") as! Data) as! NSDictionary
-        var currentcountry = self.building_dict["country"] as? String
-        var currentstate = self.building_dict["state"] as? String
+        var currentcountry = self.data_dict["country"] as? String
+        var currentstate = self.data_dict["state"] as? String
         // Getting country
         let tt = countries["countries"] as! NSDictionary
         if(tt[currentcountry] != nil){
@@ -157,28 +159,31 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         titlearr.add("Managing entity Address (line1)")
         titlearr.add("Managing entity Address (line2)")
         titlearr.add("Managing entity City")
-        titlearr.add("Managing entity Country")
         titlearr.add("Managing entity State")
+        titlearr.add("Managing entity Country")
         titlearr.add("Intend to precertify?")
         titlearr.add("Target certification date")        
-        /* building_dict["city"] = "Chennai"
-         building_dict["confidential"] = false
-         building_dict["country"] = "IN"
+        /* data_dict["city"] = "Chennai"
+         data_dict["confidential"] = false
+         data_dict["country"] = "IN"
          //"county"] =null
-         building_dict["gross_area"] = "1200"
-         building_dict["name"] = "created community"
-         building_dict["organization"] = "asd"
-         building_dict["ownerType"] = "asd"
-         building_dict["owner_email"] = "asdasd@gmail.com"
-         building_dict["project_type"] = "community"
-         building_dict["publish"] = true
-         building_dict["rating_system"] = "LEED-CM"
-         building_dict["state"] = "22"
-         building_dict["street"] = "D2, West wood apartments"
-         building_dict["unitType"] = "IP"
-         building_dict["zip_code"] = "600032"*/
+         data_dict["gross_area"] = "1200"
+         data_dict["name"] = "created community"
+         data_dict["organization"] = "asd"
+         data_dict["ownerType"] = "asd"
+         data_dict["owner_email"] = "asdasd@gmail.com"
+         data_dict["project_type"] = "community"
+         data_dict["publish"] = true
+         data_dict["rating_system"] = "LEED-CM"
+         data_dict["state"] = "22"
+         data_dict["street"] = "D2, West wood apartments"
+         data_dict["unitType"] = "IP"
+         data_dict["zip_code"] = "600032"*/
         
         // Do any additional setup after loading the view.
+        
+        tempdata_dict = NSMutableDictionary.init(dictionary: data_dict)
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -213,12 +218,14 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "manageprojcell")! as! manageprojcell
+        cell.accessoryType = .disclosureIndicator
+        cell.selectionStyle = .none
         cell.textLabel?.text = titlearr.object(at: indexPath.row) as! String
         if(indexPath.row == 0){
-            if(building_dict["name"] == nil || building_dict["name"] is NSNull){
+            if(data_dict["name"] == nil || data_dict["name"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["name"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["name"] as! String)"
                 
             }
         }else if(indexPath.row == 1){
@@ -226,6 +233,7 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             cell.textLabel?.text = titlearr.object(at: indexPath.row) as! String
             cell.segmentedctrl.tag = indexPath.row
             cell.segmentedctrl.removeAllSegments()
+            cell.selectionStyle = .none
             cell.textLabel?.font = UIFont.init(name: "OpenSans", size: 15)
             cell.segmentedctrl.insertSegment(withTitle: "IP", at: 0, animated: true)
             cell.segmentedctrl.insertSegment(withTitle: "SI", at: 1, animated: true)
@@ -237,6 +245,7 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             let cell = tableView.dequeueReusableCell(withIdentifier: "segmentcell")! as! segmentcell
             cell.textLabel?.text = titlearr.object(at: indexPath.row) as! String
             cell.segmentedctrl.tag = indexPath.row
+            cell.selectionStyle = .none
             cell.segmentedctrl.removeAllSegments()
             cell.textLabel?.font = UIFont.init(name: "OpenSans", size: 15)
             cell.segmentedctrl.insertSegment(withTitle: "LEED for \(t )", at: 0, animated: true)
@@ -247,32 +256,35 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             return cell
         }
         else if(indexPath.row == 3){
-            
-            if(building_dict["ownerType"] == nil || building_dict["ownerType"] is NSNull){
+            if(data_dict["ownerType"] == nil || data_dict["ownerType"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["ownerType"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["ownerType"] as! String)"
             }
         }
         else if(indexPath.row == 4){
-            
-            if(building_dict["organization"] == nil || building_dict["organization"] is NSNull){
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            if(data_dict["organization"] == nil || data_dict["organization"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["organization"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["organization"] as! String)"
             }
         }
         else if(indexPath.row == 5){
-            if(building_dict["owner_email"] == nil || building_dict["owner_email"] is NSNull){
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            if(data_dict["owner_email"] == nil || data_dict["owner_email"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
                 
-                cell.detailTextLabel?.text = "\(building_dict["owner_email"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["owner_email"] as! String)"
             }
         }
         else if(indexPath.row == 6){
-            
-            if(building_dict["country"] == nil || building_dict["country"] is NSNull){
+            cell.accessoryType = .none
+            cell.selectionStyle = .none
+            if(data_dict["country"] == nil || data_dict["country"] is NSNull){
                 cell.detailTextLabel?.text = self.country
             }else{
                 cell.detailTextLabel?.text = self.country
@@ -280,13 +292,13 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             
         }
         else if(indexPath.row == 7){
-            if(building_dict["gross_area"] == nil || building_dict["gross_area"] is NSNull){
+            if(data_dict["gross_area"] == nil || data_dict["gross_area"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                if(building_dict["gross_area"] is String){
-                    cell.detailTextLabel?.text = "\(building_dict["gross_area"] as! String)"
+                if(data_dict["gross_area"] is String){
+                    cell.detailTextLabel?.text = "\(data_dict["gross_area"] as! String)"
                 }else{
-                    cell.detailTextLabel?.text = "\(building_dict["gross_area"] as! Int)"
+                    cell.detailTextLabel?.text = "\(data_dict["gross_area"] as! Int)"
                 }
             }
             
@@ -296,46 +308,46 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             cell.textLabel?.text = titlearr.object(at: indexPath.row) as? String
             cell.lbl.text = ""
             cell.textLabel?.font = UIFont.init(name: "OpenSans", size: 15)
-            if(building_dict["confidential"] == nil || building_dict["confidential"] is NSNull){
+            if(data_dict["confidential"] == nil || data_dict["confidential"] is NSNull){
                 cell.yesorno.isOn = false
             }else{
-                cell.yesorno.isOn = building_dict["confidential"] as! Bool
+                cell.yesorno.isOn = data_dict["confidential"] as! Bool
             }
             cell.yesorno.tag = indexPath.row
             cell.yesorno.addTarget(self, action: #selector(self.changevalue(_:)), for: UIControlEvents.valueChanged)
             return cell
         }
         else if(indexPath.row == 9){
-            if(building_dict["occupancy"] == nil || building_dict["occupancy"] is NSNull){
+            if(data_dict["occupancy"] == nil || data_dict["occupancy"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                if(building_dict["occupancy"] is String){
-                    cell.detailTextLabel?.text = "\(building_dict["occupancy"] as! String)"
+                if(data_dict["occupancy"] is String){
+                    cell.detailTextLabel?.text = "\(data_dict["occupancy"] as! String)"
                 }else{
-                    cell.detailTextLabel?.text = "\(building_dict["occupancy"] as! Int)"
+                    cell.detailTextLabel?.text = "\(data_dict["occupancy"] as! Int)"
                 }
             }
         }
         else if(indexPath.row == 10){
-            
-            if(building_dict["street"] == nil || building_dict["street"] is NSNull){
+            cell.accessoryType = .none
+            if(data_dict["street"] == nil || data_dict["street"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["street"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["street"] as! String)"
             }
             
         }
         else if(indexPath.row == 11){
-            
-            if(building_dict["city"] == nil || building_dict["city"] is NSNull){
+            cell.accessoryType = .none
+            if(data_dict["city"] == nil || data_dict["city"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["city"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["city"] as! String)"
             }
             
         }else if(indexPath.row == 12){
-            
-            if(building_dict["state"] == nil || building_dict["state"] is NSNull){
+            cell.accessoryType = .none
+            if(data_dict["state"] == nil || data_dict["state"] is NSNull){
                 cell.detailTextLabel?.text = self.state
             }else{
                 cell.detailTextLabel?.text = self.state
@@ -343,78 +355,79 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             
         }
         else if(indexPath.row == 13){
-            
-            if(building_dict["country"] == nil || building_dict["country"] is NSNull){
+            cell.accessoryType = .none
+            if(data_dict["country"] == nil || data_dict["country"] is NSNull){
                 cell.detailTextLabel?.text = self.country
             }else{
                 cell.detailTextLabel?.text = self.country
             }
             
         }else if(indexPath.row == 14){
-            if(building_dict["zip_code"] == nil || building_dict["zip_code"] is NSNull){
+            if(data_dict["zip_code"] == nil || data_dict["zip_code"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["zip_code"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["zip_code"] as! String)"
             }
             
         }else if(indexPath.row == 15){
-            if(building_dict["year_constructed"] == nil || building_dict["year_constructed"] is NSNull){
+            if(data_dict["year_constructed"] == nil || data_dict["year_constructed"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["year_constructed"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["year_constructed"] as! String)"
             }
         }
         else if(indexPath.row == 16){
-            if(building_dict["populationDayTime"] == nil || building_dict["populationDayTime"] is NSNull){
+            if(data_dict["populationDayTime"] == nil || data_dict["populationDayTime"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["populationDayTime"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["populationDayTime"] as! String)"
             }
         }else if(indexPath.row == 17){
-            if(building_dict["populationNightTime"] == nil || building_dict["populationNightTime"] is NSNull){
+            if(data_dict["populationNightTime"] == nil || data_dict["populationNightTime"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["populationNightTime"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["populationNightTime"] as! String)"
             }
         }else if(indexPath.row == 18){
-            if(building_dict["manageEntityName"] == nil || building_dict["manageEntityName"] is NSNull){
+            if(data_dict["manageEntityName"] == nil || data_dict["manageEntityName"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["manageEntityName"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["manageEntityName"] as! String)"
             }
         }
         else if(indexPath.row == 19){
-            if(building_dict["manageEntityAdd1"] == nil || building_dict["manageEntityAdd1"] is NSNull){
+            if(data_dict["manageEntityAdd1"] == nil || data_dict["manageEntityAdd1"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["manageEntityAdd1"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["manageEntityAdd1"] as! String)"
             }
         }
         else if(indexPath.row == 20){
-            if(building_dict["managEntityAdd2"] == nil || building_dict["managEntityAdd2"] is NSNull){
+            if(data_dict["managEntityAdd2"] == nil || data_dict["managEntityAdd2"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["managEntityAdd2"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["managEntityAdd2"] as! String)"
             }
         }
         else if(indexPath.row == 21){
-            if(building_dict["manageEntityCity"] == nil || building_dict["manageEntityCity"] is NSNull){
+            if(data_dict["manageEntityCity"] == nil || data_dict["manageEntityCity"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["manageEntityCity"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["manageEntityCity"] as! String)"
             }
         }else if(indexPath.row == 22){
-            if(building_dict["manageEntityState"] == nil || building_dict["manageEntityState"] is NSNull){
+            if(data_dict["manageEntityState"] == nil || data_dict["manageEntityState"] is NSNull){
                 cell.detailTextLabel?.text = self.managestate
             }else{
                 cell.detailTextLabel?.text = self.managestate
             }
         }
         else if(indexPath.row == 23){
-            if(building_dict["manageEntityCountry"] == nil || building_dict["manageEntityCountry"] is NSNull){
+            if(data_dict["manageEntityCountry"] == nil || data_dict["manageEntityCountry"] is NSNull){
                 cell.detailTextLabel?.text = self.managecountry
             }else{
                 cell.detailTextLabel?.text = self.managecountry
+                
             }
         }
         else if(indexPath.row == 24){
@@ -423,10 +436,10 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             cell.textLabel?.text = titlearr.object(at: indexPath.row) as? String
             cell.lbl.text = ""
             cell.textLabel?.font = UIFont.init(name: "OpenSans", size: 15)
-            if(building_dict["intentToPrecertify"] == nil || building_dict["intentToPrecertify"] is NSNull){
+            if(data_dict["intentToPrecertify"] == nil || data_dict["intentToPrecertify"] is NSNull){
                 cell.yesorno.isOn = false
             }else{
-                cell.yesorno.isOn = building_dict["intentToPrecertify"] as! Bool
+                cell.yesorno.isOn = data_dict["intentToPrecertify"] as! Bool
             }
             cell.yesorno.tag = indexPath.row
             cell.yesorno.addTarget(self, action: #selector(self.changevalue(_:)), for: UIControlEvents.valueChanged)
@@ -435,10 +448,10 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         }else if(indexPath.row == 25){
             
             //intentToPrecertify   switch
-            if(building_dict["targetCertDate"] == nil || building_dict["targetCertDate"] is NSNull){
+            if(data_dict["targetCertDate"] == nil || data_dict["targetCertDate"] is NSNull){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = "\(building_dict["targetCertDate"] as! String)"
+                cell.detailTextLabel?.text = "\(data_dict["targetCertDate"] as! String)"
             }
         }
         
@@ -449,14 +462,21 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     func changevalue(_ sender: UISwitch){
         if(sender.tag == 8){
-            building_dict["confidential"] = sender.isOn
+            data_dict["confidential"] = sender.isOn
         }else if(sender.tag == 24){
-            building_dict["intentToPrecertify"] = sender.isOn
+            data_dict["intentToPrecertify"] = sender.isOn
+        }
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
         }
     }
     
     func updateproject(){
-        let url = URL.init(string:String(format: "%@assets/LEED:%d/",credentials().domain_url,building_dict["leed_id"] as! Int))
+        let url = URL.init(string:String(format: "%@assets/LEED:%d/",credentials().domain_url,data_dict["leed_id"] as! Int))
         ////print(url?.absoluteURL)
         var token = UserDefaults.standard.object(forKey: "token") as! String
         let request = NSMutableURLRequest.init(url: url!)
@@ -502,9 +522,19 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
                         DispatchQueue.main.async(execute: {
                             self.spinner.isHidden = true
                             self.view.isUserInteractionEnabled = true
+                            self.data_dict =  NSMutableDictionary.init(dictionary: (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary)
+                            self.tempdata_dict = NSMutableDictionary.init(dictionary: self.data_dict)
+                            if(self.tempdata_dict == self.data_dict){
+                                self.savebtn.isEnabled = false
+                                self.savebtn.backgroundColor = UIColor.gray
+                            }else{
+                                self.savebtn.isEnabled = true
+                                self.savebtn.backgroundColor = self.bgcolor
+                            }
+                            self.tableview.reloadData()
                             //self.navigationController?.popViewControllerAnimated(true)
                         })
-                        //self.tableview.reloadData()
+                        
                         // self.buildingactions(subscription_key, leedid: leedid)
                     } catch {
                         //print(error)
@@ -530,16 +560,23 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     func segmentchange(_ sender : UISegmentedControl){
         if(sender.tag == 1){
-            building_dict["unitType"] = sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String
+            data_dict["unitType"] = sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String
         }else if(sender.tag == 2){
             if(sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String == "LEED for cities"){
-                building_dict["rating_system"] = "LEED-CT"
+                data_dict["rating_system"] = "LEED-CT"
             }else if(sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String == "LEED for communities"){
-                building_dict["rating_system"] = "LEED-CM"
+                data_dict["rating_system"] = "LEED-CM"
             }else{
-                building_dict["rating_system"] = (sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String)?.lowercased()
+                data_dict["rating_system"] = (sender.titleForSegment(at: sender.selectedSegmentIndex)! as? String)?.lowercased()
             }
             
+        }
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
         }
     }
     
@@ -547,8 +584,8 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     @IBOutlet weak var tabbar: UITabBar!
     @IBAction func submit(_ sender: AnyObject) {
-        if((building_dict["name"] != nil || (building_dict["name"] as? String)?.characters.count > 0) && (building_dict["rating_system"] != nil || (building_dict["rating_system"] as? String)?.characters.count > 0) && (building_dict["unitType"] != nil || (building_dict["unitType"] as? String)?.characters.count > 0) && (building_dict["organization"] != nil || (building_dict["organization"] as? String)?.characters.count > 0) && (building_dict["owner_email"] != nil || (building_dict["owner_email"] as? String)?.characters.count > 0) && (building_dict["country"] != nil || (building_dict["country"] as? String)?.characters.count > 0) && (building_dict["gross_area"] != nil || (building_dict["gross_area"] as? String)?.characters.count > 0) && (building_dict["confidential"] != nil || (building_dict["confidential"] as? String)?.characters.count > 0) && (building_dict["occupancy"] != nil || (building_dict["occupancy"] as? String)?.characters.count > 0) && (building_dict["street"] != nil || (building_dict["street"] as? String)?.characters.count > 0) && (building_dict["city"] != nil || (building_dict["city"] as? String)?.characters.count > 0) && (building_dict["zip_code"] != nil || (building_dict["zip_code"] as? String)?.characters.count > 0)){
-            building_dict["manageEntityCountry"] = building_dict["country"]
+        if((data_dict["name"] != nil || (data_dict["name"] as? String)?.characters.count > 0) && (data_dict["rating_system"] != nil || (data_dict["rating_system"] as? String)?.characters.count > 0) && (data_dict["unitType"] != nil || (data_dict["unitType"] as? String)?.characters.count > 0) && (data_dict["organization"] != nil || (data_dict["organization"] as? String)?.characters.count > 0) && (data_dict["owner_email"] != nil || (data_dict["owner_email"] as? String)?.characters.count > 0) && (data_dict["country"] != nil || (data_dict["country"] as? String)?.characters.count > 0) && (data_dict["gross_area"] != nil || (data_dict["gross_area"] as? String)?.characters.count > 0) && (data_dict["confidential"] != nil || (data_dict["confidential"] as? String)?.characters.count > 0) && (data_dict["occupancy"] != nil || (data_dict["occupancy"] as? String)?.characters.count > 0) && (data_dict["street"] != nil || (data_dict["street"] as? String)?.characters.count > 0) && (data_dict["city"] != nil || (data_dict["city"] as? String)?.characters.count > 0) && (data_dict["zip_code"] != nil || (data_dict["zip_code"] as? String)?.characters.count > 0)){
+            
             DispatchQueue.main.async(execute: {
                 self.spinner.isHidden = false
                 self.savebuilding()
@@ -557,43 +594,43 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
             
             //print("Missing fields")
             let temparr = NSMutableArray()
-            if(building_dict["name"] == nil || (building_dict["name"] as? String)?.characters.count == 0){
+            if(data_dict["name"] == nil || (data_dict["name"] as? String)?.characters.count == 0){
                 temparr.add("Name")
             }
-            if(building_dict["rating_system"] == nil || (building_dict["rating_system"] as? String)?.characters.count == 0){
+            if(data_dict["rating_system"] == nil || (data_dict["rating_system"] as? String)?.characters.count == 0){
                 temparr.add("Rating system")
             }
-            if(building_dict["unitType"] == nil || (building_dict["unitType"] as? String)?.characters.count == 0){
+            if(data_dict["unitType"] == nil || (data_dict["unitType"] as? String)?.characters.count == 0){
                 temparr.add("Unit Type")
             }
-            if(building_dict["organization"] == nil || (building_dict["organization"] as? String)?.characters.count == 0){
+            if(data_dict["organization"] == nil || (data_dict["organization"] as? String)?.characters.count == 0){
                 temparr.add("Organization")
             }
-            if(building_dict["owner_email"] == nil || (building_dict["owner_email"] as? String)?.characters.count == 0){
+            if(data_dict["owner_email"] == nil || (data_dict["owner_email"] as? String)?.characters.count == 0){
                 temparr.add("Owner email")
             }
-            if(building_dict["country"] == nil || (building_dict["country"] as? String)?.characters.count == 0){
+            if(data_dict["country"] == nil || (data_dict["country"] as? String)?.characters.count == 0){
                 temparr.add("Country")
             }
-            if(building_dict["gross_area"] == nil || (building_dict["gross_area"] as? String)?.characters.count == 0){
+            if(data_dict["gross_area"] == nil || (data_dict["gross_area"] as? String)?.characters.count == 0){
                 temparr.add("Area")
             }
-            if(building_dict["confidential"] == nil || (building_dict["confidential"] as? String)?.characters.count == 0){
+            if(data_dict["confidential"] == nil || (data_dict["confidential"] as? String)?.characters.count == 0){
                 temparr.add("Project private")
             }
             
-            if(building_dict["occupancy"] == nil || (building_dict["occupancy"] as? String)?.characters.count == 0){
+            if(data_dict["occupancy"] == nil || (data_dict["occupancy"] as? String)?.characters.count == 0){
                 temparr.add("Population")
             }
-            if(building_dict["street"] == nil || (building_dict["street"] as? String)?.characters.count == 0){
+            if(data_dict["street"] == nil || (data_dict["street"] as? String)?.characters.count == 0){
                 temparr.add("Address")
             }
             
-            if(building_dict["city"] == nil || (building_dict["city"] as? String)?.characters.count == 0){
+            if(data_dict["city"] == nil || (data_dict["city"] as? String)?.characters.count == 0){
                 temparr.add("City")
             }
             
-            if(building_dict["zip_code"] == nil || (building_dict["zip_code"] as? String)?.characters.count == 0){
+            if(data_dict["zip_code"] == nil || (data_dict["zip_code"] as? String)?.characters.count == 0){
                 temparr.add("Zip Code")
             }
             
@@ -608,12 +645,20 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if(section == 0){
+            return 30
+        }
+        
+        return 12
+    }
+    
     func savebuilding(){
         var payload = NSMutableString()
         payload.append("{")
         
         
-        for (key, value) in building_dict {
+        for (key, value) in data_dict {
             if(value is String){
                 payload.append("\"\(key)\": \"\(value)\",")
             }else if(value is Int){
@@ -624,10 +669,10 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         payload.deleteCharacters(in: NSMakeRange(str.characters.count-1, 1))
         payload.append("}")
         str = payload as String
-        //print(str)
+        print(str)
         
         
-        let url = URL.init(string:String(format: "%@assets/LEED:%d/",credentials().domain_url,building_dict["leed_id"] as! Int))
+        let url = URL.init(string:String(format: "%@assets/LEED:%d/",credentials().domain_url,data_dict["leed_id"] as! Int))
         ////print(url?.absoluteURL)
         var subscription_key = credentials().subscription_key
         var token = UserDefaults.standard.object(forKey: "token") as! String
@@ -694,7 +739,8 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
                             //self.tableview.reloadData()
                             // self.buildingactions(subscription_key, leedid: leedid)
                             DispatchQueue.main.async(execute: {
-                                //      self.updateproject()
+                                self.maketoast("Updated successfully", type: "message")
+                                      self.updateproject()
                             })
                         } catch {
                             //print(error)
@@ -757,150 +803,168 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         
     }
     
-    
+    var name = ""
+    var currentcontext = ""
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         DispatchQueue.main.async(execute: {
             //dateview.hidden = false
             self.selected_index = indexPath.row
             if(indexPath.row == 0){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 1){
                 
             }else if(indexPath.row == 2){
                 
             }else if(indexPath.row == 3){
-                let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
-                }else{
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                self.performSegue(withIdentifier: "gotochoose", sender: nil)
             }else if(indexPath.row == 4){
-                let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                
+                //self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 5){
-                let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
-                }else{
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                
             }else if(indexPath.row == 6){
-                self.performSegue(withIdentifier: "gotopickerview", sender: nil)
+                
             }else if(indexPath.row == 7){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 8){
                 
             }else if(indexPath.row == 9){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 10){
-                let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
-                }else{
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 11){
-                let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
-                }else{
-                    self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                
             }else if(indexPath.row == 12){
-                self.performSegue(withIdentifier: "gotopickerview", sender: nil)
-                /*let cell = self.tableview.cellForRowAtIndexPath(indexPath)! as! manageprojcell
-                 if(cell.detailTextLabel?.text != ""){
-                 self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
-                 }else{
-                 self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                 }*/
+                
             }else if(indexPath.row == 13){
-                self.performSegue(withIdentifier: "gotopickerview", sender: nil)
+                
             }else if(indexPath.row == 14){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 15){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }
             else if(indexPath.row == 16){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 17){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 18){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }
             else if(indexPath.row == 19){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }
             else if(indexPath.row == 20){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }
             else if(indexPath.row == 21){
                 let cell = self.tableview.cellForRow(at: indexPath)! as! manageprojcell
-                if(cell.detailTextLabel?.text != ""){
+                /*if(cell.detailTextLabel?.text != ""){
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: (cell.detailTextLabel?.text)!)
                 }else{
                     self.showalert(indexPath.row, title: cell.textLabel!.text!, value: "")
-                }
+                }*/
+                self.name = (cell.detailTextLabel?.text)!
+                self.currentcontext = (cell.textLabel?.text)!
+                self.performSegue(withIdentifier: "gotoname", sender: nil)
             }else if(indexPath.row == 22){
-                self.performSegue(withIdentifier: "gotopickerview", sender: nil)
+                self.category = "states"
+                let cell = self.tableview.cellForRow(at: NSIndexPath.init(row: 23, section: 0) as IndexPath)! as! manageprojcell
+                if(cell.detailTextLabel?.text?.characters.count == 0){
+                    self.maketoast("Please select country first", type: "error")
+                }else{
+                self.performSegue(withIdentifier: "gotochoosee", sender: nil)
+                }
             }
             else if(indexPath.row == 23){
-                self.performSegue(withIdentifier: "gotopickerview", sender: nil)
+                self.category = "countries"
+                self.performSegue(withIdentifier: "gotochoosee", sender: nil)
             }
             else if(indexPath.row == 24){
                 
@@ -932,9 +996,21 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         if(segue.identifier == "gotopickerview"){
             let dest = segue.destination as! pickerviewcontroller
             dest.indx = selected_index
+        }else if(segue.identifier == "gotoname"){
+            let dest = segue.destination as! nameeditforcity
+            dest.data_dict = data_dict
+            dest.currenttitle = currentcontext
+            dest.name = name
+        }else if(segue.identifier == "gotochoose"){
+            let dest = segue.destination as! parkchoosefromlist
+            dest.dict = data_dict
+        }else if(segue.identifier == "gotochoosee"){
+            let dest = segue.destination as! gotocountries
+            dest.data_dict = data_dict
+            dest.category = category
         }
     }
-    
+    var category = ""
     func configurationTextField(_ textField: UITextField!)
     {
         //print("configurat hire the TextField")
@@ -1038,68 +1114,68 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
                 //print("User click Ok button")
                 let txtfld = self.alert.textFields![0] 
                 if(index == 0){
-                    self.building_dict["name"] = txtfld.text
+                    self.data_dict["name"] = txtfld.text
                 }else if(index == 1){
-                    self.building_dict["unitType"] = txtfld.text
+                    self.data_dict["unitType"] = txtfld.text
                 }else if(index == 2){
-                    self.building_dict["rating_system"] = txtfld.text
+                    self.data_dict["rating_system"] = txtfld.text
                 }
                 else if(index == 3){
-                    self.building_dict["ownerType"] = txtfld.text
+                    self.data_dict["ownerType"] = txtfld.text
                 }
                 else if(index == 4){
-                    self.building_dict["organization"] = txtfld.text
+                    self.data_dict["organization"] = txtfld.text
                 }
                 else if(index == 5){
-                    self.building_dict["owner_email"] = txtfld.text
+                    self.data_dict["owner_email"] = txtfld.text
                 }
                 else if(index == 6){
-                    self.building_dict["country"] = txtfld.text
+                    self.data_dict["country"] = txtfld.text
                 }
                 else if(index == 7){
-                    self.building_dict["gross_area"] = txtfld.text
+                    self.data_dict["gross_area"] = txtfld.text
                 }
                 else if(index == 8){
                     
                 }
                 else if(index == 9){
-                    self.building_dict["occupancy"] = txtfld.text
+                    self.data_dict["occupancy"] = txtfld.text
                 }
                 else if(index == 10){
-                    self.building_dict["street"] = txtfld.text
+                    self.data_dict["street"] = txtfld.text
                 }
                 else if(index == 11){
-                    self.building_dict["city"] = txtfld.text
+                    self.data_dict["city"] = txtfld.text
                 }
                 else if(index == 12){
-                    self.building_dict["state"] = txtfld.text
+                    self.data_dict["state"] = txtfld.text
                 }else if(index == 13){
-                    self.building_dict["country"] = txtfld.text
+                    self.data_dict["country"] = txtfld.text
                 }else if(index == 14){
-                    self.building_dict["zip_code"] = txtfld.text
+                    self.data_dict["zip_code"] = txtfld.text
                 }else if(index == 15){
-                    self.building_dict["year_constructed"] = txtfld.text
+                    self.data_dict["year_constructed"] = txtfld.text
                 }
                 else if(index == 16){
-                    self.building_dict["populationDayTime"] = txtfld.text
+                    self.data_dict["populationDayTime"] = txtfld.text
                 }else if(index == 17){
-                    self.building_dict["populationNightTime"] = txtfld.text
+                    self.data_dict["populationNightTime"] = txtfld.text
                 }else if(index == 18){
-                   self.building_dict["manageEntityName"] = txtfld.text
+                   self.data_dict["manageEntityName"] = txtfld.text
                 }
                 else if(index == 19){
-                    self.building_dict["manageEntityAdd1"] = txtfld.text
+                    self.data_dict["manageEntityAdd1"] = txtfld.text
                 }
                 else if(index == 20){
-                    self.building_dict["managEntityAdd2"] = txtfld.text
+                    self.data_dict["managEntityAdd2"] = txtfld.text
                 }
                 else if(index == 21){
-                    self.building_dict["manageEntityCity"] = txtfld.text
+                    self.data_dict["manageEntityCity"] = txtfld.text
                 }else if(index == 22){
-                    self.building_dict["manageEntityState"] = txtfld.text
+                    self.data_dict["manageEntityState"] = txtfld.text
                 }
                 else if(index == 23){
-                    self.building_dict["manageEntityCountry"] = txtfld.text
+                    self.data_dict["manageEntityCountry"] = txtfld.text
                 }
                
                 
@@ -1130,47 +1206,56 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
     
     @IBOutlet weak var dpicker: UIDatePicker!
     @IBOutlet weak var spinner: UIView!
-    
+    var bgcolor = UIColor()
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationItem.title = building_dict["name"] as? String
+        self.navigationItem.title = data_dict["name"] as? String
         
         var countries = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "countries") as! Data) as! NSDictionary
-        var currentcountry = self.building_dict["country"] as? String
-        var currentstate = self.building_dict["state"] as? String
-        // Getting country
-        var tt = countries["countries"] as! NSDictionary
-        if(tt[currentcountry] != nil){
-            self.country = (tt[currentcountry] as? String)!
+        
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
         }
-        countries = countries["divisions"] as! NSDictionary
-        if(countries[currentcountry] != nil){
-            let dict = countries[currentcountry] as! NSDictionary
-            if(dict[currentstate] != nil){
-            self.state = dict[currentstate] as! String
-            }
-        }
+        self.navigationController?.navigationBar.backItem?.title = "More"
         
         countries = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "countries") as! Data) as! NSDictionary
-        currentcountry = self.building_dict["manageEntityCountry"] as? String
-        currentstate = self.building_dict["manageEntityState"] as? String
-        // Getting country
-        tt = countries["countries"] as! NSDictionary
-        if(tt[currentcountry] != nil){
-            self.managecountry = (tt[currentcountry] as? String)!
-        }
-        countries = countries["divisions"] as! NSDictionary
-        if(countries[currentcountry] != nil){
-            let dict = countries[currentcountry] as! NSDictionary
-            if(dict[currentstate] != nil){
-                self.managestate = dict[currentstate] as! String
+        var d = countries["countries"] as! NSDictionary
+        var current_country = ""
+        if(data_dict["manageEntityCountry"] is NSNull || data_dict["manageEntityCountry"] == nil){
+            
+        }else{
+        for (key,value) in d {
+            let s = key as! String
+            if(s == data_dict["manageEntityCountry"] as! String){
+                managecountry = value as! String
+                current_country = key as! String
+                break
             }
-            print(managecountry,managestate)
         }
+        }
+        managestate = ""
+        d = countries["divisions"] as! NSDictionary
         
-
-        
+        if(d[current_country] != nil){
+            if(data_dict["manageEntityState"] is NSNull || data_dict["manageEntityState"] == nil){
+                
+            }else{
+        d = d[current_country] as! NSDictionary
+        for (key,value) in d {
+            let s = key as! String
+            if(s == data_dict["manageEntityState"] as! String){
+                managestate = value as! String
+                break
+            }
+        }
+            }
+        }
         tableview.reloadData()
     }
+    @IBOutlet weak var savebtn: UIButton!
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -1180,8 +1265,15 @@ class manageacity: UIViewController, UITableViewDataSource, UITableViewDelegate,
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "yyyy-MM-dd"
         let date = dateformatter.string(from: dpicker.date) 
-        building_dict["targetCertDate"] = date
+        data_dict["targetCertDate"] = date
         dateview.isHidden = true
+        if(self.tempdata_dict == self.data_dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
         tableview.reloadData()
     }
     var inputtype = ""

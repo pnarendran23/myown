@@ -514,9 +514,10 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
         segctrl.contentMode = .scaleToFill
         self.navigationItem.title = "Projects"
         let navItem = UINavigationItem(title: "All projects");
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "OpenSans", size: 13)!]
         self.nav.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "OpenSans", size: 13)!]
-        let doneItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(sayHello(_:)))
-        let filteritem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(filter(_:)))
+        let doneItem = UIBarButtonItem(title: nil, style: .plain, target: self, action: #selector(sayHello(_:)))
+        let filteritem = UIBarButtonItem(title: nil, style: .plain, target: self, action: #selector(filter(_:)))
         navItem.leftBarButtonItem = doneItem;
         navItem.rightBarButtonItem = filteritem;
         self.navigationItem.leftBarButtonItem?.title = ""
@@ -592,6 +593,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
     override func viewDidAppear(_ animated: Bool) {
         //plaque
         self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
         UserDefaults.standard.removeObject(forKey: "performance_data")
         UserDefaults.standard.removeObject(forKey: "comparable_data")
         UserDefaults.standard.removeObject(forKey: "local_comparable_data")
@@ -942,6 +944,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
         //let callActionHandler = { (action:UIAlertAction!) -> Void in
         DispatchQueue.main.async(execute: {
             self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
             self.view.isUserInteractionEnabled = true
             self.spinner.isHidden = true
             self.view.isUserInteractionEnabled = true
@@ -967,6 +970,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
     @objc func getsearchbuilding(){
         DispatchQueue.main.async(execute: {
           self.gridview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
         })
         var urlstring = searchurl
         let url = URL.init(string: urlstring)
@@ -1084,9 +1088,11 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                                 self.spinner.isHidden = true
                                 self.view.isUserInteractionEnabled = true
                                 self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                             })
                             DispatchQueue.main.async(execute: {
                                 self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                                 if(self.tobefiltered.contains("all")){
                                     self.gridview.reloadData()
                                 }else{
@@ -1094,6 +1100,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                                     self.gridview.reloadData()
                                 }
                                 self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                             })
                         }else{
                             DispatchQueue.main.async(execute: {
@@ -1102,6 +1109,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                                 self.buildingarr = building
                                 self.searcharr = jsonDictionary.mutableCopy() as! NSMutableDictionary
                                 self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                                 self.gridview.reloadData()
                             })
                         }
@@ -1191,7 +1199,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
         }else{
             UserDefaults.standard.set(1, forKey: "grid")
             if let update = currentbuilding["building_status"] as? String {
-                if(update == "activated_payment_done"){
+                if(update == "activated_payment_done" || update == "activated_under_review"){
                     let currentleedid = currentbuilding["leed_id"] as! Int
                     UserDefaults.standard.set(currentleedid, forKey: "leed_id")
                     let c = credentials()
@@ -1740,6 +1748,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
         cell.status.font = UIFont.init(name: "OpenSans", size: fontsize * UIScreen.main.bounds.size.width)
         cell.contentView.frame.size = collectionView.frame.size
         if let update = arr["building_status"] as? String {
+            
             if(update == "activated_payment_done"){
                 cell.status.text = "Registered"
             }else if(update == "activated_payment_pending"){
@@ -1749,6 +1758,8 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
             }
             else if(update == "activated_addendum_agreement_pending"){
                 cell.status.text = "Agreement pending"
+            }else if(update == "activated_under_review"){
+                cell.status.text = "Under review"
             }else{
                 cell.status.text = ""
             }
@@ -1807,6 +1818,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                     self.spinner.isHidden = true
                     self.view.isUserInteractionEnabled = true
                     self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                     self.maketoast("That was all", type: "message")
                   
                 })
@@ -1818,6 +1830,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
     func loadMoreDataFromServer(_ URL:String, subscription_key:String){
         DispatchQueue.main.async(execute: {
         self.gridview.isUserInteractionEnabled = false
+        self.navigationItem.leftBarButtonItem?.isEnabled = false
         })
         let url = Foundation.URL.init(string: URL)
         let request = NSMutableURLRequest(url:  url!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 180.0)
@@ -1854,6 +1867,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                     self.spinner.isHidden = true
                     self.view.isUserInteractionEnabled = true
                     self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                 self.maketoast("That was all", type: "message")
                     return
                 })
@@ -1897,6 +1911,7 @@ class gridviewcontroller: UIViewController, UICollectionViewDataSource, UICollec
                         DispatchQueue.main.async(execute: {
                             
                             self.gridview.isUserInteractionEnabled = true
+        self.navigationItem.leftBarButtonItem?.isEnabled = true
                             if(jsonDictionary["results"] != nil){
                                 self.assets = jsonDictionary.mutableCopy() as! NSMutableDictionary
                                 let temparr = self.assets["results"] as! NSArray

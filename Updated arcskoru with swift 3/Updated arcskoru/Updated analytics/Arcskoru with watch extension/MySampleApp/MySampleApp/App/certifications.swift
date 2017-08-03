@@ -57,7 +57,7 @@ var leedid = UserDefaults.standard.integer(forKey: "leed_id")
         token = UserDefaults.standard.object(forKey: "token") as! String
         var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         self.navigationItem.title = buildingdetails["name"] as? String
-        self.navigationController?.navigationBar.backItem?.title = "Manage"
+        self.navigationController?.navigationBar.backItem?.title = "More"
     }
     
     override func viewDidDisappear(_ animated: Bool) {

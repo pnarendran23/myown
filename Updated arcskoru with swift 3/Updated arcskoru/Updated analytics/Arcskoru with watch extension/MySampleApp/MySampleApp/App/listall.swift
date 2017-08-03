@@ -8,7 +8,7 @@
 
 import UIKit
 
-class listall: UITableViewController, UITabBarDelegate {
+class listall: UIViewController, UITabBarDelegate, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var tablview: UITableView!
 var dataarr = NSMutableArray()
     var selected = 0
@@ -22,26 +22,35 @@ var dataarr = NSMutableArray()
     
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
-        
-        
+        if(self.dataarr.count > 0){
+        var  sortDescriptor = NSSortDescriptor.init(key: "end_date", ascending: true)
+        self.dataarr.sort(using: NSArray.init(object: sortDescriptor) as! [NSSortDescriptor])
+        print(self.dataarr.lastObject)
+        let dict = (self.dataarr.lastObject as! NSDictionary)["meter"] as! NSDictionary
+        self.navigationItem.title = dict["name"] as! String
+        }
+        self.navigationItem.title = meter_name
+        self.navigationController?.navigationBar.backItem?.title = (currentarr["CreditDescription"] as! String).capitalized
+        self.tablview.reloadData()
     }
     @IBAction func closeit(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
     
     
+    @IBOutlet weak var nav: UINavigationItem!
     
     override func viewWillAppear(_ animated: Bool) {
         //dataarr = NSKeyedUnarchiver.unarchiveObjectWithData(NSUserDefaults.standardUserDefaults().objectForKey("selreading") as! NSData)?.mutableCopy() as! NSMutableArray
         //id = NSUserDefaults.standardUserDefaults().integerForKey("meterID")
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.black]
-        tablview.register(UINib.init(nibName: "customreadingcell", bundle: nil), forCellReuseIdentifier: "customreadingcell")
         tablview.reloadData()
     }
     
     var currentarr = NSMutableDictionary()
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "OpenSans", size: 13)!, NSForegroundColorAttributeName : UIColor.white]
+        tablview.register(UINib.init(nibName: "customreadingcell", bundle: nil), forCellReuseIdentifier: "customreadingcell")
         let datakeyed = UserDefaults.standard.object(forKey: "currentcategory") as! Data
         let currentcategory = (NSKeyedUnarchiver.unarchiveObject(with: datakeyed) as! NSArray).mutableCopy() as! NSMutableArray
         let current = UserDefaults.standard.integer(forKey: "selected_action")
@@ -71,11 +80,11 @@ var dataarr = NSMutableArray()
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let headerView = view as? UITableViewHeaderFooterView {
             if(headerView.textLabel?.text?.lowercased() == "no readings found"){
             headerView.textLabel?.textAlignment = .center
@@ -85,20 +94,20 @@ var dataarr = NSMutableArray()
             
         }
     }
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if(dataarr.count == 0){
             return "No readings found"
         }
         return "Swipe left to edit/delete the reading"
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return dataarr.count
     }
-
+    var meter_name = ""
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let backItem = UIBarButtonItem()
-        backItem.title = "Readings"
+        backItem.title = meter_name
         navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
         
         if(segue.identifier == "gotoeditreading"){
@@ -118,13 +127,13 @@ var dataarr = NSMutableArray()
 
     }
     
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         var dict = (dataarr.object(at: indexPath.row) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         if(tableView == tablview){
          let delete = UITableViewRowAction(style: .default, title: "Delete") { action, index in
             let alertController = UIAlertController(title: "Delete reading", message: "Would you like to delete this reading?", preferredStyle: .alert)
             
-            let yesAction = UIAlertAction(title: "Yes", style: .default, handler: {
+            let yesAction = UIAlertAction(title: "Yes", style: .destructive, handler: {
                 action in
                 if let creditDescription = self.currentarr["CreditStatus"] as? String{
                     if(creditDescription.lowercased() == "under review"){
@@ -234,7 +243,7 @@ var dataarr = NSMutableArray()
                     do {
                         DispatchQueue.main.async(execute: {
                             self.dataarr.removeObject(at: row)
-                            self.tableView.reloadData()
+                            self.tablview.reloadData()
                         })
                         
                     } catch {
@@ -265,7 +274,7 @@ var dataarr = NSMutableArray()
         task.resume()
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customreadingcell") as! customreadingcell
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         var dict = (dataarr.object(at: indexPath.row) as! NSDictionary).mutableCopy() as! NSMutableDictionary
@@ -286,7 +295,7 @@ var dataarr = NSMutableArray()
     }
     
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var dict = (dataarr.object(at: indexPath.row) as! NSDictionary).mutableCopy() as! NSMutableDictionary
         //print(dict["id"])
         

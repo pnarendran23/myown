@@ -194,42 +194,65 @@ class parkbilling: UIViewController, UITabBarDelegate,UITableViewDelegate, UITab
         if(indexPath.row == 0){
             cell.textLabel?.text = "Date"
             let formatter = DateFormatter()
-            formatter.dateFormat = credentials().micro_secs
-            let date = formatter.date(from: dict["created_at"] as! String)
-            if(dict["created_at"] is NSNull){
+            formatter.dateFormat = "yyyy-MM-dd"
+            var date = NSDate()
+            
+            if(dict["Erdat"] is NSNull || dict["Erdat"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
                 if(date == nil){
                     cell.detailTextLabel?.text = ""
                 }else{
+                    print(dict["created_at"])
+                    if(formatter.date(from: dict["Erdat"] as! String) != nil){
+                        date =  formatter.date(from: dict["Erdat"] as! String)! as NSDate
+                    }else{
+                        formatter.dateFormat = credentials().milli_secs
+                        date =  formatter.date(from: dict["Erdat"] as! String)! as NSDate
+                    }
                     formatter.dateFormat = "MMM dd, yyyy"
-                    cell.detailTextLabel?.text = formatter.string(from: date!)
+                    cell.detailTextLabel?.text = formatter.string(from: date as Date)
                 }
             }
         }else if(indexPath.row == 1){
             cell.textLabel?.text = "Order ID"
-            if(dict["sap_order_id"] is NSNull){
+            if(dict["Vbeln"] is NSNull || dict["Vbeln"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = dict["sap_order_id"] as! String
+                cell.detailTextLabel?.text = dict["Vbeln"] as! String
             }
         }else if(indexPath.row == 2){
             cell.textLabel?.text = "Order Type"
-            if(dict["soReference"] is NSNull){
+            if(dict["OrderType"] is NSNull || dict["OrderType"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = (dict["soReference"] as! String).capitalized
+                var s = ""
+                s = (dict["OrderType"] as! String).uppercased()
+                if(s == "SCORECARD"){
+                    if(dict["certification_type"] is NSNull || dict["certification_type"] == nil){
+                        cell.detailTextLabel?.text = ""
+                    }else{
+                        s = "\(s as! String) - \(dict["certification_type"] as! String)"
+                    }
+                }else if(s == "PERFORMANCE SCORE"){
+                    if(dict["certification_type"] is NSNull || dict["certification_type"] == nil){
+                        cell.detailTextLabel?.text = ""
+                    }else{
+                        s = "\(s as! String) - \(dict["certification_type"] as! String)"
+                    }
+                }
+                cell.detailTextLabel?.text = s
             }
         }else if(indexPath.row == 3){
             cell.textLabel?.text = "Total"
-            if(dict["amount_paid"] is NSNull){
+            if(dict["Netwr"] is NSNull || dict["Netwr"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
-                cell.detailTextLabel?.text = String(format:"$ %@",dict["amount_paid"] as! String)
+                cell.detailTextLabel?.text = String(format:"$ %.2f",Float(dict["Netwr"] as! String)!)
             }
         }else if(indexPath.row == 4){
             cell.textLabel?.text = "Status"
-            if(dict["OrderStatus"] is NSNull){
+            if(dict["OrderStatus"] is NSNull || dict["OrderStatus"] == nil){
                 cell.detailTextLabel?.text = ""
             }else{
                 cell.detailTextLabel?.text = (dict["OrderStatus"] as! String).capitalized

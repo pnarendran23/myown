@@ -1,53 +1,33 @@
 //
-//  selectvalue.swift
+
+//  nameedit.swift
 //  Arcskoru
 //
-//  Created by Group X on 08/02/17.
+//  Created by Group X on 07/02/17.
 //
 //
 
 import UIKit
 
-class selectvalue: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITabBarDelegate, UINavigationControllerDelegate  {
-    var PICKER_MAX = 2017
+class nameeditforcity: UIViewController, UITextFieldDelegate, UITabBarDelegate, UINavigationControllerDelegate {
+    @IBOutlet weak var txtfld: UITextField!
+    var name = ""
+    var download_requests = [URLSession]()
+    var currenttitle = ""
+    var data_dict = NSMutableDictionary()
     var leedid = UserDefaults.standard.integer(forKey: "leed_id")
     var token = UserDefaults.standard.object(forKey: "token") as! String
-    var PICKER_MIN = 1900
-    @IBOutlet weak var lbl: UILabel!
-    @IBOutlet weak var spinner: UIView!
-    @IBOutlet weak var switchh: UISwitch!
-    var download_requests = [URLSession]()
-    var currentvalue = ""
-    var currenttitle = String()
-    var data_dict = NSMutableDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.delegate = self
         self.titlefont()
+        txtfld.text = name
+        context.text = currenttitle
+        self.spinner.isHidden = true
         self.spinner.layer.cornerRadius = 5
-self.spinner.isHidden = true
-        picker.delegate = self
-        picker.dataSource = self
-        let filteritem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(done(_:)))
-        self.navigationItem.rightBarButtonItem = filteritem
-        self.navigationItem.setRightBarButton(filteritem, animated: true)
-        lbl.text = currenttitle
-        if(currenttitle == "Year built"){
-            switchh.isHidden = true
-            //print(currentvalue)
-            if(currentvalue != ""){
-                picker.selectRow((PICKER_MAX - PICKER_MIN) -  (PICKER_MAX - Int(currentvalue)!), inComponent: 0, animated: true)
-            }else{
-                picker.selectRow(0, inComponent: 0, animated: true)
-            }
-        }else if(currenttitle == "Floors above grounds"){
-            switchh.isHidden = true
-            if(currentvalue != ""){
-                picker.selectRow((PICKER_MAX - PICKER_MIN) -  (PICKER_MAX - Int(currentvalue)!), inComponent: 0, animated: true)
-            }else{
-                picker.selectRow(0, inComponent: 0, animated: true)
-            }
-        }
+        txtfld.delegate = self
+        txtfld.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
+        txtfld.becomeFirstResponder()
         let notificationsarr = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "notifications") as! Data) as! NSArray
         let plaque = UIImage.init(named: "score")
         let credits = UIImage.init(named: "Menu_icon")
@@ -55,50 +35,204 @@ self.spinner.isHidden = true
         let more = UIImage.init(named: "more")
         self.tabbar.setItems([UITabBarItem.init(title: "Score", image: plaque, tag: 0),UITabBarItem.init(title: "Credits/Actions", image: credits, tag: 1),UITabBarItem.init(title: "Analytics", image: analytics, tag: 2),UITabBarItem.init(title: "More", image: more, tag: 3)], animated: false)
         if(notificationsarr.count > 0 ){
-
-        self.tabbar.items![3].badgeValue = "\(notificationsarr.count)"
+            
+            self.tabbar.items![3].badgeValue = "\(notificationsarr.count)"
         }else{
             self.tabbar.items![3].badgeValue = nil
         }
-        
-    
         self.tabbar.selectedItem = self.tabbar.items![3]
-        //nav.setItems([navItem], animated: false);
+        var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        self.navigationItem.title = buildingdetails["name"] as? String
+        self.navigationController?.navigationBar.backItem?.title = buildingdetails["name"] as? String
+      
+        
+        
+        if(self.currenttitle == "City Name"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Owner Type"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Owner Organization"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Owner Email"){
+            
+        }else if(self.currenttitle == "Area"){
+            //number
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Population"){
+            //number
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Address"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "City"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Zip Code"){
+            //number
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Year Founded"){
+            //number
+            txtfld.keyboardType = .numberPad
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Population - Daytime"){
+            //number
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Population - Nighttime"){
+            //number
+            txtfld.keyboardType = .numberPad
+        }else if(self.currenttitle == "Managing entity Name"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Managing entity Address (line1)"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Managing entity Address (line2)"){
+            txtfld.keyboardType = .default
+        }else if(self.currenttitle == "Managing entity City"){
+            
+        }
+
+        savebtn.isEnabled = false
         // Do any additional setup after loading the view.
     }
+    
+    func textChanged(_ sender : UITextField){
+        if(sender.text!.characters.count > 0){
+            savebtn.isEnabled = true
+        }else{
+            savebtn.isEnabled = false
+        }
+    }
+    
+    @IBOutlet weak var spinner: UIView!
+    
     @IBOutlet weak var tabbar: UITabBar!
+    @IBOutlet weak var context: UILabel!
     override func viewDidAppear(_ animated: Bool) {
         token = UserDefaults.standard.object(forKey: "token") as! String
         self.navigationController?.navigationBar.backItem?.title = "Manage project"
-        var s = 1900
-        for i in 0 ... (2017 - 1900){
-            if(currenttitle == "Year built"){
-                if(data_dict["year_constructed"] is NSNull){
-                    
-                }else{
-                    if let v = data_dict["year_constructed"] as? String{
-                        if(v == "\(s as! Int)"){
-                            self.picker.selectRow(i, inComponent: 0, animated: true)
-                            break
-                        }
-                        
-                    }else if let v = data_dict["year_constructed"] as? Int{
-                        if(v == s){
-                            self.picker.selectRow(i, inComponent: 0, animated: true)
-                            break
-                        }
-                    }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
+    /*(data_dict["name"] != nil || (data_dict["name"] as? String)?.characters.count > 0) && (data_dict["rating_system"] != nil || (data_dict["rating_system"] as? String)?.characters.count > 0) && (data_dict["unitType"] != nil || (data_dict["unitType"] as? String)?.characters.count > 0) && (data_dict["organization"] != nil || (data_dict[""] as? String)?.characters.count > 0) && (data_dict["owner_email"] != nil || (data_dict[""] as? String)?.characters.count > 0) && (data_dict["country"] != nil || (data_dict["country"] as? String)?.characters.count > 0) && (data_dict["gross_area"] != nil || (data_dict["gross_area"] as? String)?.characters.count > 0) && (data_dict["confidential"] != nil || (data_dict["confidential"] as? String)?.characters.count > 0) && (data_dict["occupancy"] != nil || (data_dict["occupancy"] as? String)?.characters.count > 0) && (data_dict["street"] != nil || (data_dict["street"] as? String)?.characters.count > 0) && (data_dict["city"] != nil || (data_dict["city"] as? String)?.characters.count > 0) && (data_dict["zip_code"] != nil || (data_dict["zip_code"] as? String)?.characters.count > 0) */
+    
+    @IBOutlet weak var savebtn: UIBarButtonItem!
+    @IBAction func save(_ sender: Any) {
+        DispatchQueue.main.async(execute: {
+            self.txtfld.resignFirstResponder()
+            self.name = self.txtfld.text!
+            if(self.currenttitle == "City Name"){
+                self.data_dict["name"] = self.name
+            }else if(self.currenttitle == "Owner Type"){
+                self.data_dict["ownerType"] = self.name
+            }else if(self.currenttitle == "Owner Organization"){
+                self.data_dict["organization"] = self.name
+            }else if(self.currenttitle == "Owner Email"){
+                self.data_dict["owner_email"] = self.name
+            }else if(self.currenttitle == "Area"){
+                if(self.name.characters.count <= 5){
+                let a:Int? = Int(self.name)
+                if(a! <= 19305){
+                self.data_dict["gross_area"] = self.name
                 }
+                }
+            }else if(self.currenttitle == "Population"){
+                self.data_dict["occupancy"] = self.name
+            }else if(self.currenttitle == "Address"){
+                self.data_dict["street"] = self.name
+            }else if(self.currenttitle == "City"){
+                self.data_dict["city"] = self.name
+            }else if(self.currenttitle == "Zip Code"){
+                self.data_dict["zip_code"] = self.name
+            }else if(self.currenttitle == "Year Founded"){
+                self.data_dict["year_constructed"] = self.name
+            }else if(self.currenttitle == "Population - Daytime"){
+                self.data_dict["populationDayTime"] = self.name
+            }else if(self.currenttitle == "Population - Nighttime"){
+                self.data_dict["populationNightTime"] = self.name
+            }else if(self.currenttitle == "Managing entity Name"){
+                self.data_dict["manageEntityName"] = self.name
+            }else if(self.currenttitle == "Managing entity Address (line1)"){
+                self.data_dict["manageEntityAdd1"] = self.name
+            }else if(self.currenttitle == "Managing entity Address (line2)"){
+                self.data_dict["manageEntityAdd2"] = self.name
+            }else if(self.currenttitle == "Managing entity City"){
+                self.data_dict["manageEntityCity"] = self.name
             }
-            s = s + 1
-        }
+            
+            if(self.currenttitle == "Area"){
+                if(self.name.characters.count <= 5){
+                let a:Int? = Int(self.name)
+                if(a! <= 19305){
+                    self.data_dict["gross_area"] = self.name
+                    self.navigationController?.popViewController(animated: true)
+                }else{
+                    DispatchQueue.main.async(execute: {
+                    let alertController = UIAlertController(title: "Invalid value", message: "Please enter the Gross area value of less than 19305", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                        UIAlertAction in                     
+                    }
+                    alertController.view.subviews.first?.backgroundColor = UIColor.white
+                    alertController.view.layer.cornerRadius = 10
+                    alertController.view.layer.masksToBounds = true
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    })
+                }
+                }else{
+                    DispatchQueue.main.async(execute: {
+                        let alertController = UIAlertController(title: "Invalid value", message: "Please enter the Gross area value of less than 19305", preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+                            UIAlertAction in
+                        }
+                        alertController.view.subviews.first?.backgroundColor = UIColor.white
+                        alertController.view.layer.cornerRadius = 10
+                        alertController.view.layer.masksToBounds = true
+                        alertController.addAction(okAction)
+                        self.present(alertController, animated: true, completion: nil)
+                    })
+                }
+            }else{
+                self.navigationController?.popViewController(animated: true)
+            }
+            
+            
+            //self.saveproject(0)
+        })
+        
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if(viewController is manageproj){
-            let v = viewController as! manageproj
+        if(viewController is manageacity){
+            let v = viewController as! manageacity
             v.data_dict = data_dict
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        txtfld.resignFirstResponder()
+        var buildingdetails = (NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "building_details") as! Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        self.navigationItem.title = buildingdetails["name"] as? String
+        self.navigationController?.navigationBar.backItem?.title = buildingdetails["name"] as? String
+    }
+    
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {
+        
+    }
+    
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if(context.text == "City Name" || context.text == "Managing entity Name" || context.text == "Managing entity Address (line1)" || context.text == "Managing entity Address (line2)"){
+            return true
+        }
+        let aSet = CharacterSet(charactersIn:"0123456789").inverted
+        let compSepByCharInSet = string.components(separatedBy: aSet)
+        let numberFiltered = compSepByCharInSet.joined(separator: "")
+        if(string != numberFiltered){
+            shakeit()
+        }
+        return string == numberFiltered
     }
     
     
@@ -119,40 +253,16 @@ self.spinner.isHidden = true
             //NSNotificationCenter.defaultCenter().postNotificationName("performsegue", object: nil, userInfo: ["seguename":"listofactions"])
             NotificationCenter.default.post(name: Notification.Name(rawValue: "performrootsegue"), object: nil, userInfo: ["seguename":"listofactions"])
         }
-        
-    }
-    @IBOutlet weak var picker: UIPickerView!
-    
-    func done(_ sender: UIBarButtonItem){
-        DispatchQueue.main.async(execute: {
-            //self.spinner.isHidden = false
-            //self.view.isUserInteractionEnabled = false
-            //self.saveproject(0)
-            self.navigationController?.popViewController(animated: true)
-        })
-        
-    }
-
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
     }
     
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return (PICKER_MAX - PICKER_MIN + 1)
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(row + PICKER_MIN)"
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        currentvalue = "\(row + PICKER_MIN)"
-        if(currenttitle == "Year built"){
-        data_dict["year_constructed"] = currentvalue
-        }else if(currenttitle == "Floors above grounds"){
-        data_dict["noOfFloors"] = currentvalue    
-        }
-        //print(currentvalue)
+    func shakeit(){
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: txtfld.center.x - 10, y: txtfld.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: txtfld.center.x + 10, y: txtfld.center.y))
+        txtfld.layer.add(animation, forKey: "position")
     }
     
     @IBAction func saveproject(_ selected: Int) {
@@ -237,7 +347,7 @@ self.spinner.isHidden = true
                     }
             }
             
-        }) 
+        })
         task.resume()
     }
     
@@ -302,11 +412,11 @@ self.spinner.isHidden = true
                     }
             }
             
-        }) 
+        })
         task.resume()
         
     }
-
+    
     func showalert(_ message:String, title:String, action:String){
         
         //let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
@@ -328,7 +438,6 @@ self.spinner.isHidden = true
         
         
     }
-
     
     
     override func didReceiveMemoryWarning() {
@@ -336,15 +445,15 @@ self.spinner.isHidden = true
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

@@ -53,6 +53,13 @@ var adding = 0
         format.dateFormat = "yyyy-MM-dd"
         tempdict["start_date"] = format.string(from: dat!)
         startdatetxt.resignFirstResponder()
+        if(tempdict == dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
     }
     @IBAction func startdatecancel(_ sender: Any) {
         startdateview.isHidden = true
@@ -68,6 +75,13 @@ var adding = 0
         format.dateFormat = "yyyy-MM-dd"
         tempdict["end_date"] = format.string(from: dat!)
         enddatetxt.resignFirstResponder()
+        if(tempdict == dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
     }
     @IBAction func enddatecancel(_ sender: Any) {
         enddateview.isHidden = true
@@ -110,23 +124,60 @@ var adding = 0
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if(textField == startdatetxt){
-            startdateview.isHidden = false
+            self.startdateview.isHidden = false
+            self.enddateview.isHidden = true
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = "MMM dd,yyyy"
+            if((startdatetxt.text?.characters.count)! > 0){
+                startdatepicker.setDate(dateFormat.date(from: startdatetxt.text!)!, animated: true)
+            }
+            
+            if((enddatetxt.text?.characters.count)! > 0){
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "MMM dd,yyyy"
+                startdatepicker.maximumDate = dateFormat.date(from: enddatetxt.text!)//.setDate(dateFormat.date(from: enddate.text!)!, animated: true)
+            }
         }else if(textField == enddatetxt){
-            enddateview.isHidden = false
+            self.startdateview.isHidden = true
+            self.enddateview.isHidden = false
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = "MMM dd,yyyy"
+            if((enddatetxt.text?.characters.count)! > 0){
+                enddatepicker.setDate(dateFormat.date(from: enddatetxt.text!)!, animated: true)
+            }
+            
+            enddatepicker.minimumDate = date1
+
+            
         }
     }
     var currentarr = NSMutableDictionary()
     var enddatearr = NSMutableArray()
     @IBOutlet weak var savebtn: UIButton!
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(wastegeneratedtxt == textField || wastedivertedtxt == textField){
+        let aSet = CharacterSet(charactersIn:"0123456789").inverted
+        let compSepByCharInSet = string.components(separatedBy: aSet)
+        let numberFiltered = compSepByCharInSet.joined(separator: "")
+        
+        return string == numberFiltered
+        }
+        return false
+    }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        dict = NSMutableDictionary.init(dictionary: dataarr)
+        tempdict = NSMutableDictionary.init(dictionary: dataarr)
+        print("Init",tempdict["id"])
         let datakeyed = UserDefaults.standard.object(forKey: "currentcategory") as! Data
         let currentcategory = (NSKeyedUnarchiver.unarchiveObject(with: datakeyed) as! NSArray).mutableCopy() as! NSMutableArray
         let current = UserDefaults.standard.integer(forKey: "selected_action")
         UserDefaults.standard.synchronize()
         //print("aarra", currentcategory)
         currentarr = (currentcategory[current] as! NSDictionary).mutableCopy() as! NSMutableDictionary
-        tempdict = dict        
         var  sortDescriptor = NSSortDescriptor.init(key: "start_date", ascending: true)
         if(self.meters.count > 0){
         for i in self.meters{
@@ -141,6 +192,8 @@ var adding = 0
         self.titlefont()
         startdatetxt.delegate = self
         enddatetxt.delegate = self
+        wastedivertedtxt.delegate = self
+        wastegeneratedtxt.delegate = self
         startdatetxt.keyboardType = .numberPad
         enddatetxt.keyboardType = .numberPad
         startdatetxt.inputView = UIView()
@@ -151,6 +204,7 @@ var adding = 0
         self.navigationController?.delegate = self
         if(adding == 0){
         dict = (meters.object(at: row) as! NSDictionary).mutableCopy() as! NSMutableDictionary
+        tempdict = NSMutableDictionary.init(dictionary: dict)
         let format = DateFormatter()
         format.dateFormat = "yyyy-MM-dd"
         let str1 = format.date(from: dict["start_date"] as! String)
@@ -178,7 +232,6 @@ var adding = 0
         }
         
         if(dict["unit"] == nil || dict["unit"] is NSNull){
-            
         }else{
             if(dict["unit"] as! String == "lbs"){
                 ctrl.selectedSegmentIndex = 0
@@ -198,141 +251,161 @@ var adding = 0
         datePickerView.datePickerMode = UIDatePickerMode.date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        if(adding == 1){
-        if(enddatearr.count > 0){
-        let date1 = dateFormatter.date(from: (enddatearr.lastObject as! NSDictionary)["end_date"] as! String)
-        let today = date1
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today!)
-        dateFormatter.dateFormat = "MMM dd,yyyy"
-        
+        if(self.adding == 1){
+            self.savebtn.setTitle("Create reading", for: UIControlState())
+            let calendar = Calendar.current as! NSCalendar
             
-        let calendar = Calendar.current
-        let components = (calendar as NSCalendar).components([.day , .month , .year], from: tomorrow!)
-        let year =  components.year
-        let month = components.month
-        let day = components.day
-        let dateFormatter: DateFormatter = DateFormatter()
-        let months = dateFormatter.shortMonthSymbols
-        let monthSymbol = months?[month!+1]
-        let nextmonth = months?[month!]
-        dateFormatter.dateFormat = "MMM dd,yyyy"
-        //var date = dateFormatter.date(from: String(format: "%d %@ to %d %@", day!,monthSymbol!, day!,nextmonth!))
-        print(String(format: "%d %@ to %d %@", day!,monthSymbol!, day!,nextmonth!))
-        var date = tomorrow
-            var str = dateFormatter.string(from: tomorrow!)
-            startdatetxt.text = str
-            datePickerView.minimumDate = date
-            //startdatetxt.inputView = datePickerView
-            datePickerView.date = date!
-            startdatepicker.date = date!
-            datePickerView.addTarget(self, action: #selector(self.startdateValueChanged), for: UIControlEvents.valueChanged)
+            var recentdate = Date()
+            var diffint = 0
+            for i in meters{
+                let item = i as! NSDictionary
+                let arr = item.mutableCopy() as! NSMutableDictionary
+                let calendar = Calendar.current
+                
+                // Replace the hour (time) of both dates with 00:00
+                let date1 = calendar.startOfDay(for: Date())
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = credentials().micro_secs
+                dateFormat.dateFormat = "yyyy-MM-dd"
+                let str = arr["end_date"] as! String
+                let dat2 = calendar.startOfDay(for: dateFormat.date(from: str)!)
+                let flags = NSCalendar.Unit.day
+                let components = (calendar as NSCalendar).components(flags, from: date1, to: dat2, options: [])
+                
+                if(components.day! > 0 && diffint < components.day!){
+                    diffint = components.day!
+                    recentdate = dat2
+                    date2 = dat2
+                }
+            }
             
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            str = String(format: "%@ %02d,%d", nextmonth!,day!,year!)
-            date = dateFormatter.date(from: str)
-            date = Calendar.current.date(byAdding: .day, value: -1, to: date!)
-            enddatetxt.text = dateFormatter.string(from: date!)
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            date = dateFormatter.date(from: enddatetxt.text!)
-            enddatepicker.date = date!
-            date = dateFormatter.date(from: startdatetxt.text!)
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            tempdict["start_date"] = dateFormatter.string(from: date!)
-            
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            date = dateFormatter.date(from: enddatetxt.text!)
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            tempdict["end_date"] = dateFormatter.string(from: date!)
+            if(date2 != nil){
+                var newstartdate = Calendar.current.date(byAdding: .day, value: 1, to: date2)
+                var newenddate = Calendar.current.date(byAdding: .month, value: 1, to: newstartdate!)
+                newenddate = Calendar.current.date(byAdding: .day, value: -1, to: newenddate!)
+                //print(newstartdate,newenddate)
+                
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "yyyy-MM-dd"
+                var str = dateFormat.string(from: newstartdate!)
+                newstartdate = dateFormat.date(from: str)!
+                date1 = newstartdate!
+                dateFormat.dateFormat = "MMM dd,yyyy"
+                str = dateFormat.string(from: newstartdate!)
+                startdatetxt.text = str
+                
+                dateFormat.dateFormat = "yyyy-MM-dd"
+                str = dateFormat.string(from: newenddate!)
+                newenddate = dateFormat.date(from: str)!
+                dateFormat.dateFormat = "MMM dd,yyyy"
+                date2 = newenddate!
+                str = dateFormat.string(from: newenddate!)
+                
+                enddatetxt.text = str
+            }else{
+                if(meters.count > 0){
+                    let dateFormat = DateFormatter()
+                    let item = meters.lastObject as! NSDictionary
+                    dateFormat.dateFormat = credentials().micro_secs
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    date2 = dateFormat.date(from: item["end_date"] as! String)
+                    var newstartdate = Calendar.current.date(byAdding: .day, value: 1, to: date2)
+                    var newenddate = Calendar.current.date(byAdding: .month, value: 1, to: newstartdate!)
+                    newenddate = Calendar.current.date(byAdding: .day, value: -1, to: newenddate!)
+                    //print(newstartdate,newenddate)
+                    
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    var str = dateFormat.string(from: newstartdate!)
+                    newstartdate = dateFormat.date(from: str)!
+                    date1 = newstartdate!
+                    dateFormat.dateFormat = "MMM dd,yyyy"
+                    str = dateFormat.string(from: newstartdate!)
+                    startdatetxt.text = str
+                    
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    str = dateFormat.string(from: newenddate!)
+                    newenddate = dateFormat.date(from: str)!
+                    dateFormat.dateFormat = "MMM dd,yyyy"
+                    date2 = newenddate!
+                    str = dateFormat.string(from: newenddate!)
+                    enddatetxt.text = str
+                }else{
+                    let dateFormat = DateFormatter()
+                    
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    date2 = Date()
+                    var newstartdate = Calendar.current.date(byAdding: .day, value: 0, to: date2)
+                    var newenddate = Calendar.current.date(byAdding: .month, value: 1, to: newstartdate!)
+                    newenddate = Calendar.current.date(byAdding: .day, value: -1, to: newenddate!)
+                    //print(newstartdate,newenddate)
+                    
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    var str = dateFormat.string(from: newstartdate!)
+                    newstartdate = dateFormat.date(from: str)!
+                    date1 = newstartdate!
+                    dateFormat.dateFormat = "MMM dd,yyyy"
+                    str = dateFormat.string(from: newstartdate!)
+                    startdatetxt.text = str
+                    
+                    dateFormat.dateFormat = "yyyy-MM-dd"
+                    str = dateFormat.string(from: newenddate!)
+                    newenddate = dateFormat.date(from: str)!
+                    dateFormat.dateFormat = "MMM dd,yyyy"
+                    date2 = newenddate!
+                    str = dateFormat.string(from: newenddate!)
+                    enddatetxt.text = str
+                }
+            }
         }else{
-            let tomorrow = Date()
-            dateFormatter.dateFormat = "MMM dd,yyyy"
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = credentials().micro_secs
+            dateFormat.dateFormat = "yyyy-MM-dd"
+            var str = dataarr["start_date"] as! String
+            date1 = dateFormat.date(from: str)!
+            dateFormat.dateFormat = "MMM dd,yyyy"
+            str = dateFormat.string(from: date1)
+            startdatetxt.text = str
             
-            
+            var str2 = dataarr["end_date"] as! String
+            dateFormat.dateFormat = credentials().micro_secs
+            dateFormat.dateFormat = "yyyy-MM-dd"
+            date2 = dateFormat.date(from: str2)!
+            dateFormat.dateFormat = "MMM dd,yyyy"
+            str2 = dateFormat.string(from: date2)
             let calendar = Calendar.current
-            let components = (calendar as NSCalendar).components([.day , .month , .year], from: tomorrow)
-            let year =  components.year
-            let month = components.month
-            let day = components.day
-            let dateFormatter: DateFormatter = DateFormatter()
-            let months = dateFormatter.shortMonthSymbols
-            let monthSymbol = months?[month!+1]
-            let nextmonth = months?[month!]
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            //var date = dateFormatter.date(from: String(format: "%d %@ to %d %@", day!,monthSymbol!, day!,nextmonth!))
-            print(String(format: "%d %@ to %d %@", day!,monthSymbol!, day!,nextmonth!))
-            var date = tomorrow
-            var str = dateFormatter.string(from: tomorrow)
-            startdatetxt.text = str
-            datePickerView.minimumDate = date
-            //startdatetxt.inputView = datePickerView
-            datePickerView.date = date
-            startdatepicker.date = date
-            datePickerView.addTarget(self, action: #selector(self.startdateValueChanged), for: UIControlEvents.valueChanged)
-            
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            str = String(format: "%@ %02d,%d", nextmonth!,day!,year!)
-            date = dateFormatter.date(from: str)!
-            date = Calendar.current.date(byAdding: .day, value: -1, to: date)!
-            enddatetxt.text = dateFormatter.string(from: date)
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            date = dateFormatter.date(from: enddatetxt.text!)!
-            enddatepicker.date = date
-            date = dateFormatter.date(from: startdatetxt.text!)!
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            tempdict["start_date"] = dateFormatter.string(from: date)
-            
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            date = dateFormatter.date(from: enddatetxt.text!)!
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            tempdict["end_date"] = dateFormatter.string(from: date)
-
-            
-        }
-        }else{
-            var str1 = dict["start_date"] as! String
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            var date1 = dateFormatter.date(from: str1)
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            str1 = dateFormatter.string(from: date1!)
-            
-            var str2 = dict["end_date"] as! String
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            var date2 = dateFormatter.date(from: str2)
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            str2 = dateFormatter.string(from: date2!)
+            let twoDaysAgo = (calendar as NSCalendar).date(byAdding: .day, value: 0, to: date2, options: [])
+            str2 = dateFormat.string(from: twoDaysAgo!)
             enddatetxt.text = str2
-            startdatetxt.text = str1
-            var date = dateFormatter.date(from: startdatetxt.text!)!
-            datePickerView.minimumDate = date
-            datePickerView.maximumDate = Date()
-            //startdatetxt.inputView = datePickerView
-            datePickerView.date = date
-            startdatepicker.date = date
-            datePickerView.addTarget(self, action: #selector(self.startdateValueChanged), for: UIControlEvents.valueChanged)
-            
-            
-            let datePickerView1:UIDatePicker = UIDatePicker()
-            
-            datePickerView1.datePickerMode = UIDatePickerMode.date
-            dateFormatter.dateFormat = "MMM dd,yyyy"
-            date = dateFormatter.date(from: enddatetxt.text!)!
-            datePickerView1.minimumDate = date
-            datePickerView1.maximumDate = Date()
-            enddatetxt.inputView = UIView()
-            datePickerView1.date = date
-            enddatepicker.date = date
-            datePickerView1.addTarget(self, action: #selector(self.enddateValueChanged), for: UIControlEvents.valueChanged)
-            tempdict["start_date"] = dict["start_date"]
-            tempdict["end_date"] = dict["end_date"]
+            wastegeneratedtxt.text = String(format:"%d",dataarr["waste_generated"] as! Int)
+            wastedivertedtxt.text = String(format:"%d",dataarr["waste_diverted"] as! Int)
+            savebtn.setTitle("Update reading", for: UIControlState())
         }
         if(adding == 1){
             tempdict["unit"] = "lbs"
             ctrl.selectedSegmentIndex = 0
         }
+        bgcolor = self.savebtn.backgroundColor!
+        if(tempdict == dict){
+            self.savebtn.isEnabled = false
+            self.savebtn.backgroundColor = UIColor.gray
+        }else{
+            self.savebtn.isEnabled = true
+            self.savebtn.backgroundColor = bgcolor
+        }
+        var dateFormat = DateFormatter()
+        dateFormat.dateFormat = "MMM dd,yyyy"
+        date2 = dateFormat.date(from: startdatetxt.text!)!
+        dateFormat.dateFormat = "yyyy-MM-dd"
+        tempdict["start_date"] = dateFormat.string(from: date2)
+        
+        dateFormat.dateFormat = "MMM dd,yyyy"
+        date2 = dateFormat.date(from: enddatetxt.text!)!
+        dateFormat.dateFormat = "yyyy-MM-dd"
+        tempdict["end_date"] = dateFormat.string(from: date2)
         
         // Do any additional setup after loading the view.
     }
-    
+    var bgcolor = UIColor()
     func startdateValueChanged(_ sender:UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.medium
@@ -352,8 +425,9 @@ var adding = 0
         let str = dateFormatter.string(from: sender.date)
         tempdict["end_date"] = str
     }
-
-    
+var date2:Date!
+var date1:Date!
+var dataarr = NSMutableDictionary()
     func updatereading(){
         
         var generated = 0
@@ -362,6 +436,11 @@ var adding = 0
                 generated = Int(wastegeneratedtxt.text!)!
                 diverted = Int(wastedivertedtxt.text!)!
             print(tempdict)
+            
+            if(tempdict["unit"] == nil){
+                tempdict["unit"] = ctrl.titleForSegment(at: 0)
+            }
+            
             if(generated > diverted){
                 //Yes
                 var payload = NSMutableString()
@@ -374,7 +453,8 @@ var adding = 0
                 payload.append("\"unit\": \"\(tempdict["unit"] as! String)\"")
                 payload.append("}")
                 str = payload as String
-                //print(str,tempdict["id"])
+                print("end",tempdict["id"])
+                print(str,tempdict["id"])
                 let url = URL.init(string:String(format: "%@assets/LEED:%d/waste/ID:%d/?recompute_score=1",credentials().domain_url, leedid, tempdict["id"] as! Int))
                 ////print(url?.absoluteURL)
                 var subscription_key = credentials().subscription_key
@@ -418,13 +498,21 @@ var adding = 0
                             do {
                                 jsonDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions()) as! NSDictionary
                                 //print(jsonDictionary)
-                                self.tempdict = jsonDictionary.mutableCopy() as! NSMutableDictionary
-                                self.dict =  self.tempdict
+                                self.tempdict = NSMutableDictionary.init(dictionary: jsonDictionary.mutableCopy() as! NSMutableDictionary)
+                                self.dict =  NSMutableDictionary.init(dictionary: self.tempdict)
                                 self.meters.replaceObject(at: self.row, with: self.dict)
+                                if(self.tempdict == self.dict){
+                                    self.savebtn.isEnabled = false
+                                    self.savebtn.backgroundColor = UIColor.gray
+                                }else{
+                                    self.savebtn.isEnabled = true
+                                    self.savebtn.backgroundColor = self.bgcolor
+                                }
                                 //self.tableview.reloadData()
                                 // self.buildingactions(subscription_key, leedid: leedid)
                                 DispatchQueue.main.async(execute: {
                                     self.spinner.isHidden = true
+                                    self.maketoast("Reading updated successfully", type: "message")
                                     self.navigationController?.popViewController(animated: true)
                                 })
                             } catch {
@@ -518,12 +606,29 @@ var adding = 0
                                 self.tempdict = jsonDictionary.mutableCopy() as! NSMutableDictionary
                                 self.meters.add(self.tempdict)
                                 DispatchQueue.main.async(execute: {
+                                    self.maketoast("Reading added successfully", type: "message")
                                     self.navigationController?.popViewController(animated: true)
                                 })
                             } catch {
                                 //print(error)
                             }
                         }else{
+                            var jsonDictionary : NSDictionary
+                            do {
+                                jsonDictionary = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions()) as! NSDictionary
+                                print(jsonDictionary)
+                                DispatchQueue.main.async(execute: {
+                                if let s = jsonDictionary["non_field_errors"] as? String{                                    
+                                self.maketoast(s, type: "error")
+                                }else if let s = jsonDictionary["non_field_errors"] as? NSArray{
+                                    self.maketoast(s[0] as! String, type: "error")
+                                }
+                                    self.spinner.isHidden = true
+                                    self.view.isUserInteractionEnabled = true
+                                })
+                            } catch {
+                                //print(error)
+                            }
                             DispatchQueue.main.async(execute: {
                                 self.spinner.isHidden = true
                                 self.view.isUserInteractionEnabled = true
