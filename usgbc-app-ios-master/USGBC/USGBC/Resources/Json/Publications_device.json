@@ -1,0 +1,39 @@
+{
+    "publications":[
+                    {"publication":{
+                    "title":"LEED Green Associate Exam Preparation Guide",
+                    "image":"https:\/\/in.usgbc.org\/sites\/default\/files\/imagecache\/fixed-220_164_no_crop\/LGAcover_0.jpg",
+                    "price":"$99.00",
+                    "leed_version":"v4",
+                    "rating":"4.0"
+                    }},
+                    {"publication":{
+                    "title":"USGBC + Magazine May / June 2014",
+                    "image":"https:\/\/in.usgbc.org\/sites\/default\/files\/imagecache\/fixed-220_164_no_crop\/USGBCMagazine_05-2014_Cover-NoCrops.jpg",
+                    "price":"$9.99",
+                    "leed_version":"v4",
+                    "rating":"0.0"
+                    }},
+                    {"publication":{
+                    "title":"LEED Core Concepts Guide in Spanish",
+                    "image":"https:\/\/in.usgbc.org\/sites\/default\/files\/imagecache\/fixed-220_164_no_crop\/cover-ES.png",
+                    "price":"$85.00",
+                    "leed_version":"v4",
+                    "rating":"0.0"
+                    }},
+                    {"publication":{
+                    "title":"LEED Reference Guide for Green Building Design and Construction",
+                    "image":"https:\/\/in.usgbc.org\/sites\/default\/files\/imagecache\/fixed-220_164_no_crop\/resources-refNC.jpg",
+                    "price":"$195.00",
+                    "leed_version":"v2009",
+                    "rating":"3.8"
+                    }},
+                    {"publication":{
+                    "title":"Study Bundle: Homes Study Guide and Reference Guide",
+                    "image":"https:\/\/in.usgbc.org\/sites\/default\/files\/imagecache\/fixed-220_164_no_crop\/study_bundle_homes.jpg",
+                    "price":"$195.00",
+                    "leed_version":"v2009",
+                    "rating":"3.8"
+                    }}
+                    ]
+}

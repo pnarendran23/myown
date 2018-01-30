@@ -1,0 +1,31 @@
+{
+    "filters": [{
+                "name": "All"
+                }, {
+                "name": "Integrative process credits"
+                }, {
+                "name": "Location & transportation"
+                }, {
+                "name": "Sustainable sites"
+                }, {
+                "name": "Water efficiency"
+                }, {
+                "name": "Energy & atmosphere"
+                }, {
+                "name": "Material & resources"
+                }, {
+                "name": "Indoor environmental quality"
+                }, {
+                "name": "Innovation"
+                }, {
+                "name": "Regional priority"
+                }, {
+                "name": "Appendices"
+                }, {
+                "name": "Minimum program requirements"
+                }, {
+                "name": "Pilot credits"
+                }, {
+                "name": "Innovation catalog"
+                }]
+}

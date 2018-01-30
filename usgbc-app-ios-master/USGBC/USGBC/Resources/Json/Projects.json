@@ -1,0 +1,107 @@
+{
+    "projects": [{
+                 "project": {
+                 "title": "NUOVA SCUOLA PRIMARIA P. RACAGNI",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_150-150/profile/project/gpa_2161.jpg",
+                 "address": "PARMA, PR 43100",
+                 "leed_version": "LEED Italia v3 - LEED 2009",
+                 "member_level": "Platinum",
+                 "location":{
+                        "lat": "47.2573647",
+                        "lng": "-123.0941107"
+                    }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "KFC Big-C Kanchanaburi",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/kfc_bkj_116.jpg",
+                 "address": "Muang District, 71 71000",
+                 "leed_version": "LEED ID+C: Retail v3 - LEED 2009",
+                 "member_level": "Certified",
+                 "location":{
+                     "lat": "38.4247821",
+                     "lng": "-121.5158907"
+                    }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Wells Fargo Tower",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_150-150/profile/project/gpa_2161.jpg",
+                 "address": "Los Angeles, CA 90071",
+                 "leed_version": "LEED O+M: Existing Buildings v3 - LEED 2009",
+                 "member_level": "Gold",
+                 "location":{
+                     "lat": "34.0207504",
+                     "lng": "-118.6919295"
+                    }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Stony Brook Millstone Watershed Associate",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/1113-02.jpg",
+                 "address": "Hopewell, NJ 08525",
+                 "leed_version": "LEED BD+C: New Construction v3 - LEED 2009",
+                 "member_level": "Platinum",
+                 "location":{
+                     "lat": "36.1252285",
+                     "lng": "-115.4551959"
+                     }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Corporativo Atmosfera",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/21.jpg",
+                 "address": "Guadalajara, JAL 44630",
+                 "leed_version": "LEED BD+C: New Construction v3 - LEED 2009",
+                 "member_level": "Platinum",
+                 "location":{
+                     "lat": "34.0934075",
+                     "lng": "-110.5204559"
+                     }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Pfizer Administrative Building Toluca",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/046_pfizer.jpg",
+                 "address": "Charlotte, NC 28255",
+                 "leed_version": "LEED BD+C: New Construction v3 - LEED 2009",
+                 "member_level": "Gold",
+                 "location":{
+                     "lat": "35.140304",
+                     "lng": "-84.3852625"
+                     }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Talleres de Innovacion para el Diseno",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/001_tid_iteso_proteccin_solar.jpg",
+                 "address": "Tlaquepaque, JAL 45604",
+                 "leed_version": "LEED BD+C: New Construction v3 - LEED 2009",
+                 "member_level": "Silver",
+                 "location":{
+                     "lat": "38.8995322",
+                     "lng": "-77.154653"
+                     }
+                 }
+                 },
+                 {
+                 "project": {
+                 "title": "Fortius casa Hidalgo",
+                 "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/profile/project/fortius.jpg",
+                 "address": "Guadalajara, JAL 44600",
+                 "leed_version": "LEED BD+C: New Construction v3 - LEED 2009",
+                 "member_level": "Platinum",
+                 "location":{
+                     "lat": "37.9864962",
+                     "lng": "-81.7028098"
+                     }
+                 }
+                 }
+                 ]
+}

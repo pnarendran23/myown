@@ -1,0 +1,228 @@
+{
+    "filters": [{
+                "name": "Type",
+                "sub-filters": [{
+                                "name": "Addenda",
+                                "value" : "2780"
+                                }, {
+                                "name": "Calculators",
+                                "value" : "2783"
+                                }, {
+                                "name": "Checklists",
+                                "value" : "2781"
+                                }, {
+                                "name": "Certification",
+                                "value" : "4996"
+                                }, {
+                                "name": "Guidance",
+                                "value" : "2782"
+                                }, {
+                                "name": "Rating system",
+                                "value" : "1361"
+                                }, {
+                                "name": "Standards",
+                                "value" : "965"
+                                }]
+                }, {
+                "name": "Format",
+                "sub-filters": [{
+                                "name": "eBook",
+                                "value": "417"
+                                }, {
+                                "name": "Excel doc",
+                                "value": "1083"
+                                }, {
+                                "name": "Kindle",
+                                "value": "5269"
+                                }, {
+                                "name": "MP3",
+                                "value": "420"
+                                }, {
+                                "name": "PDF",
+                                "value": "416"
+                                }, {
+                                "name": "PowerPoint doc",
+                                "value": "418"
+                                }, {
+                                "name": "Streaming audio",
+                                "value": "1084"
+                                }, {
+                                "name": "Streaming video",
+                                "value": "421"
+                                }, {
+                                "name": "Web link",
+                                "value": "419"
+                                }, {
+                                "name": "Word doc",
+                                "value": "415"
+                                }, {
+                                "name": "Zip",
+                                "value": "6061"
+                                }]
+                }, {
+                "name": "Rating System",
+                "sub-filters": [{
+                                "name": "LEED BD+C: New Construction",
+                                "value": "1226"
+                                }, {
+                                "name": "LEED BD+C: Core and Shell",
+                                "value": "69"
+                                }, {
+                                "name": "LEED BD+C: Schools",
+                                "value": "76"
+                                }, {
+                                "name": "LEED BD+C: Retail",
+                                "value": "75"
+                                }, {
+                                "name": "LEED BD+C: Healthcare",
+                                "value": "71"
+                                }, {
+                                "name": "LEED BD+C: Data Centers",
+                                "value": "1216"
+                                }, {
+                                "name": "LEED BD+C: Hospitality",
+                                "value": "1219"
+                                }, {
+                                "name": "LEED BD+C: Warehouses and Distribution Centers",
+                                "value": "1218"
+                                }, {
+                                "name": "LEED BD+C: Homes",
+                                "value": "72"
+                                }, {
+                                "name": "LEED BD+C: Multifamily Midrise",
+                                "value": "1221"
+                                }, {
+                                "name": "LEED ID+C: Commercial Interiors",
+                                "value": "68"
+                                }, {
+                                "name": "LEED ID+C: Retail",
+                                "value": "1306"
+                                }, {
+                                "name": "LEED ID+C: Hospitality",
+                                "value": "1331"
+                                }, {
+                                "name": "LEED O+M: Existing Buildings",
+                                "value": "1227"
+                                }, {
+                                "name": "LEED O+M: Schools",
+                                "value": "1334"
+                                }, {
+                                "name": "LEED O+M: Retail",
+                                "value": "1333"
+                                }, {
+                                "name": "LEED O+M: Data Centers",
+                                "value": "1330"
+                                }, {
+                                "name": "LEED O+M: Hospitality",
+                                "value": "1332"
+                                }, {
+                                "name": "LEED O+M: Warehouses and Distribution Centers",
+                                "value": "1335"
+                                }, {
+                                "name": "LEED O+M: Multifamily",
+                                "value": "7327"
+                                }, {
+                                "name": "LEED ND: Plan",
+                                "value": "1222"
+                                }, {
+                                "name": "LEED ND: Built Project",
+                                "value": "73"
+                                }, {
+                                "name": "LEED Italia",
+                                "value": "5268"
+                                }, {
+                                "name": "Existing Buildings - Recertification",
+                                "value": "5276"
+                                }, {
+                                "name": "PEER: Campus",
+                                "value": "7354"
+                                }, {
+                                "name": "PEER: City",
+                                "value": "7353"
+                                }, {
+                                "name": "PEER: Supply",
+                                "value": "7355"
+                                }]
+                }, {
+                "name": "Versions",
+                "sub-filters": [{
+                                "name": "v4 - LEED v4",
+                                "value": "1223"
+                                }, {
+                                "name": "v3 - LEED 2009",
+                                "value": "81"
+                                }, {
+                                "name": "v3 - LEED 2008",
+                                "value": "490"
+                                }, {
+                                "name": "v3 - LEED India 2011",
+                                "value": "5976"
+                                }, {
+                                "name": "v2 - Schools 2007",
+                                "value": "491"
+                                }, {
+                                "name": "v2 - LEED 2.2",
+                                "value": "82"
+                                }, {
+                                "name": "v2 - LEED 2.1",
+                                "value": "83"
+                                }, {
+                                "name": "v2 - LEED 2.0",
+                                "value": "84"
+                                }, {
+                                "name": "v1 - LEED 1.0 pilot",
+                                "value": "1224"
+                                }, {
+                                "name": "2009 Energy Update",
+                                "value": "7416"
+                                }, {
+                                "name": "v1 - PEER v1.1",
+                                "value": "7455"
+                                }, {
+                                "name": "SITES v2",
+                                "value": "8230"
+                                }]
+                }, {
+                "name": "Access",
+                "sub-filters": [{
+                                "name": "All",
+                                "value": "all"
+                                }, {
+                                "name": "Member Only",
+                                "value": "1"
+                                }]
+                }, {
+                "name": "Language",
+                "sub-filters": [{
+                                "name": "All",
+                                "value": "all"
+                                }, {
+                                "name": "Arabic",
+                                "value": "5991"
+                                }, {
+                                "name": "Chinese",
+                                "value": "5992"
+                                }, {
+                                "name": "English",
+                                "value": "5993"
+                                }, {
+                                "name": "French",
+                                "value": "5994"
+                                }, {
+                                "name": "German",
+                                "value": "7392"
+                                }, {
+                                "name": "Japanese",
+                                "value": "7393"
+                                }, {
+                                "name": "Korean",
+                                "value": "7394"
+                                }, {
+                                "name": "Portuguese",
+                                "value": "5995"
+                                }, {
+                                "name": "Spanish",
+                                "value": "5996"
+                                }]
+                }]
+}

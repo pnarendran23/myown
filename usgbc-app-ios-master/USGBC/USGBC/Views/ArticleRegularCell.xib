@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ArticleRegularCell" customModule="USGBC" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="280"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="280"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xij-Cf-j9G">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="140"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="xij-Cf-j9G" secondAttribute="height" multiplier="8:5" constant="96" id="O80-op-sFk"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Become a sponsor of the 30x30 Nature Challenge (USGBC Iowa)" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1OA-xa-7se">
+                        <rect key="frame" x="16" y="150" width="288" height="31.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Community" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgg-vP-ggz">
+                        <rect key="frame" x="16" y="256" width="55" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="04.21.2017" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iEh-Yi-RFU">
+                        <rect key="frame" x="251.5" y="256" width="52.5" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Korinne Haeffel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUm-bx-EcZ">
+                        <rect key="frame" x="16" y="233.5" width="288" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="tgg-vP-ggz" secondAttribute="bottom" constant="12" id="9Nc-ik-xUO"/>
+                <constraint firstItem="1OA-xa-7se" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="DAd-k5-sK0"/>
+                <constraint firstItem="tgg-vP-ggz" firstAttribute="top" secondItem="kUm-bx-EcZ" secondAttribute="bottom" constant="8" id="HQh-1K-Gy4"/>
+                <constraint firstAttribute="bottom" secondItem="iEh-Yi-RFU" secondAttribute="bottom" constant="12" id="Ped-qA-WKR"/>
+                <constraint firstAttribute="trailing" secondItem="1OA-xa-7se" secondAttribute="trailing" constant="16" id="VWW-Tl-2ip"/>
+                <constraint firstItem="tgg-vP-ggz" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="aEl-p9-WdD"/>
+                <constraint firstAttribute="trailing" secondItem="kUm-bx-EcZ" secondAttribute="trailing" constant="16" id="asG-XD-VCl"/>
+                <constraint firstItem="xij-Cf-j9G" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="bIt-da-SQB"/>
+                <constraint firstAttribute="trailing" secondItem="iEh-Yi-RFU" secondAttribute="trailing" constant="16" id="ewT-xH-2Dp"/>
+                <constraint firstItem="1OA-xa-7se" firstAttribute="top" secondItem="xij-Cf-j9G" secondAttribute="bottom" constant="10" id="kDu-tS-SXp"/>
+                <constraint firstAttribute="trailing" secondItem="xij-Cf-j9G" secondAttribute="trailing" id="oBg-ei-Gz8"/>
+                <constraint firstItem="xij-Cf-j9G" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="pCg-GC-CrE"/>
+                <constraint firstItem="kUm-bx-EcZ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="sWn-cv-GcG"/>
+            </constraints>
+            <size key="customSize" width="317" height="279"/>
+            <connections>
+                <outlet property="channelLabel" destination="tgg-vP-ggz" id="RnS-0P-XaI"/>
+                <outlet property="dateLabel" destination="iEh-Yi-RFU" id="cfx-TA-IOd"/>
+                <outlet property="imageView" destination="xij-Cf-j9G" id="5jI-YU-Jix"/>
+                <outlet property="providerLabel" destination="kUm-bx-EcZ" id="L9S-Bj-NEx"/>
+                <outlet property="titleLabel" destination="1OA-xa-7se" id="16V-zb-QXf"/>
+            </connections>
+            <point key="canvasLocation" x="167" y="168"/>
+        </collectionViewCell>
+    </objects>
+</document>

@@ -1,0 +1,75 @@
+{
+    "advocacy_policy": [{
+                        "advocacy_policy": {
+                        "title": "Programs for Above-Code Construction",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202017-04-25%20at%201.01.12%20PM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Advocacy briefs"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "USGBC Member Letter Promoting Green Buildings to Virginia's Secretary of Natural Resources Over Carbon Emissions Executive Order",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202017-04-18%20at%2011.58.46%20AM.png",
+                        "file_type": "Web link",
+                        "leed_version": "v4",
+                        "category": "Advocacy briefs"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "Letter to VA Gov. McAuliffe re. Green Development Zones & LEED",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202017-02-16%20at%201.07.04%20PM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Public policies"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "LEED & Multifamily Green Building Financing Incentives",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202017-01-30%20at%203.54.20%20PM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Advocacy briefs"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "2016 Resilient Cities Summit Program Agenda & Attendee List",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/resilient-cities.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Advocacy briefs"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "Achieving Urban Resilience: Washington DC",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202016-12-07%20at%209.48.31%20AM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Reports"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "Tools for Energy Efficiency in Buildings: A Guide for Policy Makers and Experts",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202016-11-17%20at%209.34.55%20AM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Reports"
+                        }
+                        },
+                        {
+                        "advocacy_policy": {
+                        "title": "2015 Resilient Cities Summit Report",
+                        "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202016-09-02%20at%202.20.13%20PM.png",
+                        "file_type": "PDF",
+                        "leed_version": "v4",
+                        "category": "Reports"
+                        }
+                        }
+                        ]
+}

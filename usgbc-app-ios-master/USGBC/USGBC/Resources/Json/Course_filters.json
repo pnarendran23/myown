@@ -1,0 +1,207 @@
+{
+    "filters": [{
+                "name": "Continuing education",
+                "sub-filters": [{
+                                "name": "LEED AP BD+C",
+                                "value": "55"
+                                }, {
+                                "name": "LEED Green Associate",
+                                "value": "60"
+                                }, {
+                                "name": "LEED AP O+M",
+                                "value": "59"
+                                }, {
+                                "name": "LEED AP ID+C",
+                                "value": "57"
+                                },{
+                                "name": "LEED AP ND",
+                                "value": "58"
+                                }, {
+                                "name": "LEED AP Homes",
+                                "value": "56"
+                                }, {
+                                "name": "LEED AP",
+                                "value": "5299"
+                                }, {
+                                "name": "LEED Fellow",
+                                "value": "422"
+                                }, {
+                                "name": "WELL AP",
+                                "value": "7488"
+                                }, {
+                                "name": "SITES AP",
+                                "value": "8345"
+                                }]
+                },{
+                "name": "Rating system version",
+                "sub-filters": [{
+                                "name": "v4 - LEED v4",
+                                "value": "1223"
+                                }, {
+                                "name": "v3 - LEED 2009",
+                                "value": "81"
+                                }, {
+                                "name": "v1 - PEER v1.1",
+                                "value": "7455"
+                                }, {
+                                "name": "SITES v2",
+                                "value": "8230"
+                                }]
+                },{
+                "name": "LEED credit category",
+                "sub-filters": [{
+                                "name": "Integrative process credits",
+                                "value": "2779"
+                                }, {
+                                "name": "Location & linkages",
+                                "value": "1308"
+                                }, {
+                                "name": "Location & transportation",
+                                "value": "1209"
+                                }, {
+                                "name": "Sustainable sites",
+                                "value": "85"
+                                },{
+                                "name": "Water efficiency",
+                                "value": "86"
+                                }, {
+                                "name": "Energy & atmosphere",
+                                "value": "91"
+                                }, {
+                                "name": "Material & resources",
+                                "value": "87"
+                                }, {
+                                "name": "Indoor environmental quality",
+                                "value": "90"
+                                },{
+                                "name": "Smart location and linkage",
+                                "value": "88"
+                                }, {
+                                "name": "Neighborhood pattern & design",
+                                "value": "1211"
+                                }, {
+                                "name": "Green construction & technology",
+                                "value": "4934"
+                                }, {
+                                "name": "Green infrastructure & buildings",
+                                "value": "1212"
+                                },{
+                                "name": "Innovation",
+                                "value": "89"
+                                }, {
+                                "name": "Regional priority",
+                                "value": "1210"
+                                }, {
+                                "name": "Awareness & education",
+                                "value": "92"
+                                }, {
+                                "name": "Appendices",
+                                "value": "5362"
+                                },{
+                                "name": "Project Information",
+                                "value": "7494"
+                                }, {
+                                "name": "Minimum program requirements",
+                                "value": "1228"
+                                }, {
+                                "name": "Pilot credits",
+                                "value": "4923"
+                                }, {
+                                "name": "Innovation catalog",
+                                "value": "5206"
+                                },{
+                                "name": "Reliability and resiliency",
+                                "value": "7350"
+                                }, {
+                                "name": "Energy efficiency and environment",
+                                "value": "7351"
+                                }, {
+                                "name": "Operational effectiveness",
+                                "value": "7349"
+                                }, {
+                                "name": "Customer contribution",
+                                "value": "7352"
+                                },{
+                                "name": "Introduction/Other",
+                                "value": "5065"
+                                }]
+                },{
+                "name": "Course format",
+                "sub-filters": [{
+                                "name": "On Demand: Online",
+                                "value": "26"
+                                }, {
+                                "name": "On Demand: Article/Print",
+                                "value": "66"
+                                }, {
+                                "name": "LIVE: Facilitator-led",
+                                "value": "22"
+                                }, {
+                                "name": "LIVE: Online",
+                                "value": "23"
+                                },{
+                                "name": "LIVE: Conference",
+                                "value": "21"
+                                }, {
+                                "name": "LIVE: Tour",
+                                "value": "24"
+                                }, {
+                                "name": "Webinars",
+                                "value": "2790"
+                                }]
+                },{
+                "name": "Course level",
+                "sub-filters": [{
+                                "name": "Basic",
+                                "value": "17"
+                                }, {
+                                "name": "Intermediate",
+                                "value": "18"
+                                }, {
+                                "name": "Advanced",
+                                "value": "19"
+                                }, {
+                                "name": "Expert",
+                                "value": "20"
+                                }]
+                },{
+                "name": "Course language",
+                "sub-filters": [{
+                                "name": "All",
+                                "value": "all"
+                                }, {
+                                "name": "English",
+                                "value": "english"
+                                }, {
+                                "name": "Bangla",
+                                "value": "bangla"
+                                }, {
+                                "name": "Chinese",
+                                "value": "chinese"
+                                }, {
+                                "name": "French",
+                                "value": "french"
+                                }, {
+                                "name": "German",
+                                "value": "german"
+                                }, {
+                                "name": "Italian",
+                                "value": "italian"
+                                }, {
+                                "name": "Macedonian",
+                                "value": "macedonian"
+                                },{
+                                "name": "Russian",
+                                "value": "russian"
+                                }, {
+                                "name": "Serbian",
+                                "value": "serbian"
+                                }, {
+                                "name": "Spanish",
+                                "value": "spanish"
+                                }, {
+                                "name": "Swedish",
+                                "value": "swedish"
+                                }]
+                }]
+}

@@ -1,0 +1,35 @@
+{
+    "scorecard": {
+        "rating_system": "LEED ID+C: Retail (v2009)",
+        "certification_date": "Jul 2014",
+        "scores": [{
+                   "name": "Sustainable sites",
+                   "score": 12,
+                   "total": 21
+                   }, {
+                   "name": "Water efficiency",
+                   "score": 11,
+                   "total": 11
+                   }, {
+                   "name": "Energy & atmosphere",
+                   "score": 8,
+                   "total": 37
+                   }, {
+                   "name": "Material & resources",
+                   "score": 0,
+                   "total": 14
+                   }, {
+                   "name": "Indoor environmental quality",
+                   "score": 5,
+                   "total": 17
+                   }, {
+                   "name": "Innovation",
+                   "score": 5,
+                   "total": 6
+                   }, {
+                   "name": "Regional priority credits",
+                   "score": 3,
+                   "total": 4
+                   }]
+    }
+}

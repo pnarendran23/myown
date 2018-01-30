@@ -1,0 +1,75 @@
+{
+    "organizations": [{
+                      "organization": {
+                      "title": "Shanghai EXPO UBPA Business Development",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/b1b1.jpg",
+                      "address": "Shanghai, CN 200011",
+                      "member_level": "Gold",
+                      "image_banner": ""
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Verizon",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/Verizon%20Logo.jpg",
+                      "address": "Folsom, CA 95630",
+                      "member_level": "Platinum",
+                      "image_banner": "https://www.usgbc.org/sites/default/files/imagecache/fixed_708-280/Verizon_feature.jpg"
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Intel Corp.",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/imagefield_default_images/company_placeholder.png",
+                      "address": "Chandler, AZ 85248",
+                      "member_level": "Silver",
+                      "image_banner": ""
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "GAF",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/GAF_Logo_jpg.jpg",
+                      "address": "Parsippany, NJ 07054",
+                      "member_level": "Platinum",
+                      "image_banner": "https://in.usgbc.org/sites/default/files/imagecache/max-both_960-720/Protech_0.jpg"
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Lendlease",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/LL%20master%20logos%20RGB4.jpg",
+                      "address": "New York, NY 10166",
+                      "member_level": "Gold",
+                      "image_banner": ""
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Bank of America",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/profile/org/BoA_logo.jpg",
+                      "address": "Charlotte, NC 28255",
+                      "member_level": "Platinum",
+                      "image_banner": "https://www.usgbc.org/sites/default/files/imagecache/max-both_960-720/BOA_slide1.jpg"
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Green Building Services, Inc.",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/Capture_33.PNG",
+                      "address": "Portland, OR 97204",
+                      "member_level": "Platinum",
+                      "image_banner": ""
+                      }
+                      },
+                      {
+                      "organization": {
+                      "title": "Saint - Gobain",
+                      "image": "https://in.usgbc.org/sites/default/files/imagecache/max-both_125-125/profile/org/temp012010_348LK_57_129.jpg",
+                      "address": "Malvern, PA 19355",
+                      "member_level": "Gold",
+                      "image_banner": ""
+                      }
+                      }
+                      ]
+}

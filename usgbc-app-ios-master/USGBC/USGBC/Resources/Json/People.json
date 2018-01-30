@@ -1,0 +1,75 @@
+{
+    "people": [{
+               "people": {
+               "name": "Ivo Hoang",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/15_7.jpg",
+               "address": "Laveen Village, AZ",
+               "designation": "Manager",
+               "organization": "Absolute Electrician Laveen Inc"
+               }
+               },
+               {
+               "people": {
+               "name": "Lisa Moya",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/21_5.jpg",
+               "address": "Peoria, AZ",
+               "designation": "Manager",
+               "organization": "King Electrician Services Peoria Inc"
+               }
+               },
+               {
+               "people": {
+               "name": "Jake Jasper Manlunas",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/Manlunas%2C%20Jake.jpg",
+               "address": "Tamuning, GU",
+               "designation": "Electrical Engineer",
+               "organization": "EMCE Consulting Engineers"
+               }
+               },
+               {
+               "people": {
+               "name": "Sharon Ford",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/20_10.jpg",
+               "address": "Surprise, AZ",
+               "designation": "Manager",
+               "organization": "Green Planet Electrician Surprise"
+               }
+               },
+               {
+               "people": {
+               "name": "kinan miranti",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/1478192943896.jpg",
+               "address": "New York, NY 10166",
+               "designation": "marketing",
+               "organization": "spa"
+               }
+               },
+               {
+               "people": {
+               "name": "Keisha Moss",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/8_11.jpg",
+               "address": "Cave Creek, AZ",
+               "designation": "Manager",
+               "organization": "Top Electrical Cave Creek"
+               }
+               },
+               {
+               "people": {
+               "name": "Elnora Gore",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/4_44.jpg",
+               "address": "Tolleson, AZ",
+               "designation": "Manager",
+               "organization": "Legacy Electrician Services Tolleson"
+               }
+               },
+               {
+               "people": {
+               "name": "Nancy Parks",
+               "image": "https://in.usgbc.org/sites/default/files/imagecache/fixed_125-125/NancyParks%20%28002%29.jpg",
+               "address": "Philadelphia, PA",
+               "designation": "Assistant Property Manager",
+               "organization": "Brandywine Realty Trust"
+               }
+               }
+               ]
+}

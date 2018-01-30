@@ -1,0 +1,75 @@
+{
+    "leed": [{
+              "leed": {
+              "title": "LEED v4 Operations and Maintenance: Transit Guidance",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/Screen%20Shot%202017-02-13%20at%209.55.49%20AM.png",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Guidance"
+              }
+              },
+              {
+              "leed": {
+              "title": "LEED certification glossary",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/checklist-icon_2_0_0.jpg",
+              "file_type": "Web link",
+              "leed_version": "v4",
+              "category": "Certification"
+              }
+              },
+              {
+              "leed": {
+              "title": "Confirmation of Agent's Authority",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/document-icon_3.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Certification"
+              }
+              },
+              {
+              "leed": {
+              "title": "Guiding Principles Assessment Handbook",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/document_0.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Guidance"
+              }
+              },
+              {
+              "leed": {
+              "title": "LEED v4 for Building Design and Construction Checklist - Italian",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/checklist-icon_2_0.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Rating system"
+              }
+              },
+              {
+              "leed": {
+              "title": "LEED v4 for Building Operations and Maintenance Checklist - Italian",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/checklist-3-icon_1_0.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Checklists"
+              }
+              },
+              {
+              "leed": {
+              "title": "LEED v4 Building Design and Construction - Italian",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/resources_2_2.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Checklists"
+              }
+              },
+              {
+              "leed": {
+              "title": "LEED v4 Q&A: Energy and Atmosphere",
+              "image": "https://in.usgbc.org/sites/default/files/imagecache/max_width-220/q-and-a-icon_4_0_0.jpg",
+              "file_type": "PDF",
+              "leed_version": "v4",
+              "category": "Guidance"
+              }
+              }
+              ]
+}
