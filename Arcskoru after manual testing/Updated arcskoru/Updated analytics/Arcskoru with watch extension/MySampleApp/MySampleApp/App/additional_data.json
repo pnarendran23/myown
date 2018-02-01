@@ -1,0 +1,1530 @@
+[
+    
+            {
+                "name": "Select a field", 
+                "field":"", 
+                "unit_key": "", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "City wide energy consumption", 
+                "field":"city_wide_energy_cons_num", 
+                "unit_key": "city_wide_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total electricity use", 
+                "field":"tot_elect_use_num", 
+                "unit_key": "tot_elect_use_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Electricity Generated", 
+                "field":"tot_elect_gen_num", 
+                "unit_key": "tot_elect_gen_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Natural Gas use", 
+                "field":"tot_nat_gas_use_num", 
+                "unit_key": "tot_nat_gas_use_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Residential sector energy consumption", 
+                "field":"res_sec_energy_cons_num", 
+                "unit_key": "res_sec_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Commercial sector energy consumption", 
+                "field":"comm_sec_energy_cons_num", 
+                "unit_key": "comm_sec_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Municipal energy consumption", 
+                "field":"munic_energy_cons_num", 
+                "unit_key": "munic_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Transportation energy consumption", 
+                "field":"trans_energy_cons_num", 
+                "unit_key": "trans_energy_cons_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Industrial energy consumption", 
+                "field":"ind_energy_cons_num", 
+                "unit_key": "ind_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Water distribution & waste water  treatment  energy consumption", 
+                "field":"wat_waste_treatment_energy_cons_num", 
+                "unit_key": "wat_waste_treatment_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Solid waste management energy consumption", 
+                "field":"solid_waste_mgmt_energy_cons_num", 
+                "unit_key": "solid_waste_mgmt_energy_cons_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Cooling degree days (CDD)", 
+                "field":"cool_degree_days_num", 
+                "unit_key": "cool_degree_days_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Heating degree days", 
+                "field":"heat_degree_days_num", 
+                "unit_key": "heat_degree_days_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Emission Intensity", 
+                "field":"emission_intensity_num", 
+                "unit_key": "emission_intensity_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total CO2 emissions", 
+                "field":"total_co2_emissions_num", 
+                "unit_key": "total_co2_emissions_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "CO2 emissions from energy industry", 
+                "field":"co2_emissions_energy_ind_num", 
+                "unit_key": "co2_emissions_energy_ind_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "CO2 emissions from transport sector", 
+                "field":"co2_emissions_trans_sec_num", 
+                "unit_key": "co2_emissions_trans_sec_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "CO2 reduction target", 
+                "field":"co2_red_target_num", 
+                "unit_key": "co2_red_target_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total GHG emissions", 
+                "field":"total_ghg_emissions_num", 
+                "unit_key": "total_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Residential GHG emissions", 
+                "field":"res_ghg_emissions_num", 
+                "unit_key": "res_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Commercial GHG emissions", 
+                "field":"comm_ghg_emissions_num", 
+                "unit_key": "comm_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Municipal operation GHG emissions", 
+                "field":"mun_oper_ghg_emissions_num", 
+                "unit_key": "mun_oper_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Transportation GHG emissions", 
+                "field":"trans_ghg_emissions_num", 
+                "unit_key": "trans_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual excess fuel consumed per peak auto commuter", 
+                "field":"annual_excess_fuel_commuter_num", 
+                "unit_key": "annual_excess_fuel_commuter_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Industrial process GHG emissions", 
+                "field": "ind_process_ghg_emissions_num", 
+                "unit_key": "ind_process_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Drinking Water treatment/water delivery emission", 
+                "field":"drink_water_delivery_emission_num", 
+                "unit_key": "drink_water_delivery_emission_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Wastewater management Greenhouse gas emissions", 
+                "field":"wastewater_mgmt_gas_emissions_num", 
+                "unit_key": "wastewater_mgmt_gas_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Solid waste facilities /management/treatment GHG emissions", 
+                "field": "waste_facilities_ghg_emissions_num", 
+                "unit_key": "waste_facilities_ghg_emissions_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of ENERGY STAR® certified Buildings", 
+                "field": "num_energy_star_cert_buildings_num", 
+                "unit_key": "num_energy_star_cert_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total Floor Area of ENERGY STAR® Certified Buildings", 
+                "field": "total_floorarea_cert_buildings_num", 
+                "unit_key": "total_floorarea_cert_buildings_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "% of ENERGY STAR Certified Buildings", 
+                "field": "per_energy_star_cert_buildings_num", 
+                "unit_key": "per_energy_star_cert_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },            
+            {
+                "name": "%  sq.ft. of ENERGY STAR® Certified Buildings", 
+                "field": "per_sqft_cert_buildings_num", 
+                "unit_key": "per_sqft_cert_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "% of LEED certified Buildings (silver, gold or platinum)", 
+                "field": "per_leed_cert_buildings_num", 
+                "unit_key": "per_leed_cert_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "%  sq.ft of LEED certified Buildings(silver, gold or platinum)", 
+                "field": "per_sqft_leed_cert_buildings_num", 
+                "unit_key": "per_sqft_leed_cert_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total number of Residential buildings in the city", 
+                "field": "total_number_res_buildings_city_num", 
+                "unit_key": "total_number_res_buildings_city_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total Floor area of Residential buildings in the city", 
+                "field": "total_floorarea_res_buildings_city_num", 
+                "unit_key": "total_floorarea_res_buildings_city_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total number of buildings other than residentail in the city", 
+                "field": "total_num_buildings_city_num", 
+                "unit_key": "total_num_buildings_city_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total Floor area of buildings other than residential in the city", 
+                "field": "total_floorarea_buildings_city_num", 
+                "unit_key": "total_floorarea_buildings_city_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of LEED certified buildings", 
+                "field": "number_leed_certified_buildings_num", 
+                "unit_key": "number_leed_certified_buildings_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "LEED certified sq ft", 
+                "field": "leed_cert_sq_ft_num", 
+                "unit_key": "leed_cert_sq_ft_num", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "ACEEE Index", 
+                "field": "aceee_index_num", 
+                "unit_key": "aceee_index_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total Renewable energy produced", 
+                "field": "total_renewable_energy_produced_num", 
+                "unit_key": "total_renewable_energy_produced_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Renewable energy utilized", 
+                "field": "total_renewable_energy_utilized_num", 
+                "unit_key": "total_renewable_energy_utilized_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Percentage of electrical generated from renewable sources", 
+                "field": "perc_elect_rene_sources_num", 
+                "unit_key": "perc_elect_rene_sources_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of total energy consumed in city comes from renewable sources", 
+                "field": "perc_energy_rene_sources_city_num", 
+                "unit_key": "perc_energy_rene_sources_city_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "The amount of thermoelectric, power generated", 
+                "field": "thermoelectric_power_generated_num", 
+                "unit_key": "thermoelectric_power_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Renewable energy targets?", 
+                "field": "renewable_energy_targets_num", 
+                "unit_key": "renewable_energy_targets_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Solar (photovoltaics) - cumulative solar PV capacity", 
+                "field": "solar_pv_capacity_num", 
+                "unit_key": "solar_pv_capacity_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of homes using solar water heaters", 
+                "field": "homes_using_solar_water_heaters_num", 
+                "unit_key": "homes_using_solar_water_heaters_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Solar (thermal or photvoltaic) electricity generated", 
+                "field": "solar_electricity_generated_num", 
+                "unit_key": "solar_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Geothermal Energy - electricity generated", 
+                "field": "geothermal_electricity_generated_num", 
+                "unit_key": "geothermal_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Wind Power energy - electricity generated", 
+                "field": "wind_electricity_generated_num", 
+                "unit_key": "wind_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Hydropowerr - electricity generated", 
+                "field": "hydropower_electricity_generated_num", 
+                "unit_key": "hydropower_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Biomass energy- electricity generated", 
+                "field": "biomass_energy_electricity_generated_num", 
+                "unit_key": "biomass_energy_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Nuclear - electricity generated", 
+                "field": "nuclear_electricity_generated_num", 
+                "unit_key": "nuclear_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Hydro - electricity generated", 
+                "field": "hydro_electricity_generated_num", 
+                "unit_key": "hydro_electricity_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Cool/white roof for heat island mitigation strategies", 
+                "field": "heat_island_mitigation_strategies_txt", 
+                "unit_key": "heat_island_mitigation_strategies_txt_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Propotion of green roofs/green garden facilities for stormwater management in the city area- sq meter per sq mile", 
+                "field": "stormwater_city_area_num", 
+                "unit_key": "stormwater_city_area_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Water used in the city", 
+                "field": "total_water_used_in_city_num", 
+                "unit_key": "total_water_used_in_city_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Residential Water Consumption", 
+                "field": "res_water_consumption_num", 
+                "unit_key": "res_water_consumption_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Domestic, total self-supplied withdrawals", 
+                "field": "domestic_supplied_withdrawals_num", 
+                "unit_key": "domestic_supplied_withdrawals_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Domestic, self-supplied population, in thousands", 
+                "field": "domestic_supplied_pop_num", 
+                "unit_key": "domestic_supplied_pop_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Domestic water, deliveries from public supply", 
+                "field": "domestic_water_public_supply_num", 
+                "unit_key": "domestic_water_public_supply_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Public Supply, total population served, in thousands", 
+                "field": "public_supply_population_served_num", 
+                "unit_key": "public_supply_population_served_num_unit", 
+                "unit": "na",
+                "value":""
+            },
+            {
+                "name": "Proportion of population served with public water supply", 
+                "field": "per_population_served_water_supply_num", 
+                "unit_key": "per_population_served_water_supply_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Public supply, total withdrawals", 
+                "field": "public_supply_total_withdrawals_num", 
+                "unit_key": "public_supply_total_withdrawals_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total water withdrawals for Irrigation ", 
+                "field": "total_water_withdrawals_irrigation_num", 
+                "unit_key": "total_water_withdrawals_irrigation_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total water withdrawals for thermoelectric use", 
+                "field": "total_water_withdrawals_thermoelectric_num", 
+                "unit_key": "total_water_withdrawals_thermoelectric_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total water withdrawals for all use", 
+                "field": "total_water_withdrawals_alluse_num", 
+                "unit_key": "total_water_withdrawals_alluse_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Percentage of population with potable water supply service or with access to adequate and safe drinking water", 
+                "field": "per_adequate_safe_drinking_water_num", 
+                "unit_key": "per_adequate_safe_drinking_water_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of city population served by wastewater collection system", 
+                "field": "per_population_wastewater_collection_num", 
+                "unit_key": "per_population_wastewater_collection_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Waste Water Treated", 
+                "field": "waste_water_treated_num", 
+                "unit_key": "waste_water_treated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Untreated Waste Water", 
+                "field": "untreated_waste_water_num", 
+                "unit_key": "untreated_waste_water_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Waste Water based Methane Gas Generated", 
+                "field": "total_methane_gas_generated_num", 
+                "unit_key": "total_methane_gas_generated_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Waste Water based Methane Gas Released in Atmosphere", 
+                "field": "wwbmgra_num", 
+                "unit_key": "wwbmgra_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Waste Water based Methane Gas Flared", 
+                "field": "add_field_1_num", 
+                "unit_key": "add_field_1_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Waste Water based Methane Gas converted to Natural Gas", 
+                "field": "add_field_2_num", 
+                "unit_key": "add_field_2_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Waste Water based Methane Gas converted to Electricity", 
+                "field": "add_field_3_num", 
+                "unit_key": "add_field_3_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Municipal Solid Waste generation (MSW)", 
+                "field": "add_field_4_num", 
+                "unit_key": "add_field_4_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Municipal Solid Waste Collection coverage", 
+                "field": "add_field_5_num", 
+                "unit_key": "add_field_5_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Separate collection of Landfilled and Recycling Waste", 
+                "field": "add_field_6_num", 
+                "unit_key": "add_field_6_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Waste Landfilled", 
+                "field": "add_field_7_num", 
+                "unit_key": "add_field_7_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Recyclable Waste Collected by the City", 
+                "field": "add_field_8_num", 
+                "unit_key": "add_field_8_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Landfill diversion rate - the percentage of municipal solid waste diverted from the waste stream to be recycled (%)", 
+                "field": "add_field_9_num", 
+                "unit_key": "add_field_9_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Recycling rate", 
+                "field": "add_field_10_num", 
+                "unit_key": "add_field_10_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Annual waste recycled- Total amount of waste recycled", 
+                "field": "add_field_11_num", 
+                "unit_key": "add_field_11_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual Curbsides collected", 
+                "field": "add_field_12_num", 
+                "unit_key": "add_field_12_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual containerized collected", 
+                "field": "add_field_13_num", 
+                "unit_key": "add_field_13_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total MSW Serviced customers", 
+                "field": "add_field_14_num", 
+                "unit_key": "add_field_14_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Consumers Participating in recylcing", 
+                "field": "add_field_15_num", 
+                "unit_key": "add_field_15_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total Construction Waste Generated", 
+                "field": "add_field_16_num", 
+                "unit_key": "add_field_16_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Hospital/Biological Waste Generated", 
+                "field": "add_field_17_num", 
+                "unit_key": "add_field_17_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Construction Waste Recycled", 
+                "field": "add_field_18_num", 
+                "unit_key": "add_field_18_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Methane Gas Generated from Landfills", 
+                "field": "add_field_19_num", 
+                "unit_key": "add_field_19_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Methane Gas Flared from Landfills", 
+                "field": "add_field_20_num", 
+                "unit_key": "add_field_20_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "MSW based Methane Gas converted to Natural Gas", 
+                "field": "add_field_21_num", 
+                "unit_key": "add_field_21_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "MSW based Methane Gas converted to Electricity", 
+                "field": "add_field_22_num", 
+                "unit_key": "add_field_22_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "MSW based Methane Gas converted to Biofuels", 
+                "field": "add_field_23_num", 
+                "unit_key": "add_field_23_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual vehicle Miles Travelled", 
+                "field": "add_field_24_num", 
+                "unit_key": "add_field_6_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual Trips made on Public Transit", 
+                "field": "add_field_24_num", 
+                "unit_key": "add_field_24_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Maximum public transport vehicles available per square mile", 
+                "field": "add_field_25_num", 
+                "unit_key": "add_field_25_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Length of public transport", 
+                "field": "add_field_26_num", 
+                "unit_key": "add_field_26_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of people commute to work by public transportation", 
+                "field": "add_field_27_num", 
+                "unit_key": "add_field_27_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Share of drove alone to work", 
+                "field": "add_field_28_num", 
+                "unit_key": "add_field_28_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Share of carpooled to work", 
+                "field": "add_field_29_num", 
+                "unit_key": "add_field_29_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Share of using public transportation to work (excluding taxicab)", 
+                "field": "add_field_30_num", 
+                "unit_key": "add_field_30_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Share of walking to work", 
+                "field": "add_field_31_num", 
+                "unit_key": "add_field_31_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Share of bike commuters", 
+                "field": "add_field_32_num", 
+                "unit_key": "add_field_32_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Share of work at home", 
+                "field": "add_field_33_num", 
+                "unit_key": "add_field_33_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Average commute time from residence to work, worker age 16+", 
+                "field": "add_field_34_num", 
+                "unit_key": "add_field_34_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Percentage of  people work outside place of residence", 
+                "field": "add_field_35_num", 
+                "unit_key": "add_field_35_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total miles/km of bicycle infrastructure per sq mile/km", 
+                "field": "add_field_36_num", 
+                "unit_key": "add_field_36_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total miles/km of sidewalks per sq mile/km", 
+                "field": "add_field_37_num", 
+                "unit_key": "add_field_37_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Percentage of worker 16 years and over don't possess  a vehicle", 
+                "field": "add_field_38_num", 
+                "unit_key": "add_field_38_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "percentage of housing unit don't possess a vehicle", 
+                "field": "add_field_39_num", 
+                "unit_key": "add_field_39_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Number of Registered vehicles", 
+                "field": "add_field_40_num", 
+                "unit_key": "add_field_40_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total roadway miles", 
+                "field": "add_field_41_num", 
+                "unit_key": "add_field_41_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total miles of Freeway", 
+                "field": "add_field_42_num", 
+                "unit_key": "add_field_42_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Freeways miles travelled daily", 
+                "field": "add_field_43_num", 
+                "unit_key": "add_field_43_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "% of total Miles serving as freeways", 
+                "field": "add_field_44_num", 
+                "unit_key": "add_field_44_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "% of total DVMT served by freeways", 
+                "field": "add_field_45_num", 
+                "unit_key": "add_field_45_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total freeway lane miles", 
+                "field": "add_field_46_num", 
+                "unit_key": "add_field_46_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Average daily number of cars per freeway lane mile", 
+                "field": "add_field_47_num", 
+                "unit_key": "add_field_47_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Daily vehicle-miles of travel on Arterial streets", 
+                "field": "add_field_48_num", 
+                "unit_key": "add_field_48_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Lane-miles of Arterial streets", 
+                "field": "add_field_49_num", 
+                "unit_key": "add_field_49_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual passenger-miles of travel of public transportation", 
+                "field": "add_field_50_num", 
+                "unit_key": "add_field_50_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual unlinked passenger trips of public transportation", 
+                "field": "add_field_51_num", 
+                "unit_key": "add_field_51_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Congested travel", 
+                "field": "add_field_52_num", 
+                "unit_key": "add_field_52_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Congested system", 
+                "field": "add_field_53_num", 
+                "unit_key": "add_field_53_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Congested time (rush hours)", 
+                "field": "add_field_54_num", 
+                "unit_key": "add_field_54_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Annual delay per peak auto commuter", 
+                "field": "add_field_55_num", 
+                "unit_key": "add_field_55_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Travel Time Index", 
+                "field": "add_field_56_num", 
+                "unit_key": "add_field_56_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Congestion cost per peak auto commuter", 
+                "field": "add_field_57_num", 
+                "unit_key": "add_field_57_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Additional CO2 production on Freeways and Arterial Street due to roadway congestion", 
+                "field": "add_field_58_num", 
+                "unit_key": "add_field_58_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Roadway congestion index", 
+                "field": "add_field_59_num", 
+                "unit_key": "add_field_59_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Citywide total  traffic fatality rate per 100000 population", 
+                "field": "add_field_60_num", 
+                "unit_key": "add_field_60_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Pedestrian fatality rate per 100,000 population", 
+                "field": "add_field_61_num", 
+                "unit_key": "add_field_61_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of the passenger vehicle/individual/ public transport fleet using alternative fuels", 
+                "field": "add_field_62_num", 
+                "unit_key": "add_field_62_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Private vehicles running on natural gas", 
+                "field": "add_field_63_num", 
+                "unit_key": "add_field_63_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Private vehicles running on Bio fuels", 
+                "field": "add_field_64_num", 
+                "unit_key": "add_field_64_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Private vehicles running on electricity", 
+                "field": "add_field_65_num", 
+                "unit_key": "add_field_65_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Private vehicles that are hybrids or plug-in hybrids", 
+                "field": "add_field_66_num", 
+                "unit_key": "add_field_66_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Government fleet running on natural gas", 
+                "field": "add_field_67_num", 
+                "unit_key": "add_field_67_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Government fleet running on Bio fuels", 
+                "field": "add_field_68_num", 
+                "unit_key": "add_field_68_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Government fleet running on electricity", 
+                "field": "add_field_69_num", 
+                "unit_key": "add_field_69_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Government fleet that are hybrids or plug-in hybrids", 
+                "field": "add_field_70_num", 
+                "unit_key": "add_field_70_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of Public buses running on natural gas", 
+                "field": "add_field_71_num", 
+                "unit_key": "add_field_71_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of  Public buses running on Bio fuels", 
+                "field": "add_field_72_num", 
+                "unit_key": "add_field_72_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of  Public buses running on electricity", 
+                "field": "add_field_73_num", 
+                "unit_key": "add_field_73_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of  Public buses that are hybrids or plug-in hybrids", 
+                "field": "add_field_74_num", 
+                "unit_key": "add_field_74_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Life expectancy  at birth", 
+                "field": "add_field_75_num", 
+                "unit_key": "add_field_75_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Infant mortality under 1 year of age per 1000 per live births", 
+                "field": "add_field_76_num", 
+                "unit_key": "add_field_76_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Mortality rate: all causes", 
+                "field": "add_field_77_num", 
+                "unit_key": "add_field_77_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of people with health insurance coverage", 
+                "field": "add_field_78_num", 
+                "unit_key": "add_field_78_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "People with Disability status ", 
+                "field": "add_field_79_num", 
+                "unit_key": "add_field_79_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of population are obese or overweight", 
+                "field": "add_field_80_num", 
+                "unit_key": "add_field_80_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of population have diabetes", 
+                "field": "add_field_81_num", 
+                "unit_key": "add_field_81_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "PM10 - Annual mean PM10 concentrations in ug/m3", 
+                "field": "add_field_82_num", 
+                "unit_key": "add_field_82_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "PM2.5 - Annual mean PM2.5 concentrations in ug/m3", 
+                "field": "add_field_83_num", 
+                "unit_key": "add_field_83_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "NOx - Annual mean NOx concentrations in ppb", 
+                "field": "add_field_84_num", 
+                "unit_key": "add_field_84_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "SO2 - Annual mean SO2 concentrations in ppb", 
+                "field": "add_field_85_num", 
+                "unit_key": "add_field_85_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Ground level Ozone - annual fourth-higheset daily maximum 8-hour average concentration, in ppm", 
+                "field": "add_field_86_num", 
+                "unit_key": "add_field_86_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Groud level Ozone - annual mean concentration", 
+                "field": "add_field_87_num", 
+                "unit_key": "add_field_87_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "CO - Annual mean CO concentrations in ppm", 
+                "field": "add_field_88_num", 
+                "unit_key": "add_field_88_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Lead (Pb) level  - annual mean pb concentration in ug/m3", 
+                "field": "add_field_89_num", 
+                "unit_key": "add_field_89_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Median Air Quality Index(AQI) by CBSA", 
+                "field": "add_field_90_num", 
+                "unit_key": "add_field_90_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Max Air Quality Index (AQI) by CBSA", 
+                "field": "add_field_91_num", 
+                "unit_key": "add_field_91_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of days Unhealthy for Sensitive Groups by CBSA", 
+                "field": "add_field_92_num", 
+                "unit_key": "add_field_92_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of days unhealthy by CBSA", 
+                "field": "add_field_93_num", 
+                "unit_key": "add_field_93_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Median Air Quality Index(AQI) by county", 
+                "field": "add_field_94_num", 
+                "unit_key": "add_field_94_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Max Air Quality Index (AQI) by county", 
+                "field": "add_field_95_num", 
+                "unit_key": "add_field_95_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of days Unhealthy for Sensitive Groups by county", 
+                "field": "add_field_96_num", 
+                "unit_key": "add_field_96_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of days unhealthy by county", 
+                "field": "add_field_97_num", 
+                "unit_key": "add_field_97_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of smog days", 
+                "field": "add_field_98_num", 
+                "unit_key": "add_field_98_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Additional days the air was unhealthy to breathe", 
+                "field": "add_field_99_num", 
+                "unit_key": "add_field_99_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Highest Concentration", 
+                "field": "add_field_100_num", 
+                "unit_key": "add_field_100_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Air pollution days (in a year)", 
+                "field": "add_field_101_num", 
+                "unit_key": "add_field_101_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total Green area coverage in the city", 
+                "field": "add_field_102_num", 
+                "unit_key": "add_field_102_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Total area covered by Parkland", 
+                "field": "add_field_103_num", 
+                "unit_key": "add_field_103_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of Parks/playground", 
+                "field": "add_field_104_num", 
+                "unit_key": "add_field_104_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percent of city population with walkable park access (within 1/2 miles of a park) - Public access to green space", 
+                "field": "add_field_105_num", 
+                "unit_key": "add_field_105_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of farms", 
+                "field": "add_field_106_num", 
+                "unit_key": "add_field_106_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total land in farms", 
+                "field": "add_field_107_num", 
+                "unit_key": "add_field_107_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Green sectors - farmer markets ratio", 
+                "field": "add_field_108_num", 
+                "unit_key": "add_field_108_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Farm land ratio", 
+                "field": "add_field_109_num", 
+                "unit_key": "add_field_109_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Number of law enforcement officers", 
+                "field": "add_field_110_num", 
+                "unit_key": "add_field_110_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of law enforcement civilian employees", 
+                "field": "add_field_111_num", 
+                "unit_key": "add_field_111_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of government workers of the civilian employed population over 16 years", 
+                "field": "add_field_112_num", 
+                "unit_key": "add_field_112_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+
+            {
+                "name": "Crime rate index", 
+                "field": "add_field_113_num", 
+                "unit_key": "add_field_113_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of violent crimes", 
+                "field": "add_field_114_num", 
+                "unit_key": "add_field_114_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Number of property crimes", 
+                "field": "add_field_115_num", 
+                "unit_key": "add_field_115_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Total number of crimes", 
+                "field": "add_field_116_num", 
+                "unit_key": "add_field_116_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "City Gross Domestic Poduct (GDP)", 
+                "field": "add_field_117_num", 
+                "unit_key": "add_field_117_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "Real GDP by metropolitan area", 
+                "field": "add_field_118_num", 
+                "unit_key": "add_field_118_num_unit", 
+                "unit": "", 
+                "value":""
+            },
+            {
+                "name": "GDP annual average growth rate", 
+                "field": "add_field_119_num", 
+                "unit_key": "add_field_119_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Median Household Income", 
+                "field": "add_field_120_num", 
+                "unit_key": "add_field_120_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Mean household income", 
+                "field": "add_field_121_num", 
+                "unit_key": "add_field_121_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Average income per capita", 
+                "field": "add_field_122_num", 
+                "unit_key": "add_field_122_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Cost of living", 
+                "field": "add_field_123_num", 
+                "unit_key": "add_field_123_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Minimum Hourly wages", 
+                "field": "add_field_124_num", 
+                "unit_key": "add_field_124_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of people earning less than the mean per capita income", 
+                "field": "add_field_125_num", 
+                "unit_key": "add_field_125_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Unemployment rate", 
+                "field": "add_field_126_num", 
+                "unit_key": "add_field_126_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "House price to rent ratio", 
+                "field": "add_field_127_num", 
+                "unit_key": "add_field_127_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Zillow Rent Index", 
+                "field": "add_field_128_num", 
+                "unit_key": "add_field_128_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Income concentration index (GINI coefficient)", 
+                "field": "add_field_129_num", 
+                "unit_key": "add_field_129_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Housing affordability -Housing price to income ratio - Cost of Living Proportion of income spent on housing (%) ", 
+                "field": "add_field_130_num", 
+                "unit_key": "add_field_130_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Housing affordability - median gross rent as percentage of household income", 
+                "field": "add_field_131_num", 
+                "unit_key": "add_field_131_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Rent to own ratio/homeownership rate", 
+                "field": "add_field_132_num", 
+                "unit_key": "add_field_132_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of occupied housing units", 
+                "field": "add_field_133_num", 
+                "unit_key": "add_field_133_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of civilian over 16 years and over  employed in agriculture, forestry, fishing and hunting, and mining ", 
+                "field": "add_field_134_num", 
+                "unit_key": "add_field_134_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of foreign born population", 
+                "field": "add_field_135_num", 
+                "unit_key": "add_field_135_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of  civilian employed population 16 years and over that is female", 
+                "field": "add_field_136_num", 
+                "unit_key": "add_field_136_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Women civilian labor force participation rate", 
+                "field": "add_field_137_num", 
+                "unit_key": "add_field_137_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Homeless population", 
+                "field": "add_field_138_num", 
+                "unit_key": "add_field_138_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Percentage of population living below poverty line", 
+                "field": "add_field_139_num", 
+                "unit_key": "add_field_139_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Educational Attainment -  % of population with a high school degree or higher", 
+                "field": "add_field_140_num", 
+                "unit_key": "add_field_140_num_unit", 
+                "unit": "na", 
+                "value":""
+            },
+            {
+                "name": "Higher educational Attainment - % of population with bachelor degree or higher", 
+                "field": "add_field_141_num", 
+                "unit_key": "add_field_141_num_unit", 
+                "unit": "na", 
+                "value":""
+            }
+        ]

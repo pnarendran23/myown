@@ -1,0 +1,19 @@
+{
+    "filters": [{
+                "name": "All"
+                }, {
+                "name": "Member employees"
+                }, {
+                "name": "Chapter members"
+                }, {
+                "name": "USGBC faculty"
+                }, {
+                "name": "USGBC staff"
+                }, {
+                "name": "USGBC Students"
+                }, {
+                "name": "LEED Fellows"
+                }, {
+                "name": "Experts"
+                }]
+}

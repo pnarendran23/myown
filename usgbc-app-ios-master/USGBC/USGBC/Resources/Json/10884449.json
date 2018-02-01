@@ -1,0 +1,72 @@
+{
+    "course_details": [{
+                       "details": {
+                       "courseid": "10884449",
+                       "title": "Zero Net-Energy Buildings: Modeled Predictions and Outcomes",
+                       "path": "https:\/\/www.usgbc.org\/education\/sessions\/zero-netenergy-buildings-modeled-predictions-and-outcomes-10884449",
+                       "published_date": "April 12, 2017",
+                       "price": "$45.00",
+                       "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/Buildings_0.jpg",
+                       "course_name": "Zero Net-Energy Buildings: Modeled Predictions and Outcomes",
+                       "type": "Session",
+                       "gbci_number": "0920012796",
+                       "leed_version" : "v4",
+                       "summary": "This course addresses the technical feasibility of meeting the challenge of all new buildings being zero net-energy by 2030.",
+                       "body": "ASHRAE and many other societies and governmental organizations have adopted the Architecture 2030 challenge which calls for new buildings to be zero net-energy (ZNE) by the year 2030. This course addresses the technical feasibility of meeting this challenge based on recent analysis, including ASHRAE research on the maximum technical potential for achieving low energy buildings (RP-1651), and the on-site renewable energy production potential for typical climates. Data from measured energy performance (utility bills) of recently constructed ZNE buildings will then be compared to the theoretical targets, and the areas of agreement as well as the gaps will be explored.",
+                       "objectives": [
+                                      "Assess how climate and building type affect the strategies and level of effort required to achieve ZNE",
+                                      "Use energy bills to evaluate ZNE performance and compare to energy models used during design and construction ",
+                                      "Understand the role of building operators and occupants in delivering ZNE success in buildings ",
+                                      "Recognize the role of building performance data in ongoing ZNE operation"
+                                      ],
+                       "subscription": "included",
+                       "course_level": "Intermediate",
+                       "eligible_for_ce": "This course is eligible for CE.",
+                       "ce_hours": "1",
+                       "hosted_on_usgbc": "Yes, the course will be on USGBC's course delivery platform",
+                       "star_rating": "3",
+                       "quiz_title": "Zero Net-Energy Buildings: Modeled Predictions and Outcomes",
+                       "course_modules": [
+                                          "ZNE Feasibility and Issues By Building Type and Climate\nRun time: 00:27:59\nhttps:\/\/s3.amazonaws.com\/usgbc_videos\/mp4\/ZNEFeasibilityandIssues.mp4",
+                                          "Comparing Outcomes to Modeling Results\nRun time: 00:29:42\nhttps:\/\/s3.amazonaws.com\/usgbc_videos\/mp4\/ComparingOutcomes.mp4"
+                                          ],
+                       "crs_level_tid": "18",
+                       "quiz_path": "https:\/\/www.usgbc.org\/classroom\/tests\/zero-netenergy-buildings-modeled-predictions-and-outcomes",
+                       "resources": [{
+                                     "url": "https:\/\/www.usgbc.org\/sites\/default\/files\/education\/courses\/ZNEFeasibilityandIssues.pdf",
+                                     "description": "ZNE Feasibility and Issues By Building Type and Climate PDF of Slides"
+                                     },
+                                     {
+                                     "url": "https:\/\/www.usgbc.org\/sites\/default\/files\/education\/courses\/ZNEFeasibilityandIssues.mp3",
+                                     "description": "ZNE Feasibility and Issues By Building Type and Climate Audio"
+                                     },
+                                     {
+                                     "url": "https:\/\/www.usgbc.org\/sites\/default\/files\/education\/courses\/ComparingOutcomes.pdf",
+                                     "description": "Comparing Outcomes to Modeling Results"
+                                     },
+                                     {
+                                     "url": "https:\/\/www.usgbc.org\/sites\/default\/files\/education\/courses\/ComparingOutcomes.mp3",
+                                     "description": "Comparing Outcomes to Modeling Results"
+                                     }],
+                       "leaders": [{
+                                   "first_name": "Mark",
+                                   "last_name": "Frankel",
+                                   "job_title": "Technical Director"
+                                   },
+                                   {
+                                   "first_name": "Charles",
+                                   "last_name": "Eley",
+                                   "job_title": "Technical Director"
+                                   }],
+                       "providers": [{
+                                     "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/max-both_125-125\/imagefield_default_images\/company_placeholder.png",
+                                     "title": "ASHRAE",
+                                     "city": "Atlanta",
+                                     "state": "Georgia",
+                                     "country": "United States",
+                                     "associations": "Education Partner"
+                                     }],
+                       "included_sessions":[]
+                       }
+                       }]
+}

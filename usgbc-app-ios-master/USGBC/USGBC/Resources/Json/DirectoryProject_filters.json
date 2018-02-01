@@ -1,0 +1,87 @@
+{
+    "filters": [{
+                "name": "All",
+                "value": "all"
+                }, {
+                "name": "LEED BD+C: New Construction",
+                "value": "1226"
+                }, {
+                "name": "LEED BD+C: Core and Shell",
+                "value": "69"
+                }, {
+                "name": "LEED BD+C: Schools",
+                "value": "76"
+                }, {
+                "name": "LEED BD+C: Retail",
+                "value": "75"
+                }, {
+                "name": "LEED BD+C: Healthcare",
+                "value": "71"
+                }, {
+                "name": "LEED BD+C: Data Centers",
+                "value": "1216"
+                }, {
+                "name": "LEED BD+C: Hospitality",
+                "value": "1219"
+                }, {
+                "name": "LEED BD+C: Warehouses and Distribution Centers",
+                "value": "1218"
+                }, {
+                "name": "LEED BD+C: Homes",
+                "value": "72"
+                }, {
+                "name": "LEED BD+C: Multifamily Midrise",
+                "value": "1221"
+                }, {
+                "name": "LEED ID+C: Commercial Interiors",
+                "value": "68"
+                }, {
+                "name": "LEED ID+C: Retail",
+                "value": "1306"
+                }, {
+                "name": "LEED ID+C: Hospitality",
+                "value": "1331"
+                }, {
+                "name": "LEED O+M: Existing Buildings",
+                "value": "1227"
+                }, {
+                "name": "LEED O+M: Schools",
+                "value": "1334"
+                }, {
+                "name": "LEED O+M: Retail",
+                "value": "1333"
+                }, {
+                "name": "LEED O+M: Data Centers",
+                "value": "1330"
+                }, {
+                "name": "LEED O+M: Hospitality",
+                "value": "1332"
+                }, {
+                "name": "LEED O+M: Warehouses and Distribution Centers",
+                "value": "1335"
+                }, {
+                "name": "LEED O+M: Multifamily",
+                "value": "7327"
+                }, {
+                "name": "LEED ND: Plan",
+                "value": "1222"
+                }, {
+                "name": "LEED ND: Built Project",
+                "value": "73"
+                }, {
+                "name": "LEED Italia",
+                "value": "5268"
+                }, {
+                "name": "Existing Buildings - Recertification",
+                "value": "5276"
+                }, {
+                "name": "PEER: Campus",
+                "value": "7354"
+                }, {
+                "name": "PEER: City",
+                "value": "7353"
+                }, {
+                "name": "PEER: Supply",
+                "value": "7355"
+                }]
+}

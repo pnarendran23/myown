@@ -1,0 +1,23 @@
+{
+    "filters": [{
+                "name": "All"
+                }, {
+                "name": "Advocacy and policy"
+                }, {
+                "name": "Center for Green Schools"
+                }, {
+                "name": "Community"
+                }, {
+                "name": "Education"
+                }, {
+                "name": "Greenbuild"
+                }, {
+                "name": "Industry"
+                }, {
+                "name": "LEED"
+                }, {
+                "name": "Media"
+                }, {
+                "name": "Sponsored"
+                }]
+}
