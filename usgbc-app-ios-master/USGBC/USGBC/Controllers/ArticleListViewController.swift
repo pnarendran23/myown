@@ -40,6 +40,7 @@ class ArticleListViewController: UIViewController {
         DispatchQueue.main.async {
             Utility.showLoading()
             self.initViews()
+            AppUtility.lockOrientation(.all)
             self.collectionView.keyboardDismissMode = .onDrag
             //loadFirestoreData(category: "All")
             if((self.searchBar.text?.characters.count)! > 0){
@@ -446,6 +447,7 @@ extension ArticleListViewController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let screenRect: CGRect = UIScreen.main.bounds
         let screenWidth: CGFloat = screenRect.size.width
+        //return CGSize(width: floor(collectionView.frame.size.width), height: floor(collectionView.frame.size.height))
         if UI_USER_INTERFACE_IDIOM() == .pad {
             if(UIApplication.shared.statusBarOrientation.isPortrait){
                 let baseWidth: CGFloat = 320

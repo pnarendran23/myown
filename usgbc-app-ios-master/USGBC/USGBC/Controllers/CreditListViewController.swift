@@ -112,7 +112,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
     }
     
     func showSearch(){
-        collectionView.frame.origin.y = 54
+        collectionViewTopConstraint.constant = 54
         UIView.animate(withDuration: 1.0,
                        delay: 0.0,
                        usingSpringWithDamping: 0.5,
@@ -125,7 +125,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
     }
     
     func hideSearch(){
-        collectionView.frame.origin.y = 0
+        collectionViewTopConstraint.constant = 0
         UIView.animate(withDuration: 1.0,
                        delay: 0.0,
                        usingSpringWithDamping: 0.5,

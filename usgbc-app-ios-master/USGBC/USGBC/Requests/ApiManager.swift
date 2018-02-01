@@ -22,7 +22,7 @@ class ApiManager {
     let elasticbaseURL = "https://elastic:g54BZeb6EXs5mMDxRKWR4Vg2@0f9ee9407395f8e5c5ce2b7ee341d1d8.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_"
     let helper = Utility()
     var a : DataRequest!
-    
+    var size = 50
     
     
     func authenticateUser(userName: String, password: String, callback: @escaping (String?, NSError?) -> ()){
@@ -568,12 +568,12 @@ class ApiManager {
         var params: [String: Any] = [:]
         var articles = [Article]()
         if(category == "All"){
-            params = ["from": 0, "size": 40]
+            params = ["size": size]
         }else{
             let cat = "\"\(category)\""
             url += "?q=\(cat)"
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["from": 0, "size": 40]
+            params = ["size": size]
         }
         a = Alamofire.request(url, method: .get, parameters: params)
             .validate()
@@ -647,12 +647,12 @@ class ApiManager {
         var params: [String: Any] = [:]
         var articles = [Article]()
         if(category == "All"){
-            params = ["from": 0, "size": 40]
+            params = [ "size": size]
         }else{
             let cat = "\"\(category)\""
             url += "?q=\(cat)"
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["from": 0, "size": 40]
+            params = [ "size": size]
         }
         a = Alamofire.request(url, method: .get, parameters: params)
             .validate()
@@ -1725,7 +1725,7 @@ class ApiManager {
         }
     }
     
-    func getProjectsElasticWithpaginationNew(from: Int, size: Int, search: String, category: String, callback: @escaping (Int?, [Project]?, NSError?) -> () ){
+    func getProjectsElasticWithpaginationNew(from: Int, sizee: Int, search: String, category: String, callback: @escaping (Int?, [Project]?, NSError?) -> () ){
         // Old API var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "projects_ios/_search"
         let searchText = "\"\(search)\""
@@ -1736,7 +1736,7 @@ class ApiManager {
         print(url)
         var params: [String: Any] = [:]
         if(category == "All"){
-            params = ["from": from, "size": size]
+            params = [ "size": sizee]
         }else{
             let cat = "\"\(category)\""
             url = elasticbaseURL + "projects_ios/_search?q= \(cat)"
@@ -1744,7 +1744,7 @@ class ApiManager {
                 url = elasticbaseURL + "projects_ios/_search?q=\(searchText)AND\(cat)"
             }
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["from": from, "size": size]
+            params = [ "size": sizee]
         }
         //print(params)
 //        if let theJSONData = try?  JSONSerialization.data(
@@ -1793,12 +1793,12 @@ class ApiManager {
         var url = elasticbaseURL + "projects_ios/_search"
         var params: [String: Any] = [:]
         if(category == "All"){
-            params = ["from": 0, "size": 40]
+            params = [ "size": size]
         }else{
             let cat = "\"\(category)\""
             url += "?q=\(cat)"
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["from": 0, "size": 40]
+            params = [ "size": size]
         }
         a = Alamofire.request(url, method: .get)
             .validate()
@@ -1819,7 +1819,7 @@ class ApiManager {
         
     }
     
-    func getProjectsElasticForMap(from: Int, size: Int, search: String, category: String, callback: @escaping (Int?, [Project]?, NSError?) -> () ){
+    func getProjectsElasticForMap(from: Int, sizee: Int, search: String, category: String, callback: @escaping (Int?, [Project]?, NSError?) -> () ){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "projects_ios/_search"
         let searchText = "\"\(search)\""
@@ -1829,7 +1829,7 @@ class ApiManager {
         }
         var params: [String: Any] = [:]
         if(category == "All"){
-            params = ["from": from, "size": size]
+            params = [ "size": sizee]
         }else{
             let cat = "\"\(category)\""
             url = elasticbaseURL + "projects_ios/_search?q= \(cat)"
@@ -1837,7 +1837,7 @@ class ApiManager {
                 url = elasticbaseURL + "projects_ios/_search?q=\(searchText)AND\(cat)"
             }
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["from": from, "size": size]
+            params = [ "size": sizee]
         }
         //print(params)
         if let theJSONData = try?  JSONSerialization.data(

@@ -24,6 +24,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     var igcMenu: IGCMenu?
     let sb = UIStoryboard(name: "Dashboard", bundle: nil)
     
+    @IBOutlet weak var articleslbl: UILabel!
     var quickMenus: [QuickMenu] = []
     var settings: [SettingsMenu] = []
     var selectedSettings: [SettingsMenu] = []
@@ -34,7 +35,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     var drawerOpen = false
     var isMenuActive = false
     var userSeenDashboard = false
-    
+    var actualrect = CGRect()
     var currentNotificationCount = 0
     var previousNotificationCount = 0
     var drawerMenuList: [String] = ["My Account", "Credentials", "Education@USGBC", "Articles", "Resources", "Publications", "Directory", "Credit Library", "Favorites", "Settings",  "About Us"]
@@ -52,28 +53,92 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     }
     
     func changeorientation(){
-        AppUtility.lockOrientation(.all)
+        AppUtility.lockOrientation(.portrait)
+        if(UIDevice.current.userInterfaceIdiom == .pad){
+            AppUtility.lockOrientation(.all)
+        }
         loaded = true
+        self.updatecollectionview()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+    }
+    
+    func rotated() {
+        self.updatecollectionview()
     }
     
     override func viewDidLayoutSubviews() {
-        self.articleCollectionView.collectionViewLayout.invalidateLayout()
+        //self.articleCollectionView.collectionViewLayout.invalidateLayout()
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: 600, height: 650)
+    var h : CGFloat = 0.0
+    var w : CGFloat = 0.0
+ 
+    
+    
+    func updatecollectionview(){
+        self.articleCollectionView.frame.origin.y = 1.1 * (self.articleslbl.frame.size.height + self.articleslbl.frame.origin.y)
+        layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
+        h = UIScreen.main.bounds.size.width
+        w = self.articleCollectionView.layer.bounds.size.height
+        }else{
+        h = self.articleCollectionView.layer.bounds.size.height
+        w = UIScreen.main.bounds.size.width
+        }
+        layout.itemSize = CGSize(width: w * 0.9, height: h * 1.1)//270)
+        if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
+            layout.itemSize = CGSize(width: 0.5 * h, height: 0.95 * w)//270)
+        }else{
+            layout.itemSize = CGSize(width: 0.85 * w, height: 0.95 * h)//270)
+        }
+        if(UIDevice.current.userInterfaceIdiom == .pad){
+        //self.articleCollectionView.frame.size.height = 0.8 * h
+        layout.itemSize = CGSize(width: 0.8 * w, height: h)//270)
+        if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
+        layout.itemSize = CGSize(width: 0.5 * h, height:0.95 * w)//270)
+        }else{
+        layout.itemSize = CGSize(width: 0.7 * w, height: 0.95 * h)//270)
+        }
+        }
+        print(layout.itemSize.width,layout.itemSize.height)
+        self.articleCollectionView.collectionViewLayout = layout
+        self.articleCollectionView.reloadData()
     }
     
+    var layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.articleCollectionView.backgroundColor = UIColor.brown
+        self.articleCollectionView.frame.origin.y = 1.1 * (self.articleslbl.frame.size.height + self.articleslbl.frame.origin.y)
+        actualrect = self.articleCollectionView.frame
+        h = self.articleCollectionView.frame.size.height
+        w = self.articleCollectionView.frame.size.width
+        self.articleCollectionView.backgroundColor = UIColor.clear
         self.automaticallyAdjustsScrollViewInsets = false
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        //layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        self.articleCollectionView.frame = CGRect(x:self.articleCollectionView.frame.origin.x,y:self.articleCollectionView.frame.origin.y,width:self.articleCollectionView.frame.size.width,height:450)
-        layout.itemSize = CGSize(width: 600, height: 450)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
+            h = self.articleCollectionView.frame.size.width
+            w = self.articleCollectionView.frame.size.height
+        }else{
+            h = self.articleCollectionView.frame.size.height
+            w = self.articleCollectionView.frame.size.width
+        }
+        layout.itemSize = CGSize(width: w * 0.9, height: h * 1.1)//270)
+        if(UIDevice.current.userInterfaceIdiom == .pad){
+            //self.articleCollectionView.frame.size.height = 0.8 * h
+            layout.itemSize = CGSize(width: 0.8 * w, height: h)//270)
+            if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
+                layout.itemSize = CGSize(width: 1.1 * w, height: w)//270)
+            }else{
+                layout.itemSize = CGSize(width: 1.1 * h, height: h)//270)
+            }
+        }
+        print(layout.itemSize.width,layout.itemSize.height)
         self.articleCollectionView.collectionViewLayout = layout
-        print(self.articleCollectionView.frame.size.height, layout.itemSize.height)
+        print(self.articleCollectionView.frame.size.height,self.articleCollectionView.frame.size.width, UIScreen.main.bounds.size.width,UIScreen.main.bounds.size.height)
         self.articleCollectionView.register(UINib.init(nibName: "ArticleCell", bundle: nil), forCellWithReuseIdentifier: "ArticleCell")
         AppUtility.lockOrientation(.portrait)
         Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.changeorientation), userInfo: nil, repeats: false)
@@ -104,7 +169,10 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     
     override func viewDidAppear(_ animated: Bool) {
         if(loaded == true){
-            AppUtility.lockOrientation(.all)
+            AppUtility.lockOrientation(.portrait)
+            if(UIDevice.current.userInterfaceIdiom == .pad){
+                AppUtility.lockOrientation(.all)
+            }
         }
     }
     
@@ -569,6 +637,8 @@ extension DashboardViewController: UICollectionViewDelegate, UICollectionViewDat
         return cell*/
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArticleCell", for: indexPath) as! ArticleCell
         cell.updateViews(article: articles[indexPath.row])
+        cell.contentView.layer.cornerRadius = 5
+        cell.contentView.layer.masksToBounds = true
         
         return cell
     }

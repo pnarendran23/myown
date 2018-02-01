@@ -158,7 +158,7 @@ class DirectoryProjectMapViewController: UIViewController, UIPopoverControllerDe
     }
     
     func loadProjectsElastic(search: String, category: String){
-        ApiManager.shared.getProjectsElasticForMap (from: 0, size: 1000, search: search, category: category, callback: {(totalRecords, projects, error) in
+        ApiManager.shared.getProjectsElasticForMap (from: 0, sizee: 1000, search: search, category: category, callback: {(totalRecords, projects, error) in
             if(error == nil){
                 self.totalRecords = totalRecords!
                 self.projects = projects!

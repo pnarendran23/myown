@@ -208,7 +208,7 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
     }
     
     func loadProjectsWithPagination(from: Int , size: Int, category: String, search: String,  loadType: String){
-        ApiManager.shared.getProjectsElasticWithpaginationNew(from: from, size: size, search: search, category:  category, callback: { totalCount, projects, error in
+        ApiManager.shared.getProjectsElasticWithpaginationNew(from: from, sizee: size, search: search, category:  category, callback: { totalCount, projects, error in
             if(error == nil){
                 if(loadType == "init"){
                     //self.totalCount = totalCount!
