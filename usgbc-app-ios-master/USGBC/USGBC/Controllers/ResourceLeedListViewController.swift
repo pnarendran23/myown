@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class ResourceLeedListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
 
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "2780+2783+2781+4996+2782+1361+965/all/all/all/all/all"
     fileprivate var loadType = "init"
@@ -324,6 +325,11 @@ extension ResourceLeedListViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterResources.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterResources.count
     }
     

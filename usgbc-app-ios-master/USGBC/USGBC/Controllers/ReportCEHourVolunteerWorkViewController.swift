@@ -14,8 +14,6 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var providerTextField: UITextField!
-    @IBOutlet weak var startDateTextField: ImageTextField!
-    @IBOutlet weak var endDateTextField: ImageTextField!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var greenAssociateRadioButton: DLRadioButton!
@@ -27,6 +25,9 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
     @IBOutlet weak var grRadioButton: DLRadioButton!
     @IBOutlet weak var noneRadioButton: DLRadioButton!
     @IBOutlet weak var ceHoursTextField: UITextField!
+    @IBOutlet weak var startlbl: UILabel!
+    @IBOutlet weak var endlbl: UILabel!
+    @IBOutlet weak var scrollview: UIScrollView!
     
     let ceType: String = "5304"
     var startDates: NSDate!
@@ -36,7 +37,66 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapped(_:)))
+        tap.numberOfTapsRequired = 1
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapped1(_:)))
+        tap1.numberOfTapsRequired = 1
+        self.startlbl.tag = 0
+        self.endlbl.tag = 1
+        self.scrollview.keyboardDismissMode = .onDrag
+        self.startlbl.layer.cornerRadius = 5
+        self.startlbl.layer.masksToBounds = true
+        self.startlbl.layer.borderColor = UIColor.lightGray.cgColor
+        self.startlbl.layer.borderWidth = 1.0;
+        self.endlbl.layer.cornerRadius = 5
+        self.startlbl.textAlignment = .center
+        self.endlbl.textAlignment = .center
+        self.endlbl.layer.masksToBounds = true
+        self.endlbl.layer.borderColor = UIColor.lightGray.cgColor
+        self.endlbl.layer.borderWidth = 1.0;
+        self.startlbl.isUserInteractionEnabled = true
+        self.endlbl.isUserInteractionEnabled = true
+        self.startlbl.addGestureRecognizer(tap)
+        self.endlbl.addGestureRecognizer(tap1)
         initViews()
+    }
+    
+    func doubleTapped(_ recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+        if(recognizer.view!.tag == 0){
+            print("start label")
+        }else{
+            print("end label")
+        }
+        let currentDate = Date()
+        var dateComponents = DateComponents()
+        dateComponents.month = -3
+        let threeMonthAgo = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
+            if let dt = date {
+                self.startDates = dt as NSDate
+                self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            }
+        }
+    }
+    
+    func doubleTapped1(_ recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+        if(recognizer.view!.tag == 0){
+            print("start label")
+        }else{
+            print("end label")
+        }
+        let currentDate = Date()
+        var dateComponents = DateComponents()
+        dateComponents.month = -3
+        let threeMonthAgo = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
+            if let dt = date {
+                self.endDates = dt as NSDate
+                self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            }
+        }
     }
     
     func initViews(){
@@ -53,16 +113,6 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         providerTextField.layer.borderWidth = 0.5
         providerTextField.layer.cornerRadius = 4
         providerTextField.layer.borderColor = UIColor.lightGray.cgColor
-        
-        startDateTextField.layer.borderWidth = 0.5
-        startDateTextField.layer.cornerRadius = 4
-        startDateTextField.layer.borderColor = UIColor.lightGray.cgColor
-        startDateTextField.inputView = UIView()
-        
-        endDateTextField.layer.borderWidth = 0.5
-        endDateTextField.layer.cornerRadius = 4
-        endDateTextField.layer.borderColor = UIColor.lightGray.cgColor
-        endDateTextField.inputView = UIView()
         
         urlTextField.layer.borderWidth = 0.5
         urlTextField.layer.cornerRadius = 4
@@ -161,8 +211,6 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         
         titleTextField.returnKeyType = .next
         providerTextField.returnKeyType = .next
-        startDateTextField.returnKeyType = .next
-        endDateTextField.returnKeyType = .next
         descriptionTextView.returnKeyType = .next
         urlTextField.returnKeyType = .next
         ceHoursTextField.returnKeyType = .go
@@ -200,13 +248,13 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
             Utility.showToast(message: NSLocalizedString("Please enter provider.", comment: "validation"))
             return
         }
-        guard let startDate = startDateTextField.text, !startDate.isEmpty else {
-            startDateTextField.shake()
+        guard let startDate = startlbl.text, !startDate.isEmpty else {
+            startlbl.shake()
             Utility.showToast(message: NSLocalizedString("Please enter start date.", comment: "validation"))
             return
         }
-        guard let endDate = endDateTextField.text, !endDate.isEmpty else {
-            endDateTextField.shake()
+        guard let endDate = endlbl.text, !endDate.isEmpty else {
+            endlbl.shake()
             Utility.showToast(message: NSLocalizedString("Please enter end date.", comment: "validation"))
             return
         }
@@ -233,8 +281,8 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         
         let components = calendar.dateComponents([.second], from: date1, to: date2)
         if(components.second! < 0){
-            startDateTextField.shake()
-            endDateTextField.shake()
+            startlbl.shake()
+            endlbl.shake()
             Utility.showToast(message: NSLocalizedString("Invalid date range.", comment: "validation"))
             return
         }
@@ -279,7 +327,7 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
             if let dt = date {
                 self.startDates = dt as NSDate
-                self.startDateTextField.text = "\(self.convertDate(date: dt as NSDate))"
+                self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
             }
         }
     }
@@ -293,7 +341,7 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
             if let dt = date {
                 self.endDates = dt as NSDate
-                self.endDateTextField.text = "\(self.convertDate(date: dt as NSDate))"
+                self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
             }
         }
     }

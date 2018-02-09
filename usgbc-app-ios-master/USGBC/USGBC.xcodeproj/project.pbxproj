@@ -1830,8 +1830,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USGBC/USGBC.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				ENABLE_BITCODE = NO;
@@ -1839,8 +1839,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "18652e82-89a7-4a5c-ab2e-dd9e5a239048";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Reader Development";
+				PROVISIONING_PROFILE = "ec4e7290-3368-4075-9217-3b84a769a560";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Reader Ad Hoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "USGBC/USGBC-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -1855,8 +1855,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USGBC/USGBC.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				ENABLE_BITCODE = NO;
@@ -1864,8 +1864,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "18652e82-89a7-4a5c-ab2e-dd9e5a239048";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Reader Development";
+				PROVISIONING_PROFILE = "ec4e7290-3368-4075-9217-3b84a769a560";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Reader Ad Hoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "USGBC/USGBC-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

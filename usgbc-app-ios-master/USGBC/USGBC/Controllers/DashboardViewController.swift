@@ -62,6 +62,11 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
         NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+    }
+    
     func rotated() {
         self.updatecollectionview()
     }
@@ -96,7 +101,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
         //self.articleCollectionView.frame.size.height = 0.8 * h
         layout.itemSize = CGSize(width: 0.8 * w, height: h)//270)
         if(UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height){
-        layout.itemSize = CGSize(width: 0.5 * h, height:0.95 * w)//270)
+        layout.itemSize = CGSize(width: 0.5 * h, height:0.9 * w)//270)
         }else{
         layout.itemSize = CGSize(width: 0.7 * w, height: 0.95 * h)//270)
         }
@@ -142,6 +147,20 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
         self.articleCollectionView.register(UINib.init(nibName: "ArticleCell", bundle: nil), forCellWithReuseIdentifier: "ArticleCell")
         AppUtility.lockOrientation(.portrait)
         Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.changeorientation), userInfo: nil, repeats: false)
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onBaseTapOnly))
+        doubleTapRecognizer.numberOfTapsRequired = 1
+        doubleTapRecognizer.delegate = self
+        self.view.addGestureRecognizer(doubleTapRecognizer)
+    }
+    var loaded = false
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if(loaded == true){
+            AppUtility.lockOrientation(.portrait)
+            if(UIDevice.current.userInterfaceIdiom == .pad){
+                AppUtility.lockOrientation(.all)
+            }
+        }
         DispatchQueue.main.async {
             self.helper = Utility()
             Utility.showLoading()
@@ -158,20 +177,6 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
                     self.drawerMenuList.append("Logout")
                     self.drawerTableView.reloadData()
                 }
-            }
-        }
-        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(onBaseTapOnly))
-        doubleTapRecognizer.numberOfTapsRequired = 1
-        doubleTapRecognizer.delegate = self
-        self.view.addGestureRecognizer(doubleTapRecognizer)
-    }
-    var loaded = false
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if(loaded == true){
-            AppUtility.lockOrientation(.portrait)
-            if(UIDevice.current.userInterfaceIdiom == .pad){
-                AppUtility.lockOrientation(.all)
             }
         }
     }
@@ -310,7 +315,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
             Utility.showLoading()
         }
         Utility.showLoading()
-        ApiManager.shared.getArticlesfromElastic(category: "All", callback: {(articles, error) in
+        ApiManager.shared.getArticlesfromElastic(category: "All", size: 10, callback: {(articles, error) in
             if(error == nil){
                 //Utility.hideLoading()
                 self.articles = articles!
@@ -464,6 +469,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
                 self.drawerMenuList.removeLast()
                 self.drawerTableView.reloadData()
                 Utility().saveAppID(appId: appId)
+                Utility.showToast(message: "You've logged out successfully")
             }else{
                 Utility.showToast(message: "Something went wrong!")
             }

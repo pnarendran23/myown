@@ -14,19 +14,20 @@ import FirebaseFirestore
 class ApiManager {
     
     static let shared = ApiManager()
-    
+    let partneralias = "usgbcmobile"
+    let partnerpwd = "usgbcmobilepwd"
+    let tempURL = "http://krishna-dev.usgbc.org/mobile/services"
     let baseUrl: String = "http://identity.usgbc.org/Api"
     let baseUrlMobile: String = "https://www.usgbc.org/mobile/services"
     let baseUrlMobileSTG: String = "https://stg.usgbc.org/mobile/sergetnotificationlogvices"
     let baseUrlMobileDEV: String = "https://dev.usgbc.org/mobile/services"
-    let elasticbaseURL = "https://elastic:g54BZeb6EXs5mMDxRKWR4Vg2@0f9ee9407395f8e5c5ce2b7ee341d1d8.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_"
+    let elasticbaseURL = "https://elastic:xsYV5xUu5T9lu87159rz0aUB@a95ebd45a8925b8b70aeca45845119d9.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_"
     let helper = Utility()
     var a : DataRequest!
-    var size = 50
     
     
     func authenticateUser(userName: String, password: String, callback: @escaping (String?, NSError?) -> ()){
-        let params = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "email": userName, "pwd": password]
+        let params = ["partneralias": partneralias, "partnerpwd": partnerpwd, "email": userName, "pwd": password]
         print(params)
         a = Alamofire.request("https://dev.usgbc.org/api/v1/authenticate.json", method: .post, parameters: params)
             .validate()
@@ -52,9 +53,9 @@ class ApiManager {
     }
     
     func logoutUser(email: String, callback: @escaping (String?, NSError?) -> ()){
-        let params = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "email": email]
+        let params = ["partneralias": partneralias, "partnerpwd": partnerpwd, "email": email]
         print(params)
-        a = Alamofire.request("http://krishna-dev.usgbc.org/mobile/services/user_logout", method: .post, parameters: params)
+        a = Alamofire.request("\(baseUrlMobileDEV)/user_logout", method: .post, parameters: params)
             .validate()
             .responseJSON { response in
                 print(response.request!)
@@ -78,7 +79,7 @@ class ApiManager {
     }
     
     func createUser(firstName: String, lastName: String, email: String, password: String, phone: String,  callback: @escaping (String?, NSError?) -> ()){
-        let params = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "firstname": firstName, "lastname": lastName, "email": email, "pwd": password, "phone": phone, "acceptlegalterms": "1"]
+        let params = ["partneralias": partneralias, "partnerpwd": partnerpwd, "firstname": firstName, "lastname": lastName, "email": email, "pwd": password, "phone": phone, "acceptlegalterms": "1"]
         print(params)
         a = Alamofire.request("https://dev.usgbc.org/api/v1/createuser.json", method: .post, parameters: params)
             .validate()
@@ -104,7 +105,7 @@ class ApiManager {
     }
     
     func resetPassword(email: String, callback: @escaping (String?, NSError?) -> ()){
-        let params = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "email": email]
+        let params = ["partneralias": partneralias, "partnerpwd": partnerpwd, "email": email]
         print(params)
         a = Alamofire.request("\(baseUrlMobileDEV)/forgotpassword", method: .post, parameters: params)
             .validate()
@@ -130,7 +131,8 @@ class ApiManager {
     }
     
     func registerFCMDevice(params: [String: Any], callback: @escaping (String?, NSError?) -> ()){
-        a = Alamofire.request("\(baseUrlMobileDEV)/deviceregister", method: .post, parameters: params)
+        print(params)
+        a = Alamofire.request("\(tempURL)/deviceregister", method: .post, parameters: params)
             .validate()
             .responseJSON { response in
                 print(response.request!)
@@ -215,28 +217,95 @@ class ApiManager {
         }
     }
     
-    func updatePersonalProfile(firstname : String,lastname : String, phone : String, address1 : String, address2 : String, city : String, province : String, country : String, postal_code : String, email : String, mailstreet : String, mailcity : String, mailprovince : String, mailcountry : String, mailpostalcode : String, billstreet : String,billcity : String, billprovince : String, billcountry : String, billpostalcode : String, bio : String, dob : String, website : String, facebook : String, linkedin : String, twitter : String){
-        let profileData = ["firstname": firstname, "lastname": lastname, "phone": phone, "address1":address1, "address2":address2, "city": city, "province": province, "country": country, "postal_code": postal_code, "email": email,"mailingaddressstreet": mailstreet,"mailingaddresscity":mailcity,"mailingaddressprovince":mailprovince,"mailingaddresscountry":mailcountry,"mailingaddresspostalcode":mailpostalcode,"billingaddressstreet":billstreet,"billingaddresscity":billcity,"billingaddressprovince":billprovince,"billingaddresscountry":billcountry,"billingaddresspostalcode":billpostalcode,"bio":bio,"dob":dob,"website":website,"facebooklink":facebook,"linkedinlink":linkedin,"twitterlink":twitter]
+    func updatePersonalProfilepic(image : UIImage , path : String, callback: @escaping (NSDictionary?, NSError?) -> ()){
+        let parameters = ["partneralias":"usgbcmobile", "partnerpwd":"usgbcmobilepwd", "email": Utility().getUserDetail(), "profileimg": image] as [String : Any]
+        print(path)
+        let headers = [
+            "Content-Type": "multipart/form-data"
+        ]
+        /*a = Alamofire.request("http://krishna-dev.usgbc.org/mobile/services/changeprofileimage", method: .post, parameters: parameters, headers : headers)
+            .validate()
+            .responseJSON { response in
+                print(response)
+                switch response.result {
+                case .success( _):
+                    print("Success")
+                    if let jsonString = response.data {
+                        let json = JSON(data: jsonString)
+                        var dict = NSDictionary()
+                            callback(dict, nil)
+                    }
+                    
+                case .failure(let error):
+                    print("message: Error 4xx / 5xx: \(error)")
+                    callback(nil, error as NSError)
+                }
+        }*/
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            multipartFormData.append(UIImageJPEGRepresentation(image, 0.5)!, withName: "profileimg", fileName: "upload.jpg", mimeType: "image/jpeg")
+                multipartFormData.append(("usgbcmobile").data(using: String.Encoding.utf8)!, withName: "partneralias")                
+                multipartFormData.append(("usgbcmobilepwd").data(using: String.Encoding.utf8)!, withName: "partnerpwd")
+                multipartFormData.append((Utility().getUserDetail()).data(using: String.Encoding.utf8)!, withName: "email")
+        }, to:"\(baseUrlMobileDEV)/changeprofileimage")
+        { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                
+                upload.uploadProgress(closure: { (Progress) in
+                    print("Upload Progress: \(Progress.fractionCompleted)")
+                })
+                
+                upload.responseJSON { response in
+                    //self.delegate?.showSuccessAlert()
+                    print(response.request)  // original URL request
+                    print(response.response) // URL response
+                    print(response.data)     // server data
+                    print(response.result)   // result of response serialization
+                    //                        self.showSuccesAlert()
+                    //self.removeImage("frame", fileExtension: "txt")
+                    if let JSON = response.result.value {
+                        print("JSON: \(JSON)")
+                    }
+                }
+                
+            case .failure(let encodingError):
+                //self.delegate?.showFailAlert()
+                print(encodingError)
+            }
+            
+        }
+    }
+    
+    
+    func updatePersonalProfile(firstname : String,lastname : String,jobtitle : String,department : String, company :String, email : String, aia : String, aslanumber: String, phone : String, address1 : String, address2 : String, city : String, province : String, country : String, postal_code : String,mailstreet : String, mailcity : String, mailprovince : String, mailcountry : String, mailpostalcode : String, billstreet : String,billcity : String, billprovince : String, billcountry : String, billpostalcode : String, bio : String, dob : String, gender : String, website : String, facebook : String, linkedin : String, twitter : String, publicdirectory : String,callback: @escaping (PersonalProfile?, NSError?) -> ()){
+                
+        let profileData = ["firstname": firstname, "lastname": lastname, "jobtitle" : jobtitle, "department" : department, "company" : company,"email" : email, "aianumber" : aia, "aslanumber" : aslanumber, "phone": phone, "address1":address1, "address2":address2, "city": city, "province": province, "country": country, "postal_code": postal_code, "mailingaddressstreet": mailstreet,"mailingaddresscity":mailcity,"mailingaddressprovince":mailprovince,"mailingaddresscountry":mailcountry,"mailingaddresspostalcode":mailpostalcode,"billingaddressstreet":billstreet,"billingaddresscity":billcity,"billingaddressprovince":billprovince,"billingaddresscountry":billcountry,"billingaddresspostalcode":billpostalcode,"bio":bio,"dob":dob, "gender" : gender, "website":website,"facebooklink":facebook,"linkedinlink":linkedin,"twitterlink":twitter,"publicdirectory":publicdirectory]
       
         let parameters = ["partneralias":"usgbcmobile", "partnerpwd":"usgbcmobilepwd", "email": Utility().getUserDetail(), "profiledata": profileData] as [String : Any]
-        print(parameters)
-        a = Alamofire.request("http://dev.usgbc.org/mobile/services/personalprofileupdate", method: .post, parameters: parameters)
+        print("Parameter" , parameters)
+        a = Alamofire.request("\(baseUrlMobileDEV)/personalprofileupdate", method: .post, parameters: parameters)
             .validate()
             .responseJSON { response in
                 print(response.request!)
                 switch response.result {
                 case .success( _):
-                    if let jsonString = response.result.value {
-                        print(JSON(jsonString))
+                    if let jsonString = response.data {
+                        let json = JSON(data: jsonString)
+                        print(json)
+                            let profile = PersonalProfile(json: json["return"]["Profile"])
+                            callback(profile, nil)
+                       
                     }
                 case .failure(let error):
                     print("message: Error 4xx / 5xx: \(error)")
+                    callback(nil, error as NSError)
                 }
         }
     }
     
     func getAccountProfile(callback: @escaping (AccountProfile?, NSError?) -> ()){
-        let parameters = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "token": Utility().getTokenDetail()]
+        let parameters = ["partneralias": partneralias, "partnerpwd": partnerpwd, "token": Utility().getTokenDetail()]
         print(parameters)
         a = Alamofire.request("\(baseUrlMobileDEV)/getprofile", method: .post, parameters: parameters)
             .validate()
@@ -264,7 +333,7 @@ class ApiManager {
     }
     
     func getPersonalProfile(callback: @escaping (PersonalProfile?, NSError?) -> ()){
-        let parameters = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "token": Utility().getTokenDetail()]
+        let parameters = ["partneralias": partneralias, "partnerpwd": partnerpwd, "token": Utility().getTokenDetail()]
         print(parameters)
         a = Alamofire.request("\(baseUrlMobileDEV)/getprofile", method: .post, parameters: parameters)
             .validate()
@@ -292,7 +361,10 @@ class ApiManager {
     
     func reportCEHours(ceReport: CEReport, callback: @escaping (JSON?, NSError?) -> ()){
         let parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
-        a = Alamofire.request("http://dev.usgbc.org/api/v1/cehours/report", method: .post, parameters: parameters, encoding: JSONEncoding.default)
+        
+        print(parameters)
+        
+        a = Alamofire.request("\(baseUrlMobileDEV)/cehours/report", method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
             .responseJSON { response in
                 print(response.request!)
@@ -311,7 +383,7 @@ class ApiManager {
     
     func reportCEHoursPE(ceReport: CEReport, callback: @escaping (JSON?, NSError?) -> ()){
         let parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
-        a = Alamofire.request("http://dev.usgbc.org/api/v1/cehours/report", method: .post, parameters: parameters, encoding: JSONEncoding.default)
+        a = Alamofire.request("\(baseUrlMobileDEV)/cehours/report", method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
             .responseJSON { response in
                 print(response.request!)
@@ -354,8 +426,8 @@ class ApiManager {
     }
     
     func getCredentials(email: String, callback: @escaping (Credentials?, NSError?) -> ()){
-        let url = "http://dev.usgbc.org/mobile/services/getcredentials"
-        let parameters = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "email": email]
+        let url = "\(baseUrlMobileDEV)/getcredentials"
+        let parameters = ["partneralias": partneralias, "partnerpwd": partnerpwd, "email": email]
         print(parameters)
         a = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .validate()
@@ -390,7 +462,7 @@ class ApiManager {
     
     func getNotificationLogs(email: String, callback: @escaping ([NotificationLog]?, NSError?) -> ()){
         let url = "\(baseUrlMobileDEV)/getnotificationlog"
-        let parameters = ["partneralias": "usgbcmobile", "partnerpwd": "usgbcmobilepwd", "user_email": email]
+        let parameters = ["partneralias": partneralias, "partnerpwd": partnerpwd, "user_email": email]
         print(parameters)
         a = Alamofire.request(url, method: .post, parameters: parameters)
             .validate()
@@ -561,7 +633,7 @@ class ApiManager {
     }
     
     
-    func getArticlesfromElastic(category: String, callback: @escaping ([Article]?, NSError?) -> ()){
+    func getArticlesfromElastic(category: String, size : Int, callback: @escaping ([Article]?, NSError?) -> ()){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         //https://elastic:dKoop4HDVLk54kt6eI6rgCDg@996d58b7610023f635201f31c2f7cb4d.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_ios_
         var url = elasticbaseURL + "articles_ios/_search"
@@ -640,7 +712,7 @@ class ApiManager {
     }
     
     
-    func searchArticlesfromElastic(category: String, keyword:String, callback: @escaping ([Article]?, NSError?) -> ()){
+    func searchArticlesfromElastic(category: String, size : Int, keyword:String, callback: @escaping ([Article]?, NSError?) -> ()){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "articles_ios/_search"
         url.append("?q=\(keyword)")
@@ -1210,8 +1282,113 @@ class ApiManager {
         }
     }
     
-    func getCredits(rating:String, parameter: String, version:String, credit:String, search: String, page: Int, callback: @escaping ([Credit]?, NSError?) -> ()){
-        var parameters = ["page": "\(page)"]
+    func getdirectorycounts(category: String,strarr : [String], callback: @escaping (NSMutableDictionary?, NSError?) -> ()){
+        let group = DispatchGroup()
+        var articleFilters: [String] = []
+        var countsDict = NSMutableDictionary()
+        var plural = ""
+        var singular = ""
+        if(category == "organizationslist"){
+            plural = "organizations"
+            singular = "organization"
+        }else if(category == "peoplelist"){
+            plural = "people"
+            singular = "people"
+        }
+        for str in strarr {
+            group.enter()
+            var s = str.replacingOccurrences(of: " ", with: "-")
+            s = s.lowercased()
+            var url = "\(baseUrlMobileDEV)/\(category)/\(s)"
+            a = Alamofire.request(url, method: .get)
+                .validate()
+                .responseJSON { response in
+                    print(response.request!)
+                    switch response.result {
+                    case .success( _):
+                        if let jsonString = response.data {
+                            var count = 0
+                            let json = JSON(data: jsonString)
+                            
+                            do {
+                                let JSON = try JSONSerialization.jsonObject(with: response.data!, options: JSONSerialization.ReadingOptions(rawValue: JSONSerialization.ReadingOptions.RawValue(0)))
+                                guard let JSONDictionary: NSDictionary = JSON as? NSDictionary else {
+                                    print("Not a Dictionary")
+                                    var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                   countsDict[s] = 0
+                                    // put in function
+                                    group.leave()
+                                    return
+                                }
+                                print("JSONDictionary! \(JSONDictionary)")
+                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                if(JSONDictionary[plural] != nil){
+                                    var arr = JSONDictionary[plural] as! NSArray
+                                    if(arr.count == 0){
+                                        var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                        countsDict[s] = 0
+                                        // put in function
+                                        group.leave()
+                                    }else{
+                                        var dict = arr.firstObject as! NSDictionary
+                                        if(dict[singular] != nil){
+                                            var data = dict[singular] as! NSDictionary
+                                            if(data["totalCount"] != nil){
+                                                let count = Int(data["totalCount"] as! String)
+                                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                                countsDict[s] = count
+                                                group.leave()
+                                            }else{
+                                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                                countsDict[s] = 0
+                                                // put in function
+                                                group.leave()
+                                            }
+                                        }else{
+                                            var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                            countsDict[s] = 0
+                                            // put in function
+                                            group.leave()
+                                        }
+                                    }
+                                }else{
+                                    var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                    countsDict[s] = 0
+                                    // put in function
+                                    group.leave()
+                                }
+                                
+                            }
+                            catch let JSONError as NSError {
+                                print("\(JSONError)")
+                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                                countsDict[s] = 0
+                                // put in function
+                                group.leave()
+                            }
+                            
+                            
+                        }
+                        //callback(count, nil)
+                    case .failure(let error):
+                        print("message: Error 4xx / 5xx: \(error)")
+                        //callback(nil, error as NSError)
+                        var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
+                        countsDict[s] = 0
+                        // put in function
+                        group.leave()
+                    }
+            }
+            
+        }
+        group.notify(queue: .main) {
+            callback(countsDict, nil)
+        }
+    }
+    
+    
+    func getCredits(rating:String, size: Int, parameter: String, version:String, credit:String, search: String, page: Int, callback: @escaping ([Credit]?, NSError?) -> ()){
+        var parameters = ["from": "\(page)", "size" : size] as! [String:Any]
         if(search != ""){
             parameters["search"] = search
         }
@@ -1230,7 +1407,7 @@ class ApiManager {
         }else if(search.characters.count == 0 && parameter.characters.count > 0){
             url = url + "?q=field_credit_category:" + parameter
         }
-        a = Alamofire.request(url, method: .get)
+        a = Alamofire.request(url, method: .get, parameters : parameters)
             .validate()
             .responseJSON { response in
                 print(response.request!)
@@ -1788,7 +1965,7 @@ class ApiManager {
         
     }
     
-    func getProjectsCount(category: String, callback: @escaping (Int?, NSError?) -> () ){
+    func getProjectsCount(category: String, size: Int, callback: @escaping (Int?, NSError?) -> () ){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "projects_ios/_search"
         var params: [String: Any] = [:]
@@ -1883,7 +2060,7 @@ class ApiManager {
     
     
     func stopAllSessions() {
-            a.cancel()
+            self.a.cancel()     
     }
     
     

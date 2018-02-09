@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate{
 
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "all"
     fileprivate var loadType = "init"
@@ -208,6 +209,11 @@ extension DirectoryPeopleListViewController: UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterPeople.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterPeople.count
     }
     

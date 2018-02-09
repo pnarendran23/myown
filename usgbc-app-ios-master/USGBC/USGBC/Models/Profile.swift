@@ -36,6 +36,7 @@ final class Profile {
     var province = ""
     var country = ""
     var postal_code = ""
+
     //-----
     var customernumber = ""
     var aslanumber = ""
@@ -77,7 +78,7 @@ final class Profile {
         gender = json["gender"].stringValue
         graduationDate = json["graduationdate"].stringValue
         studentID = json["studentid"].stringValue
-        currentInstitute = json["educational_institution"].stringValue
+        currentInstitute = json["educational_institution"].stringValue        
     }
 }
 

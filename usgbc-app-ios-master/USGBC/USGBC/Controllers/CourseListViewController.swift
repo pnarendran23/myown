@@ -53,8 +53,8 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
         super.viewDidAppear(true)
         loadFilters()
         self.collectionView.keyboardDismissMode = .onDrag
-        Utility.showLoading()
         if(isFiltered || courses.count == 0){
+            Utility.showLoading()
             loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
         }
     }

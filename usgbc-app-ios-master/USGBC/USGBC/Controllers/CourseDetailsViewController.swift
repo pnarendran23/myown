@@ -166,7 +166,11 @@ class CourseDetailsViewController: UIViewController{
                     self.initCourseLeaders()
                 }else{
                     //Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong, try again later!")
+                    var statuscode = error?._code as! Int
+                    if(statuscode != -999){
+                        Utility.hideLoading()
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                    }
                 }
             })
         }
@@ -183,7 +187,11 @@ class CourseDetailsViewController: UIViewController{
                     self.initCourseResources()
                 }else{
                     //Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong, try again later!")
+                    var statuscode = error?._code as! Int
+                    if(statuscode != -999){
+                        Utility.hideLoading()
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                    }
                 }
             })
         }
@@ -200,7 +208,11 @@ class CourseDetailsViewController: UIViewController{
                     self.initCourseProviders()
                 }else{
                     //Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong, try again later!")
+                    var statuscode = error?._code as! Int
+                    if(statuscode != -999){
+                        Utility.hideLoading()
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                    }
                 }
             })
         }
@@ -216,7 +228,11 @@ class CourseDetailsViewController: UIViewController{
                     self.initCourseSessions()
                 }else{
                     //Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong, try again later!")
+                    var statuscode = error?._code as! Int
+                    if(statuscode != -999){
+                        Utility.hideLoading()
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                    }
                 }
             })
         }
@@ -232,8 +248,11 @@ class CourseDetailsViewController: UIViewController{
                     self.access = access!
                     self.loadCourseDetails()
                 }else {
-                    Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong!")
+                    var statuscode = error?._code as! Int
+                    if(statuscode != -999){
+                        Utility.hideLoading()
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                    }
                 }
             })
         }

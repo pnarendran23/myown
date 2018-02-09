@@ -207,6 +207,7 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
         })
     }
     
+    @IBOutlet weak var nodata: UILabel!
     func loadProjectsWithPagination(from: Int , size: Int, category: String, search: String,  loadType: String){
         ApiManager.shared.getProjectsElasticWithpaginationNew(from: from, sizee: size, search: search, category:  category, callback: { totalCount, projects, error in
             if(error == nil){
@@ -262,6 +263,11 @@ extension DirectoryProjectListViewController: UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterProjects.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterProjects.count
     }
     

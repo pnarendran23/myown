@@ -16,6 +16,15 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 2
     }
+    @IBOutlet weak var submitbtn: UIButton!
+    @IBAction func submit(_ sender: Any) {
+        DispatchQueue.main.async( execute: {
+            Utility.showLoading()
+            self.submitbtn.isEnabled = false
+            self.submitbtn.setTitle("Submitting..", for: .normal)
+            self.updatedata()
+        })
+    }
     
     @IBOutlet weak var dpickerview: UIView!
     @IBOutlet weak var dpicker: UIDatePicker!
@@ -28,13 +37,20 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
     var profile : PersonalProfile!
     override func viewDidLoad() {
         super.viewDidLoad()
-        dpicker.datePickerMode = .date
+        self.submitbtn.frame = CGRect(x:self.submitbtn.frame.origin.x,y:self.tableView.frame.origin.y + self.tableView.frame.size.height,width:self.submitbtn.frame.size.width,height:(self.view.frame.size.height - (self.tableView.frame.origin.y + self.tableView.frame.size.height)))
+        self.submitbtn.isEnabled = false
+            self.submitbtn.alpha = 0.3
+        print(self.tempaccountdict)
+        dpicker.datePickerMode = .date        
         self.dpickerview.isHidden = true
         self.pickerview.isHidden = true
+        self.submitbtn.setTitle("Submit", for: .normal)
         dpicker.addTarget(self, action: #selector(self.changeDate(dpicker:)), for: .valueChanged)
         let viewController = self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)! - 2]
         defaultbtn = (viewController?.navigationItem.backBarButtonItem!)!
-        tempaccountdict = accountdict
+        for (key,value) in self.accountdict{
+            self.tempaccountdict[key] = value
+        }
         self.tableView.register(UINib.init(nibName: "TextwithLabel", bundle: nil), forCellReuseIdentifier: "cell")
         self.navigationItem.title = "About me"
         // Do any additional setup after loading the view.
@@ -102,13 +118,13 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
             }else if(indexPath.section == 1){
                 if(indexPath.row == 0){
                     cell.lbl.text = "Facebook"
-                    cell.txtfield.text = ((self.tempaccountdict["facebook"] as! String).isEmpty) ? "" :  self.tempaccountdict["facebook"] as! String
+                    cell.txtfield.text = ((self.tempaccountdict["facebooklink"] as! String).isEmpty) ? "" :  self.tempaccountdict["facebooklink"] as! String
                 }else if(indexPath.row == 1){
                     cell.lbl.text = "Twitter"
-                    cell.txtfield.text = ((self.tempaccountdict["twitter"] as! String).isEmpty) ? "" :  self.tempaccountdict["twitter"] as! String
+                    cell.txtfield.text = ((self.tempaccountdict["twitterlink"] as! String).isEmpty) ? "" :  self.tempaccountdict["twitterlink"] as! String
                 }else if(indexPath.row == 2){
                     cell.lbl.text = "LinkedIn"
-                    cell.txtfield.text = ((self.tempaccountdict["linkedin"] as! String).isEmpty) ? "" :  self.tempaccountdict["linkedin"] as! String
+                    cell.txtfield.text = ((self.tempaccountdict["linkedinlink"] as! String).isEmpty) ? "" :  self.tempaccountdict["linkedinlink"] as! String
                 }
             }
         return cell
@@ -135,14 +151,23 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
                     dateformat.dateFormat = "dd/MM/yy"
                     var date = NSDate()
                     if(self.tempaccountdict["dob"] != nil){
-                        date = dateformat.date(from: self.tempaccountdict["dob"] as! String) as! NSDate
+                        if(self.tempaccountdict["dob"] as! String == ""){
+                            date = NSDate()
+                        }else{
+                            if(dateformat.date(from: self.tempaccountdict["dob"] as! String) == nil){
+                            date = NSDate()
+                            }else{
+                            date = dateformat.date(from: self.tempaccountdict["dob"] as! String) as! NSDate
+                            }
+                        }
                     }
                     dpicker.date = date as Date
                     dpickerview.isHidden = false
                     pickerview.isHidden = true
                 }else{
                     picker.selectRow(0, inComponent: 0, animated: true)
-                    if(self.tempaccountdict["gender"] != nil){
+                    if(self.tempaccountdict["gender"] as! String == ""){
+                        picker.selectRow(0, inComponent: 0, animated: true)
                         if((self.tempaccountdict["gender"] as! String).lowercased() == "male"){
                            picker.selectRow(0, inComponent: 0, animated: true)
                         }else if((self.tempaccountdict["gender"] as! String).lowercased() == "female"){
@@ -177,11 +202,11 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
         }else if(textField.tag == 4){
             self.tempaccountdict["gender"] = textField.text
         }else if(textField.tag == 1000){
-            self.tempaccountdict["facebook"] = textField.text
+            self.tempaccountdict["facebooklink"] = textField.text
         }else if(textField.tag == 1001){
-            self.tempaccountdict["twitter"] = textField.text
+            self.tempaccountdict["twitterlink"] = textField.text
         }else if(textField.tag == 1002){
-            self.tempaccountdict["linkedin"] = textField.text
+            self.tempaccountdict["linkedinlink"] = textField.text
         }
     }
     
@@ -205,12 +230,13 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
         self.view.endEditing(true)
         dpickerview.isHidden = true
         pickerview.isHidden = true
+        self.tableView.reloadData()
     }
     func done(button : UIBarButtonItem){
         self.navigationItem.backBarButtonItem = defaultbtn
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.leftBarButtonItem = nil
-        self.view.endEditing(true)
+        self.view.endEditing(true)        
         dpickerview.isHidden = true
         pickerview.isHidden = true
         if(self.picker.selectedRow(inComponent: 0) == 0){
@@ -218,10 +244,123 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
         }else{
             self.tempaccountdict["gender"] = "female"
         }
-        
-        ApiManager.shared.updatePersonalProfile(firstname: self.profile.fname, lastname: self.profile.lname, phone: self.profile.phone, address1: self.profile.address1, address2: self.profile.address2, city: self.profile.city, province: self.profile.province, country: self.profile.country, postal_code: self.profile.postal_code, email: self.profile.email, mailstreet: self.profile.mailingaddressstreet, mailcity: self.profile.mailingaddresscity, mailprovince: self.profile.mailingaddressprovince, mailcountry: self.profile.mailingaddresscountry, mailpostalcode: self.profile.mailingaddresspostalcode, billstreet: self.profile.billingaddressstreet, billcity: self.profile.billingaddresscity, billprovince: self.profile.billingaddressprovince, billcountry: self.profile.billingaddresscountry, billpostalcode: self.profile.billingaddresspostalcode, bio: self.tempaccountdict["bio"] as! String, dob: self.tempaccountdict["dob"] as! String, website: self.tempaccountdict["website"] as! String, facebook: self.tempaccountdict["facebook"] as! String, linkedin: self.tempaccountdict["linkedin"] as! String, twitter: self.tempaccountdict["twitter"] as! String)
+        if(self.accountdict == self.tempaccountdict){
+            self.submitbtn.isEnabled = false
+            self.submitbtn.alpha = 0.3
+        }else{
+            self.submitbtn.isEnabled = true
+            self.submitbtn.alpha = 1
+        }
+        self.tableView.reloadData()
+       
     }
     
+    
+    func updatedata(){
+        ApiManager.shared.updatePersonalProfile(firstname : self.tempaccountdict["firstname"] as! String,lastname : self.tempaccountdict["lastname"] as! String,jobtitle : self.tempaccountdict["jobtitle"] as! String,department : self.tempaccountdict["department"] as! String, company :self.tempaccountdict["company"] as! String, email : self.tempaccountdict["email"] as! String, aia : self.tempaccountdict["aianumber"] as! String, aslanumber: self.tempaccountdict["aslanumber"] as! String, phone : self.profile.phone, address1 : self.profile.address1, address2 : self.profile.address2, city : self.profile.city, province : self.profile.province, country : self.profile.country, postal_code : self.profile.postal_code,mailstreet : self.tempaccountdict["mailingaddressstreet"] as! String, mailcity : self.tempaccountdict["mailingaddresscity"] as! String, mailprovince : self.tempaccountdict["mailingaddressprovince"] as! String, mailcountry : self.tempaccountdict["mailingaddresscountry"] as! String, mailpostalcode : self.tempaccountdict["mailingaddresspostalcode"] as! String, billstreet : self.tempaccountdict["billingaddressstreet"] as! String,billcity : self.tempaccountdict["billingaddresscity"] as! String, billprovince : self.tempaccountdict["billingaddressprovince"] as! String, billcountry : self.tempaccountdict["billingaddresscountry"] as! String, billpostalcode : self.tempaccountdict["billingaddresspostalcode"] as! String, bio : self.tempaccountdict["bio"] as! String, dob : self.tempaccountdict["dob"] as! String, gender : self.tempaccountdict["gender"] as! String, website : self.tempaccountdict["website"] as! String, facebook : self.tempaccountdict["facebooklink"] as! String, linkedin : self.tempaccountdict["linkedinlink"] as! String, twitter : self.tempaccountdict["twitterlink"] as! String, publicdirectory : self.tempaccountdict["publicdirectory"] as! String,callback: { (profile, error) in
+            if(error == nil && profile != nil){
+                //self.view.isUserInteractionEnabled = true
+                //self.loadPersonalProfile()
+                //self.profile = profile!
+                DispatchQueue.main.async( execute: {
+                    self.profile = profile!
+                    let imageView = UIImageView()
+                    //imageView.image = UIImage(named: "h")
+                    imageView.contentMode = .scaleAspectFill
+                    let image = UIImage(named: "usgbc")
+                    imageView.kf.setImage(with: URL(string: "http://dev.usgbc.org/\(self.profile.image)"), placeholder: image)
+                    /*//self.tableView.parallaxHeader.view = imageView
+                     self.tableView.parallaxHeader.height = 400
+                     self.tableView.parallaxHeader.minimumHeight = 0
+                     self.tableView.parallaxHeader.mode = .topFill*/
+                    var label = UILabel.init(frame: CGRect(x:0,y:0.8 * 400, width : self.view.bounds.width,height:400-(0.8 * 400)))
+                    label.numberOfLines = 3
+                    label.text = "\(self.profile.fname) \(self.profile.lname) | \(self.profile.jobtitle) \n \(self.profile.department) | \(self.profile.company)"
+                    
+                    label.backgroundColor = UIColor.black
+                    label.textColor = UIColor.white
+                    label.font = UIFont.gothamBook(size: 15)
+                    self.accountdict = NSMutableDictionary()
+                    self.tempaccountdict = NSMutableDictionary()
+                    //self.tableView.parallaxHeader.view.addSubview(label)
+                    self.accountdict["email"] = Utility().getUserDetail()
+                    var dict = NSMutableDictionary()
+                    dict["mailingaddressstreet"] = (self.profile.mailingaddressstreet.isEmpty) ? "" : self.profile.mailingaddressstreet
+                    dict["mailingaddresscity"] = (self.profile.mailingaddresscity.isEmpty) ? "" : self.profile.mailingaddresscity
+                    dict["mailingaddressprovince"] = (self.profile.mailingaddressprovince.isEmpty) ? "" : self.profile.mailingaddressprovince
+                    dict["mailingaddresscountry"] = (self.profile.mailingaddresscountry.isEmpty) ? "" : self.profile.mailingaddresscountry
+                    dict["mailingaddresspostalcode"] = (self.profile.mailingaddresspostalcode.isEmpty) ? "" : self.profile.mailingaddresspostalcode
+                    
+                    self.accountdict["mailingaddressstreet"] = (self.profile.mailingaddressstreet.isEmpty) ? "" : self.profile.mailingaddressstreet
+                    self.accountdict["mailingaddresscity"] = (self.profile.mailingaddresscity.isEmpty) ? "" : self.profile.mailingaddresscity
+                    self.accountdict["mailingaddressprovince"] = (self.profile.mailingaddressprovince.isEmpty) ? "" : self.profile.mailingaddressprovince
+                    self.accountdict["mailingaddresscountry"] = (self.profile.mailingaddresscountry.isEmpty) ? "" : self.profile.mailingaddresscountry
+                    self.accountdict["mailingaddresspostalcode"] = (self.profile.mailingaddresspostalcode.isEmpty) ? "" : self.profile.mailingaddresspostalcode
+                    
+                    
+                    
+                    self.accountdict["mailingaddress"] = dict
+                    self.accountdict["gender"] = (self.profile.gender.isEmpty) ? "" : self.profile.gender
+                    dict = NSMutableDictionary()
+                    dict["billingaddressstreet"] = (self.profile.billingaddressstreet.isEmpty) ? "" : self.profile.billingaddressstreet
+                    dict["billingaddresscity"] = (self.profile.billingaddresscity.isEmpty) ? "" : self.profile.billingaddresscity
+                    dict["billingaddressprovince"] = (self.profile.billingaddressprovince.isEmpty) ? "" : self.profile.billingaddressprovince
+                    dict["billingaddresscountry"] = (self.profile.billingaddresscountry.isEmpty) ? "" : self.profile.billingaddresscountry
+                    dict["billingaddresspostalcode"] = (self.profile.billingaddresspostalcode.isEmpty) ? "" : self.profile.billingaddresspostalcode
+                    
+                    self.accountdict["billingaddressstreet"] = (self.profile.billingaddressstreet.isEmpty) ? "" : self.profile.billingaddressstreet
+                    self.accountdict["billingaddresscity"] = (self.profile.billingaddresscity.isEmpty) ? "" : self.profile.billingaddresscity
+                    self.accountdict["billingaddressprovince"] = (self.profile.billingaddressprovince.isEmpty) ? "" : self.profile.billingaddressprovince
+                    self.accountdict["billingaddresscountry"] = (self.profile.billingaddresscountry.isEmpty) ? "" : self.profile.billingaddresscountry
+                    self.accountdict["billingaddresspostalcode"] = (self.profile.billingaddresspostalcode.isEmpty) ? "" : self.profile.billingaddresspostalcode
+                    self.accountdict["billingaddress"] = dict
+                    
+                    
+                    
+                    self.accountdict["aianumber"] = (self.profile.aia.isEmpty) ? "AIA# " : self.profile.aia
+                    self.accountdict["aslanumber"] = (self.profile.aslanumber.isEmpty) ? "" : self.profile.aslanumber
+                    self.accountdict["publicdirectory"] = self.profile.publicdirectory
+                    self.accountdict["bio"] = self.profile.bio
+                    self.accountdict["website"] = self.profile.website
+                    self.accountdict["location"] = self.profile.location
+                    self.accountdict["linkedinlink"] = self.profile.linkedin
+                    self.accountdict["facebooklink"] = self.profile.facebook
+                    self.accountdict["twitterlink"] = self.profile.twitter
+                    self.accountdict["dob"] = self.profile.dob
+                    self.accountdict["department"] = self.profile.department
+                    self.accountdict["firstname"] = self.profile.fname
+                    self.accountdict["lastname"] = self.profile.lname
+                    self.accountdict["jobtitle"] = self.profile.jobtitle
+                    self.accountdict["company"] = self.profile.company
+                    self.tempaccountdict = NSMutableDictionary()
+                    for (key,value) in self.accountdict{
+                        self.tempaccountdict[key] = value
+                    }
+                    Utility.showToast(message: "Profile updated successfully")
+                    Utility.hideLoading()
+                    self.submitbtn.isEnabled = false
+                    self.submitbtn.alpha = 0.3
+                    self.submitbtn.setTitle("Submit", for: .normal)
+                    self.tableView.reloadData()
+                })
+            }else{
+                var statuscode = error?._code as! Int
+                if(statuscode != -999){
+                    DispatchQueue.main.async( execute: {
+                        Utility.hideLoading()
+                        self.submitbtn.isEnabled = true
+                        self.submitbtn.alpha = 1
+                        //self.view.isUserInteractionEnabled = true
+                        Utility.showToast(message: "Something went wrong, try again later!")
+                        self.submitbtn.setTitle("Submit", for: .normal)
+                        
+                    })
+                }else{
+                    //Utility.hideLoading()
+                }
+            }
+        })
+    }
     
     
 

@@ -32,7 +32,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </imageView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© 2018 U.S. Green Building Council" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e2R-Vb-V0X">
-                                <rect key="frame" x="47" y="607" width="280" height="21"/>
+                                <rect key="frame" x="64" y="607" width="225" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="41H-b3-Zzp"/>
                                 </constraints>
@@ -40,22 +40,18 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cc white" translatesAutoresizingMaskIntoConstraints="NO" id="uWE-Il-h1F">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="cc white" translatesAutoresizingMaskIntoConstraints="NO" id="uWE-Il-h1F">
                                 <rect key="frame" x="37" y="183" width="300" height="300"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.099079631268978119" green="0.57943415641784668" blue="0.84132295846939087" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="uWE-Il-h1F" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="163" id="Bsx-7F-lTZ"/>
-                            <constraint firstItem="uWE-Il-h1F" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Frg-7y-RjH"/>
-                            <constraint firstItem="e2R-Vb-V0X" firstAttribute="centerX" secondItem="uWE-Il-h1F" secondAttribute="centerX" id="J8e-JI-ij5"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="fde-bb-UkN" secondAttribute="bottom" constant="8" id="NCz-HE-Eli"/>
-                            <constraint firstItem="uWE-Il-h1F" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="21" id="QqK-PH-6pw"/>
                             <constraint firstAttribute="trailing" secondItem="fde-bb-UkN" secondAttribute="trailing" constant="8" id="ScK-3r-BZX"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="e2R-Vb-V0X" secondAttribute="bottom" constant="39" id="VMy-7H-wP7"/>
                             <constraint firstItem="fde-bb-UkN" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="8" id="aXM-Bl-Gcw"/>
-                            <constraint firstItem="uWE-Il-h1F" firstAttribute="centerX" secondItem="fde-bb-UkN" secondAttribute="centerX" id="ku6-cO-IFp"/>
-                            <constraint firstItem="e2R-Vb-V0X" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="31" id="yiK-Tw-weB"/>
+                            <constraint firstItem="e2R-Vb-V0X" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="48" id="yiK-Tw-weB"/>
                             <constraint firstItem="fde-bb-UkN" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="8" id="z1X-Su-cBM"/>
                         </constraints>
                     </view>

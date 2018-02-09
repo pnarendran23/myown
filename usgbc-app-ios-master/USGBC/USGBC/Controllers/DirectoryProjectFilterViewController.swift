@@ -53,7 +53,7 @@ class DirectoryProjectFilterViewController: UIViewController {
     }
     
     func loadTotalProjectsCount(){
-        ApiManager.shared.getProjectsCount(category: filter, callback: { (count, error) in
+        ApiManager.shared.getProjectsCount(category: filter, size: 50, callback: { (count, error) in
             if(error == nil){
                 if(self.filter == "All"){
                     self.totalCount = count!

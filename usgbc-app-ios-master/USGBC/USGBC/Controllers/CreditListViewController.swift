@@ -11,9 +11,10 @@ import SwiftyJSON
 
 class CreditListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
 
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var pageNumber = 0
-    fileprivate var pageSize = 40
+    fileprivate var pageSize = 50
     fileprivate var lastRecordsCount = 0
     fileprivate var loading = false
     fileprivate var searchOpen = false
@@ -93,6 +94,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
             searchBar.resignFirstResponder()
             hideSearch()
         }
+        self.pageNumber = 0
         loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
     }
     
@@ -152,7 +154,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
         Utility.showLoading()
         var parameter = category.replacingOccurrences(of: " ", with: "%20")
         parameter = parameter.replacingOccurrences(of: "&", with: "%26")
-        ApiManager.shared.getCredits(rating: rating, parameter : parameter, version: version, credit: credit, search: search, page: page, callback: { (credits:[Credit]?, error:NSError?) in
+        ApiManager.shared.getCredits(rating: rating, size: 50, parameter : parameter, version: version, credit: credit, search: search, page: page, callback: { (credits:[Credit]?, error:NSError?) in
             if(error == nil){
                 Utility.hideLoading()
                 if(loadType == "init"){
@@ -160,12 +162,16 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     self.lastRecordsCount = credits!.count
                     self.filterCredits = self.credits
                     self.collectionView.setContentOffset(.zero, animated: false)
+                    self.pageNumber += self.credits.count
                     self.collectionView.reloadData()
                     print(self.filterCredits.count)
-                }else{
+                    
+                }else{                    
                     self.credits.append(contentsOf: credits!)
                     self.lastRecordsCount = credits!.count
+                    self.filterCredits.removeAll()
                     self.filterCredits = self.credits
+                    self.pageNumber += credits!.count
                     self.collectionView.reloadData()
                     self.loading = false
                     print(self.filterCredits.count)
@@ -213,6 +219,11 @@ extension CreditListViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterCredits.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterCredits.count
     }
     
@@ -263,7 +274,7 @@ extension CreditListViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterCredits.count-1 && !loading && lastRecordsCount == pageSize {
+        if indexPath.row == filterCredits.count-1 && !loading {
             loading = true
             loadType = "more"
             pageNumber += 1
@@ -306,6 +317,7 @@ extension CreditListViewController: UISearchBarDelegate {
         pageNumber = 0
         searchBar.showsCancelButton = false
         ApiManager.shared.stopAllSessions()
+        Utility.showLoading()
         loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
     }
 }

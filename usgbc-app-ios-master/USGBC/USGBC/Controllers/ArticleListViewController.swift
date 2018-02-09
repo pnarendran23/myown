@@ -14,6 +14,7 @@ import FirebaseDatabase
 
 class ArticleListViewController: UIViewController {
     
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "All"
     fileprivate var loadType = "init"
@@ -121,7 +122,7 @@ class ArticleListViewController: UIViewController {
     
     func searchData(keyword : String){
         
-        ApiManager.shared.searchArticlesfromElastic(category: category, keyword: keyword, callback: {(articles, error) in
+        ApiManager.shared.searchArticlesfromElastic(category: category, size: 50, keyword: keyword, callback: {(articles, error) in
             
             //(category: "all", search: "", page: 0, callback:  { (articles, error) in
             if(error == nil){
@@ -136,7 +137,7 @@ class ArticleListViewController: UIViewController {
                 //Utility.hideLoading()
                 var statuscode = error?._code
                 if(statuscode != -999){
-                Utility.showToast(message: "Unable to get featured articles!")
+                Utility.showToast(message: "Something went wrong")
                 }
             }
             //self.loadAllFirestoreData(category: self.category)
@@ -145,7 +146,7 @@ class ArticleListViewController: UIViewController {
 
     
     func getData(){
-        ApiManager.shared.getArticlesfromElastic(category: category, callback: {(articles, error) in
+        ApiManager.shared.getArticlesfromElastic(category: category, size : 50, callback: {(articles, error) in
         
         //(category: "all", search: "", page: 0, callback:  { (articles, error) in
                         if(error == nil){
@@ -159,7 +160,10 @@ class ArticleListViewController: UIViewController {
                             
                       }else{
                             //Utility.hideLoading()
-                            Utility.showToast(message: "Unable to get featured articles!")
+                            var statuscode = error?._code
+                            if(statuscode != -999){
+                                Utility.showToast(message: "Something went wrong")
+                            }
                         }
             //self.loadAllFirestoreData(category: self.category)
                     })
@@ -426,6 +430,11 @@ extension ArticleListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterArticles.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterArticles.count
     }
     

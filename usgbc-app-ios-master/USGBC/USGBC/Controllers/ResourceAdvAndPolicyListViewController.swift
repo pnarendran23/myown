@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class ResourceAdvAndPolicyListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
 
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "4937+1231+7386+1236+6/all/all/all/all/all"
     fileprivate var loadType = "init"
@@ -231,6 +232,11 @@ extension ResourceAdvAndPolicyListViewController: UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterResources.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterResources.count
     }
     
@@ -340,6 +346,12 @@ extension ResourceAdvAndPolicyListViewController: ResourcesAdvAndPolicyFilterDel
             self.versions = versions
             self.access = access
             self.language = language
+            self.typearr = typearray
+            self.formatarr = formatarray
+            self.ratingarr = ratingarray
+            self.versionarr  = versionarray
+            self.accessarr  = accessarray
+            self.languagearr  = languagearray
             //type/rating/version/language/format/member
             category = ((type.isEmpty) ? "all" : type) + "/" + ((ratingSystem.isEmpty) ? "all" : ratingSystem) + "/" + ((versions.isEmpty) ? "all" : versions) + "/" + ((language.isEmpty) ? "all" : language) + "/" + ((format.isEmpty) ? "all" : format) +  "/" + ((access.isEmpty) ? "all" : access)
             print(category)

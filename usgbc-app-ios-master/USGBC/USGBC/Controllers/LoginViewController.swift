@@ -38,6 +38,9 @@ class LoginViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        userNameTF.autocorrectionType = .no
+        userNameTF.autocapitalizationType = .none
+        userNameTF.spellCheckingType = .no
         //scrollview.contentSize = CGSize(width : UIScreen.main.bounds.size.width,height : UIScreen.main.bounds.size.height)
         helper = Utility()
         initViews()

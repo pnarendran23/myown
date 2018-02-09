@@ -11,11 +11,12 @@ import SwiftyJSON
 
 class DirectoryOrganizationListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
 
+    @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "all"
     fileprivate var loadType = "init"
     fileprivate var pageNumber = 0
-    fileprivate var pageSize = 40
+    fileprivate var pageSize = 50
     fileprivate var lastRecordsCount = 0
     fileprivate var loading = false
     fileprivate var searchOpen = false
@@ -75,6 +76,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
         refreshControl.addTarget(self, action: #selector(DirectoryOrganizationListViewController.handleRefresh(_:)), for: .valueChanged)
         collectionView.addSubview(refreshControl)
         collectionView.alwaysBounceVertical = true
+        self.pageNumber = 0
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
@@ -161,6 +163,8 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                     self.lastRecordsCount = organizations!.count
                     self.filterOrganizations = self.organizations
                     self.collectionView.setContentOffset(.zero, animated: false)
+                    self.loading = false
+                    self.pageNumber += organizations!.count
                     self.collectionView.reloadData()
                     print(self.filterOrganizations.count)
                 }else{
@@ -169,6 +173,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                     self.filterOrganizations = self.organizations
                     self.collectionView.reloadData()
                     self.loading = false
+                    self.pageNumber += organizations!.count
                     print(self.filterOrganizations.count)
                 }
             }else{
@@ -208,6 +213,11 @@ extension DirectoryOrganizationListViewController: UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterOrganizations.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterOrganizations.count
     }
     
@@ -256,7 +266,7 @@ extension DirectoryOrganizationListViewController: UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterOrganizations.count-1 && !loading && lastRecordsCount == pageSize {
+        if indexPath.row == filterOrganizations.count-1 && !loading {
             loading = true
             loadType = "more"
             pageNumber += 1

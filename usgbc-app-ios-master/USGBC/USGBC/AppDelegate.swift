@@ -110,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
         let secondBounds = NSValue(cgRect: CGRect(x: 0, y: 0, width:  0.48 * UIScreen.main.bounds.size.width, height:  0.48 * UIScreen.main.bounds.size.width))
         let finalBounds = NSValue(cgRect: CGRect(x: 0, y: 0, width:  36.23 * UIScreen.main.bounds.size.width, height:  36.23 * UIScreen.main.bounds.size.width))
         transformAnimation.values = [initalBounds, secondBounds, finalBounds]
-        transformAnimation.keyTimes = [0, 0.5, 1]
+        transformAnimation.keyTimes = [0, 0.3, 1]
         transformAnimation.timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut), CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)]
         transformAnimation.isRemovedOnCompletion = false
         transformAnimation.fillMode = kCAFillModeForwards
@@ -140,6 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
                                        delay: 0.0,
                                        options: UIViewAnimationOptions.curveEaseInOut,
                                        animations: {
+                                        navigationController.view.layer.mask = nil
                                         self.window!.rootViewController!.view.transform = .identity
                         },
                                        completion: nil)
@@ -347,6 +348,7 @@ extension AppDelegate : MessagingDelegate {
                 "partnerpwd": "usgbcmobilepwd" as AnyObject,
                 "notification_status": notificationStatus as AnyObject
             ]
+        print(parameters)
             ApiManager.shared.registerFCMDevice(params: parameters){ (message, error) in
                 if(error == nil && message != nil){
                     Utility().saveAppID(appId: message!)

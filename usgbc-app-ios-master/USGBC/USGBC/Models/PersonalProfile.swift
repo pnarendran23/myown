@@ -44,6 +44,7 @@ class PersonalProfile {
     var address2 = ""
     var city = ""
     var country = ""
+    var publicdirectory = ""
     var province = ""
     var postal_code = ""
     init(){}
@@ -84,6 +85,7 @@ class PersonalProfile {
         billingaddresscity = json["billingaddresscity"].stringValue
         billingaddressprovince = json["billingaddressprovince"].stringValue
         billingaddresscountry = json["billingaddresscountry"].stringValue
-        billingaddresspostalcode = json["billingaddresspostalcode"].stringValue        
+        billingaddresspostalcode = json["billingaddresspostalcode"].stringValue
+        publicdirectory = json["publicdirectory"].stringValue
     }
 }

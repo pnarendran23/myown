@@ -35,6 +35,7 @@ class DirectoryProjectMapViewController: UIViewController, UIPopoverControllerDe
     var totalRecords = 0
     var totalCount = 0
     
+    @IBOutlet weak var nodata: UILabel!
     let geocoder = GMSGeocoder()
     
     @IBOutlet weak var mapViewTopConstraint: NSLayoutConstraint!
@@ -46,6 +47,7 @@ class DirectoryProjectMapViewController: UIViewController, UIPopoverControllerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        nodata.isHidden = true
         mapView.delegate = self
         searchBar.delegate = self
         mapView.settings.zoomGestures = true
@@ -146,6 +148,7 @@ class DirectoryProjectMapViewController: UIViewController, UIPopoverControllerDe
                 self.lastRecordsCount = projects!.count
                 self.filterProjects = self.projects
                 print(projects!.count)
+                
                 self.loadMapView()
             }else{
                 var statuscode = error?._code

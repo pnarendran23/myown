@@ -32,6 +32,7 @@ class CredentialsCEActivityViewController: UIViewController {
     @IBOutlet weak var credentialsMessageLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeight: NSLayoutConstraint!
+    @IBOutlet weak var imgview: UIImageView!
     
     var didSelecedRadioButton: Bool = false
     var selectedOption: String = ""
@@ -39,6 +40,7 @@ class CredentialsCEActivityViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.imgview.isHidden = true
         initViews()
         
     }
@@ -75,11 +77,13 @@ class CredentialsCEActivityViewController: UIViewController {
                         self.noCredentialsView.isHidden = false
                         self.credentialsMessageLabel.isHidden = false
                         self.clickHereButton.isHidden = false
+                        self.imgview.isHidden = false
                     }
                 }else{
                     self.noCredentialsView.isHidden = false
                     self.credentialsMessageLabel.isHidden = false
                     self.clickHereButton.isHidden = false
+                    self.imgview.isHidden = false
                 }
             }else{
                 Utility.hideLoading()

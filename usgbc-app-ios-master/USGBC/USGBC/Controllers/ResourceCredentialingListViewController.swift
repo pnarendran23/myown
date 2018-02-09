@@ -10,7 +10,8 @@ import UIKit
 import SwiftyJSON
 
 class ResourceCredentialingListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
-
+    @IBOutlet weak var nodata: UILabel!
+    
     fileprivate var searchText = ""
     fileprivate var category = "7456+5048+2016"
     fileprivate var loadType = "init"
@@ -234,6 +235,11 @@ extension ResourceCredentialingListViewController: UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if(filterResources.count == 0){
+            self.nodata.isHidden = false
+        }else{
+            self.nodata.isHidden = true
+        }
         return filterResources.count
     }
     

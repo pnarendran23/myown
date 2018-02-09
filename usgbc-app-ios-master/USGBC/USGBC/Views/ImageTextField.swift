@@ -19,7 +19,6 @@ class ImageTextField: UITextField {
         textRect.origin.x += padding
         return textRect
     }
-    
     // Provides right padding for image
     override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         var textRect = super.rightViewRect(forBounds: bounds)

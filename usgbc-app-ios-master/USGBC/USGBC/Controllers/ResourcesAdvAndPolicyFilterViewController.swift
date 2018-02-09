@@ -60,7 +60,7 @@ class ResourcesAdvAndPolicyFilterViewController: UIViewController {
     
     func loadResourcesLeedCount(){
  let parameter = Payloads().makePayloadForResources(typearray: typearray, formatarray: formatarray, ratingarray: ratingarray, versionarray: versionarray, accessarray: accessarray, languagearray: languagearray)
-        
+        print(parameter)
         filter = ((type.isEmpty) ? "all" : type) + "/" + ((ratingSystem.isEmpty) ? "all" : ratingSystem) + "/" + ((versions.isEmpty) ? "all" : versions) + "/" + ((language.isEmpty) ? "all" : language) + "/" + ((format.isEmpty) ? "all" : format) +  "/" + ((access.isEmpty) ? "all" : access)
         print(filter)
         ApiManager.shared.getResourcesCount(category: filter, parameter:  parameter) { count, error in
@@ -74,7 +74,6 @@ class ResourcesAdvAndPolicyFilterViewController: UIViewController {
     }
     
     @IBAction func handleClearFilter(_ sender: Any) {
-        if(self.filter != "4937+1231+7386+1236+6/all/all/all/all/all"){
             filter = "4937+1231+7386+1236+6/all/all/all/all/all"
             type = "4937+1231+7386+1236+6"
             format = ""
@@ -101,7 +100,6 @@ class ResourcesAdvAndPolicyFilterViewController: UIViewController {
             self.accessarray = []
             self.languagearray = []
             loadResourcesLeedCount()
-        }
     }
     
     @IBAction func handleDone(_ sender: Any){
