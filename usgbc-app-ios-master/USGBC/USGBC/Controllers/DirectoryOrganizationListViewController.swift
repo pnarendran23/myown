@@ -13,7 +13,10 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
 
     @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
-    fileprivate var category = "all"
+    var category = "all"
+    var rating = "all"
+    var version = "all"
+    
     fileprivate var loadType = "init"
     fileprivate var pageNumber = 0
     fileprivate var pageSize = 50
@@ -29,6 +32,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.isHidden = true
         initViews()
         
     }
@@ -79,7 +83,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
         self.pageNumber = 0
         DispatchQueue.main.async {
             Utility.showLoading()
-            self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
+            self.loadOrganizations(rating : self.rating, version : self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
         }
         
     }
@@ -107,7 +111,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
         }
         DispatchQueue.main.async {
             Utility.showLoading()
-            self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
+            self.loadOrganizations(rating : self.rating, version : self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
         }
     }
     
@@ -152,8 +156,11 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
     }
     
     //To load JSON from file
-    func loadOrganizations(category: String, search: String, page: Int, loadType: String){
-        ApiManager.shared.getOrganizationsNew (category: category, search: search, page: page, callback: {(organizations, error) in
+    func loadOrganizations(rating: String, version: String, category: String, search: String, page: Int, loadType: String){
+        Utility.showLoading()
+        var parameter = category.replacingOccurrences(of: " ", with: "%20")
+        parameter = parameter.replacingOccurrences(of: "&", with: "%26")
+        ApiManager.shared.getOrganizationsNew(rating: rating, size: 50, parameter : parameter, version: version, category: category, search: self.searchText, page: page, callback: { (organizations:[Organization]?, error:NSError?) in
             if(error == nil){
                 DispatchQueue.main.async {
                         Utility.hideLoading()
@@ -166,21 +173,42 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                     self.loading = false
                     self.pageNumber += organizations!.count
                     self.collectionView.reloadData()
+                    if(self.filterOrganizations.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterOrganizations.count)
                 }else{
-                    self.organizations.append(contentsOf: organizations!)
-                    self.lastRecordsCount = organizations!.count
-                    self.filterOrganizations = self.organizations
-                    self.collectionView.reloadData()
-                    self.loading = false
-                    self.pageNumber += organizations!.count
-                    print(self.filterOrganizations.count)
+                    if(organizations!.count > 0){
+                        self.organizations.append(contentsOf: organizations!)
+                        self.loading = false
+                        if(self.organizations.count == 0){
+                            self.loading = true
+                            Utility.showToast(message: "That was all")
+                        }
+                        self.lastRecordsCount = organizations!.count
+                        self.filterOrganizations = self.organizations
+                        self.collectionView.reloadData()
+                        self.pageNumber += organizations!.count
+                        if(self.filterOrganizations.count == 0){
+                            self.nodata.isHidden = false
+                        }else{
+                            self.nodata.isHidden = true
+                        }
+                        print(self.filterOrganizations.count)
+                    }else{
+                        Utility.showToast(message: "That was all")      
+                    }
                 }
             }else{
                 var statuscode = error?._code
                 if(statuscode != -999){
                     Utility.hideLoading()
                     Utility.showToast(message: "Something went wrong, try again later!")
+                    self.loading = false
+                        Utility.showToast(message: "That was all")
+                    
                 }
             }
         })
@@ -213,11 +241,6 @@ extension DirectoryOrganizationListViewController: UICollectionViewDelegate, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterOrganizations.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterOrganizations.count
     }
     
@@ -272,7 +295,7 @@ extension DirectoryOrganizationListViewController: UICollectionViewDelegate, UIC
             pageNumber += 1
             DispatchQueue.main.async {
                 Utility.showLoading()
-                self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
+                self.loadOrganizations(rating : self.rating, version : self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
             }
         }
     }
@@ -301,7 +324,7 @@ extension DirectoryOrganizationListViewController: UISearchBarDelegate {
         pageNumber = 0
         DispatchQueue.main.async {
             Utility.showLoading()
-            self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
+            self.loadOrganizations(rating : self.rating, version : self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
         }
     }
     
@@ -309,15 +332,18 @@ extension DirectoryOrganizationListViewController: UISearchBarDelegate {
        
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
         
-            
-            loadType = "init"
-            pageNumber = 0
+        
             DispatchQueue.main.async {
+                self.searchText = searchTxt
+                self.loadType = "init"
+                self.pageNumber = 0
                 Utility.showLoading()
+                self.loading = true
+                self.pageNumber = 0
                 ApiManager.shared.stopAllSessions()
-                self.loadOrganizations(category: self.category, search: searchText, page: self.pageNumber, loadType: self.loadType )
+                self.loadOrganizations(rating: self.rating, version: self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
                 
             }
     }
@@ -332,7 +358,7 @@ extension DirectoryOrganizationListViewController: OrganizationFilterDelegate {
         loadType = "init"
         DispatchQueue.main.async {
             Utility.showLoading()
-            self.loadOrganizations(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )
+            self.loadOrganizations(rating: self.rating, version: self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
         }
     }
 }

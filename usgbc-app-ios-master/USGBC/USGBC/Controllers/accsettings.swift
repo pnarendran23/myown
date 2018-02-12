@@ -77,7 +77,11 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
                 //imageView.image = UIImage(named: "h")
                 imageView.contentMode = .scaleAspectFill
                 let image = UIImage(named: "usgbc")
+                imageView.image = image
+                if(self.profile.image != ""){
                 imageView.kf.setImage(with: URL(string: "http://dev.usgbc.org/\(self.profile.image)"), placeholder: image)
+                }
+                
                 /*//self.tableView.parallaxHeader.view = imageView
                 self.tableView.parallaxHeader.height = 400
                 self.tableView.parallaxHeader.minimumHeight = 0
@@ -232,10 +236,10 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
                 singleTap.numberOfTapsRequired = 1;
                 cell.imgview.addGestureRecognizer(singleTap)
             }
-            if(self.profile.gender == "Male"){
+            if(self.profile.gender.lowercased() == "male"){
                 cell.imgview.image = UIImage.init(named: "male")
             }
-            if(self.profile.gender == "Female"){
+            if(self.profile.gender.lowercased() == "female"){
                 cell.imgview.image = UIImage.init(named: "female")
             }
             cell.switchh.isOn = false
@@ -351,10 +355,14 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         }
         if(self.accountdict == self.tempaccountdict){
             self.submitbtn.isEnabled = false
-            self.submitbtn.alpha = 0.3
+            self.tableView.alpha = 1
         }else{
-            self.submitbtn.isEnabled = true
-            self.submitbtn.alpha = 1
+            DispatchQueue.main.async( execute: {
+                self.spinner.isHidden = false
+                self.view.isUserInteractionEnabled = false
+                self.tableView.alpha = 0.3
+                self.updateData()
+            })
         }
         //let timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(someSelector), userInfo: nil, repeats: false)
     }
@@ -443,10 +451,12 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
                 }
                     Utility.showToast(message: "Profile updated successfully")
                     self.spinner.isHidden = true
-                    self.submitbtn.isEnabled = false
-                    self.submitbtn.alpha = 0.3
-                    self.submitbtn.setTitle("Submit", for: .normal)
-                self.tableView.reloadData()
+                    self.tableView.alpha = 1
+                    self.view.isUserInteractionEnabled = true
+                    //self.submitbtn.isEnabled = false
+                    //self.submitbtn.alpha = 0.3
+                    //self.submitbtn.setTitle("Submit", for: .normal)
+                    self.tableView.reloadData()
                 })
             }else{
                 var statuscode = error?._code as! Int
@@ -454,7 +464,8 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
                     DispatchQueue.main.async( execute: {
                     self.spinner.isHidden = true
                     self.submitbtn.isEnabled = true
-                    self.submitbtn.alpha = 1
+                    self.view.isUserInteractionEnabled = true
+                    self.tableView.alpha = 1
                     //self.view.isUserInteractionEnabled = true
                         Utility.showToast(message: "Something went wrong, try again later!")
                         self.submitbtn.setTitle("Submit", for: .normal)
@@ -557,8 +568,22 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         
         let remove = UIAlertAction.init(title: "Remove Photo", style: UIAlertActionStyle.default, handler: { (action) in
             //self.showPhotoLibrary()
-            self.profile.image = ""
-            self.tableView.reloadData()
+            let image = UIImage(named: "usgbc")
+            self.saveImageDocumentDirectory(image: image!)
+            let imagePath = (self.getDirectoryPath() as NSString).appendingPathComponent("upload.jpg")
+            var uploadimg = UIImage(contentsOfFile: imagePath)!
+            let cell = self.tableView.cellForRow(at: (NSIndexPath.init(item: 0, section: 0) as NSIndexPath) as IndexPath) as! accountcell
+            if(self.profile.gender == "Male"){
+                cell.imgview.image = UIImage.init(named: "male")
+            }
+            if(self.profile.gender == "Female"){
+                cell.imgview.image = UIImage.init(named: "female")
+            }
+            if(image != nil){
+                DispatchQueue.main.async( execute: {
+                    self.updateprofilepic(url: self.uploadimg, path: imagePath, action: "delete")
+                })
+            }
         })
         
         if(profile.image.isEmpty){
@@ -604,7 +629,7 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         cell.imgview.image = uploadimg        
         if(image != nil){
         DispatchQueue.main.async( execute: {
-            self.updateprofilepic(url: self.uploadimg, path: imagePath)
+            self.updateprofilepic(url: self.uploadimg, path: imagePath, action: "upload")
         })
         }
         
@@ -642,22 +667,20 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         self.view.endEditing(true)
         //someSelector()
         if(self.accountdict == self.tempaccountdict){
-            self.submitbtn.isEnabled = false
-            self.submitbtn.alpha = 0.3            
+            
         }else{
-            self.submitbtn.isEnabled = true
-            self.submitbtn.alpha = 1
+            DispatchQueue.main.async( execute: {
+                self.spinner.isHidden = false
+                self.view.isUserInteractionEnabled = false
+                self.tableView.alpha = 0.3
+                self.updateData()
+            })
         }
         
     }
   
     @IBAction func submit(_ sender: Any) {
-        DispatchQueue.main.async( execute: {
-        self.spinner.isHidden = false
-        self.submitbtn.isEnabled = false
-        self.submitbtn.setTitle("Submitting..", for: .normal)
-        self.updateData()
-        })
+        
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem.init(title: "Cancel", style: .plain, target: self, action: #selector(self.cancel(button:)))
@@ -712,17 +735,32 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
     }
     
     
-    func updateprofilepic(url :  UIImage, path : String){
-        ApiManager.shared.updatePersonalProfilepic(image: url, path: path, callback: {(dict, error) in
+    func updateprofilepic(url :  UIImage, path : String, action : String){
+        DispatchQueue.main.async( execute: {
+            Utility.showLoading()
+        })
+        ApiManager.shared.updatePersonalProfilepic(image: url, path: path, action : action, callback: {(dict, error) in
             if(error == nil && dict != nil){
                 DispatchQueue.main.async( execute: {
                     print(dict)
-                    self.loadPersonalProfile()
+                    if(action == "upload"){
+                        Utility.showToast(message: "Photo updated successfully")
+                        Utility.hideLoading()
+                        self.loadPersonalProfile()
+                    }else{
+                        Utility.showToast(message: "Photo removed successfully")
+                        Utility.hideLoading()
+                        self.profile.image = ""
+                        self.tableView.reloadData()
+                    }
                 })
                 
             }else{
-                Utility.showToast(message: "Something went wrong!")
-                print(error)
+                DispatchQueue.main.async( execute: {
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong!")
+                    print(error)
+                })
             }
             
         })

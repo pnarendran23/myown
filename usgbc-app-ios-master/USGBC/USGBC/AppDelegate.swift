@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
         URLCache.shared = cache
         
         //Animation
-        self.window = UIWindow(frame: UIScreen.main.bounds)
+       /* self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window!.backgroundColor = UIColor.hex(hex: Colors.primaryColor)//(red: 241/255, green: 196/255, blue: 15/255, alpha: 1)
         self.window!.makeKeyAndVisible()
         
@@ -145,7 +145,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
                         },
                                        completion: nil)
         })
-        
+        */
         
         
         

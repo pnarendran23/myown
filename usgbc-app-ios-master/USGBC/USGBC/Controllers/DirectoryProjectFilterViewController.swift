@@ -58,7 +58,15 @@ class DirectoryProjectFilterViewController: UIViewController {
                 if(self.filter == "All"){
                     self.totalCount = count!
                 }
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) projects"
+            }else{
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong")
+                }
             }
         })
     }
@@ -106,6 +114,9 @@ extension DirectoryProjectFilterViewController: UITableViewDelegate, UITableView
             cell.accessoryType = .checkmark
         }
         selectedIndexPath = indexPath
+        DispatchQueue.main.async {
+                Utility.showLoading()
+        }
         //filter = filters[indexPath.row].value
         filter = filters[indexPath.row].name
         filterChanged = true

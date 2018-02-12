@@ -1827,7 +1827,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9F7B102EB32F3772463BFD77 /* Pods-USGBC.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USGBC/USGBC.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
@@ -1852,7 +1852,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CE796639694DC2A544A2AAF /* Pods-USGBC.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USGBC/USGBC.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";

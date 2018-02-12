@@ -30,6 +30,9 @@
                         <fontDescription key="fontDescription" name="Gotham-Book" family="Gotham" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <fontDescription key="fontDescription" name="Gotham-Book" family="Gotham" pointSize="18"/>
+                        </variation>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yRt-ja-iSF">
                         <rect key="frame" x="6" y="3.5" width="83" height="83"/>

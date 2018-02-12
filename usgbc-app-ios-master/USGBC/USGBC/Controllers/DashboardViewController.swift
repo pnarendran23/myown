@@ -114,6 +114,12 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     var layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.loadArticleJson()
+        self.initViews()
+        self.loadQuickMenus()
+        self.loadSettingsMenus()
+        self.setDefaultQuickMenu()
+        self.initQuickMenu()
         self.articleCollectionView.frame.origin.y = 1.1 * (self.articleslbl.frame.size.height + self.articleslbl.frame.origin.y)
         actualrect = self.articleCollectionView.frame
         h = self.articleCollectionView.frame.size.height
@@ -164,12 +170,6 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
         DispatchQueue.main.async {
             self.helper = Utility()
             Utility.showLoading()
-            self.loadArticleJson()
-            self.initViews()
-            self.loadQuickMenus()
-            self.loadSettingsMenus()
-            self.setDefaultQuickMenu()
-            self.initQuickMenu()
             self.getPreviousNotifications()
             self.loadNotifications()
             if(self.helper.getTokenDetail() != ""){
@@ -443,11 +443,11 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     //MARK: - Logout dialog
     func showLogoutDialog(){
         let logoutAlert = UIAlertController(title: "Logout", message: "Are you sure, you want to logout? ", preferredStyle: UIAlertControllerStyle.alert)
-        logoutAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
-            self.logoutUser()
-        }))
         logoutAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
             logoutAlert .dismiss(animated: true, completion: nil)
+        }))
+        logoutAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
+            self.logoutUser()
         }))
         present(logoutAlert, animated: true, completion: nil)
     }

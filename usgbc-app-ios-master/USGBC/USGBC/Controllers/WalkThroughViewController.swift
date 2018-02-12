@@ -31,8 +31,7 @@ class WalkThroughViewController: UIViewController, PaperOnboardingDataSource, Pa
         let backgroundColorThree = UIColor.hex(hex: Colors.primaryColor)
         
         let titleFont = UIFont(name: "AvenirNext-Bold", size: 24)!
-        let descirptionFont = UIFont(name: "AvenirNext-Regular", size: 18)!
-        
+        let descirptionFont = UIFont(name: "AvenirNext-Regular", size: 18)!        
         return [("intro-usgbc", "USGBC", "The U.S. Green Building Council is committed to a prosperous and sustainable future through cost-efficient and energy-saving green buildings.", "", backgroundColorOne, UIColor.white, UIColor.white, titleFont, descirptionFont),
                 ("intro-article", "Articles", "Caramels cheesecake bonbon bonbon topping. Candy halvah cotton candy chocolate bar cake. Fruitcake liquorice candy canes marshmallow topping powder.", "", backgroundColorOne, UIColor.white, UIColor.white, titleFont, descirptionFont),
                 

@@ -13,6 +13,7 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
         return 1
     }
     
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 2
     }
@@ -246,10 +247,13 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
         }
         if(self.accountdict == self.tempaccountdict){
             self.submitbtn.isEnabled = false
-            self.submitbtn.alpha = 0.3
         }else{
-            self.submitbtn.isEnabled = true
-            self.submitbtn.alpha = 1
+            DispatchQueue.main.async {
+                self.spinner.isHidden = false
+                self.view.isUserInteractionEnabled = false
+                self.tableView.alpha = 0.3
+                self.updatedata()
+            }
         }
         self.tableView.reloadData()
        
@@ -338,8 +342,8 @@ class aboutme: UIViewController,UITableViewDataSource, UITableViewDelegate, UITe
                     }
                     Utility.showToast(message: "Profile updated successfully")
                     Utility.hideLoading()
-                    self.submitbtn.isEnabled = false
-                    self.submitbtn.alpha = 0.3
+                    self.view.isUserInteractionEnabled = true
+                    self.tableView.alpha = 1
                     self.submitbtn.setTitle("Submit", for: .normal)
                     self.tableView.reloadData()
                 })

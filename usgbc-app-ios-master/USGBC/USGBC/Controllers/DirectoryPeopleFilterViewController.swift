@@ -71,6 +71,9 @@ class DirectoryPeopleFilterViewController: UIViewController {
         }
         self.filters.removeAll()
         self.tableView.reloadData()
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         ApiManager.shared.getdirectorycounts(category : "peoplelist", strarr :strarr, callback: {(people, error) in
                 var people = people! as! NSMutableDictionary
                 if(error == nil && people.count == strarr.count){
@@ -83,12 +86,10 @@ class DirectoryPeopleFilterViewController: UIViewController {
                     self.usgbc_faculty = people["usgbc-faculty"] as! Int
                     self.usgbc_staff = people["usgbc-staff"] as! Int
                     self.usgbc_students = people["usgbc-students"] as! Int
-//                    self.all = organizations["all"] as! Int
-//                    self.education = organizations["education-partners"] as! Int
-//                    self.homes = organizations["homes-providers"] as! Int
-//                    self.roundtable = organizations["leed-international-roundtable-member"] as! Int
-//                    self.members = organizations["members"] as! Int
-//                    self.regions = organizations["regions"] as! Int
+                    DispatchQueue.main.async {
+                        Utility.hideLoading()
+                    }
+                    
                     self.loadFilters()
                     self.tableView.reloadData()
                 }else{

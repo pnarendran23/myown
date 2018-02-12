@@ -21,12 +21,16 @@ class People{
     init() {}
     
     init(json: JSON) {
-        title = json["title"].stringValue
-        UID = json["UID"].stringValue
-        job_title = json["job_title"].stringValue
-        organization_name = json["organization_name"].stringValue
-        ID = json["ID"].stringValue
-        image = json["image"].stringValue
-        address = json["address"].stringValue
+        title = (json["title"].arrayValue.first?.stringValue)!
+        if(json["uid"] == nil){
+            UID = ""
+        }else{
+            UID = (json["uid"].arrayValue.first?.stringValue)!
+        }
+        job_title = (json["job_title"].arrayValue.first?.stringValue)!
+        organization_name = (json["organization_name"].arrayValue.first?.stringValue)!
+        ID = (json["id"].arrayValue.first?.stringValue)!
+        image = (json["image"].arrayValue.first?.stringValue)!
+        address = (json["address"].arrayValue.first?.stringValue)!
     }
 }

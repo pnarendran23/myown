@@ -41,6 +41,7 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
+        self.nodata.isHidden = true
         //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
         //loadProjectsWithPagination(filterChanged: filterChanged, id: "", category: category, loadType: "init")
         
@@ -187,6 +188,11 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
                     self.collectionView.setContentOffset(.zero, animated: false)
                     self.collectionView.reloadData()
                     print("init")
+                    if(self.filterProjects.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterProjects.count)
                 }else{
                     self.projects.append(contentsOf: projects!)
@@ -195,6 +201,11 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
                     self.collectionView.reloadData()
                     self.loading = false
                     print("more")
+                    if(self.filterProjects.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterProjects.count)
                 }
             }else{
@@ -263,11 +274,6 @@ extension DirectoryProjectListViewController: UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterProjects.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterProjects.count
     }
     

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gotham-Bold.otf">
+            <string>Gotham-Bold</string>
+        </array>
+        <array key="Gotham-Medium.otf">
+            <string>Gotham-Medium</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -25,14 +33,17 @@
                             <constraint firstAttribute="width" secondItem="mKW-rQ-enW" secondAttribute="height" multiplier="8:5" constant="96" id="ELv-my-6JA"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFu-nb-soo">
-                        <rect key="frame" x="0.0" y="152" width="320" height="31.5"/>
-                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFu-nb-soo">
+                        <rect key="frame" x="0.0" y="152" width="320" height="66"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="66" id="5IU-rS-ipM"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Gotham-Bold" family="Gotham" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zfX-aC-3rV" customClass="SwiftyStarRatingView" customModule="SwiftyStarRatingView">
-                        <rect key="frame" x="-3" y="252" width="100" height="12"/>
+                        <rect key="frame" x="110" y="260" width="100" height="12"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.098039215690000001" green="0.58039215690000001" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -51,9 +62,12 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Green Building Research Institute (GBRI)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-0C-nu4">
-                        <rect key="frame" x="0.0" y="225.5" width="320" height="14.5"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Green Building Research Institute (GBRI)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-0C-nu4">
+                        <rect key="frame" x="0.0" y="225" width="320" height="27"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="27" id="6hN-fz-9qO"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Gotham-Medium" family="Gotham" pointSize="13"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -61,17 +75,24 @@
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" id="21N-xg-d5M"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="trailing" secondItem="mKW-rQ-enW" secondAttribute="trailing" id="4BO-kK-5mA"/>
+                <constraint firstAttribute="trailing" secondItem="zfX-aC-3rV" secondAttribute="trailing" constant="110" id="5ai-em-ts8"/>
                 <constraint firstAttribute="trailing" secondItem="mKW-rQ-enW" secondAttribute="trailing" id="8w2-24-owg"/>
-                <constraint firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" id="Ash-vy-KVo"/>
-                <constraint firstItem="zfX-aC-3rV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="-3" id="GnZ-uk-5wG"/>
-                <constraint firstItem="LKX-0C-nu4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Hl4-A9-30y"/>
-                <constraint firstAttribute="bottom" secondItem="zfX-aC-3rV" secondAttribute="bottom" constant="16" id="SE9-ZI-eVg"/>
+                <constraint firstItem="zfX-aC-3rV" firstAttribute="top" secondItem="LKX-0C-nu4" secondAttribute="bottom" constant="8" symbolic="YES" id="ANz-TB-7dF"/>
+                <constraint firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" id="BCR-Wa-iFj"/>
+                <constraint firstItem="zfX-aC-3rV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="110" id="GnZ-uk-5wG"/>
+                <constraint firstItem="LKX-0C-nu4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="HCp-Gz-EnS"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Hlk-mM-owH"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="top" secondItem="mKW-rQ-enW" secondAttribute="bottom" constant="12" id="LF3-RP-P98"/>
+                <constraint firstItem="LKX-0C-nu4" firstAttribute="top" secondItem="vFu-nb-soo" secondAttribute="bottom" constant="7" id="Niy-l1-SHU"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="LKX-0C-nu4" secondAttribute="leading" id="RU2-kL-OEU"/>
+                <constraint firstAttribute="bottom" secondItem="zfX-aC-3rV" secondAttribute="bottom" constant="8" id="SE9-ZI-eVg"/>
                 <constraint firstItem="mKW-rQ-enW" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="cF3-wt-gq4"/>
-                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="iV4-nC-gdT"/>
+                <constraint firstAttribute="trailing" secondItem="vFu-nb-soo" secondAttribute="trailing" id="i8x-VP-Fhg"/>
                 <constraint firstItem="mKW-rQ-enW" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="jte-ie-gcA"/>
-                <constraint firstAttribute="trailing" secondItem="vFu-nb-soo" secondAttribute="trailing" id="nc4-oR-hbc"/>
-                <constraint firstItem="vFu-nb-soo" firstAttribute="top" secondItem="mKW-rQ-enW" secondAttribute="bottom" constant="12" id="tfU-PH-hYB"/>
-                <constraint firstItem="zfX-aC-3rV" firstAttribute="top" secondItem="LKX-0C-nu4" secondAttribute="bottom" constant="12" id="vP4-tZ-jhV"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="mKW-rQ-enW" secondAttribute="leading" id="q1D-LG-CFN"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="uhC-oc-BKS"/>
             </constraints>
             <connections>
                 <outlet property="imageView" destination="mKW-rQ-enW" id="vQw-bD-DYX"/>

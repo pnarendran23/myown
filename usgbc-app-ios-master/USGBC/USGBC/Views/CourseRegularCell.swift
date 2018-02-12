@@ -22,8 +22,8 @@ class CourseRegularCell: UICollectionViewCell {
     }
     
     func initViews(){
-        titleLabel.font = UIFont.gothamBold(size: 14)
-        providerLabel.font = UIFont.gothamMedium(size: 12)
+        //titleLabel.font = UIFont.gothamBold(size: 15)
+        //providerLabel.font = UIFont.gothamMedium(size: 13)
     }
     
     func updateViews(course: Course){
@@ -32,7 +32,12 @@ class CourseRegularCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 2
         imageView.clipsToBounds = true
         titleLabel.attributedText = Utility.linespacedString(string: course.title, lineSpace: 2)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        titleLabel.attributedText = NSAttributedString(string: (titleLabel.attributedText?.string)!,attributes: [NSParagraphStyleAttributeName : paragraph])
         providerLabel.text = course.provider_name
+        self.layer.cornerRadius = 5
+        self.layer.masksToBounds = true
         ratingView.value = CGFloat(NumberFormatter().number(from: course.star_rating)!)
     }
 }

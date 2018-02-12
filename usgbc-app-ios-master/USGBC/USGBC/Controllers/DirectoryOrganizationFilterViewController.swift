@@ -60,14 +60,14 @@ class DirectoryOrganizationFilterViewController: UIViewController {
         }
         self.filters.removeAll()
         self.tableView.reloadData()
-        ApiManager.shared.getdirectorycounts(category : "organizationslist", strarr :strarr, callback: {(organization, error) in
+        ApiManager.shared.getDirectoriesCounts(callback: {(organization, error) in
             var organizations = organization! as! NSMutableDictionary
             if(error == nil && organizations.count == 6){
                     print(organizations)
-                self.all = organizations["all"] as! Int
-                self.education = organizations["education-partners"] as! Int
-                self.homes = organizations["homes-providers"] as! Int
-                self.roundtable = organizations["leed-international-roundtable-member"] as! Int
+                self.all = organizations["All"] as! Int
+                self.education = organizations["education partners"] as! Int
+                self.homes = organizations["homes providers"] as! Int
+                self.roundtable = organizations["leed international roundtable member"] as! Int
                 self.members = organizations["members"] as! Int
                 self.regions = organizations["regions"] as! Int
                 self.loadFilters()

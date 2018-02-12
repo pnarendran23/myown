@@ -33,11 +33,14 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    
+    override func viewDidLoad() {
+        self.nodata.isHidden = true
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         searchText = searchBar.text!
+        self.pageNumber = 0
         self.collectionView.keyboardDismissMode = .onDrag
         loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
         initViews()
@@ -164,6 +167,11 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     self.collectionView.setContentOffset(.zero, animated: false)
                     self.pageNumber += self.credits.count
                     self.collectionView.reloadData()
+                    if(self.filterCredits.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterCredits.count)
                     
                 }else{                    
@@ -173,6 +181,11 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     self.filterCredits = self.credits
                     self.pageNumber += credits!.count
                     self.collectionView.reloadData()
+                    if(self.filterCredits.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     self.loading = false
                     print(self.filterCredits.count)
                 }
@@ -219,11 +232,6 @@ extension CreditListViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterCredits.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterCredits.count
     }
     

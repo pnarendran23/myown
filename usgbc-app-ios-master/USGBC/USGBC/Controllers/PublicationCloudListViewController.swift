@@ -156,10 +156,20 @@ extension PublicationCloudListViewController: UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! PublicationCompactCell
         let publication = filterPublications[indexPath.row]
+        self.collectionView.isUserInteractionEnabled = false
+        Utility.showLoading()
         ApiManager.shared.downloadPublication(publication: publication, cell: cell, callback: {(publication: Publication?, error: NSError?) -> () in
             if(!(error != nil)){
+                self.collectionView.isUserInteractionEnabled = true
                 self.filterPublications = self.publications.filter() { $0.fileName != (publication?.fileName)! }
                 collectionView.reloadData()
+                Utility.hideLoading()
+            }else{
+                DispatchQueue.main.async {
+                    self.collectionView.isUserInteractionEnabled = true
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong while downloading a file")
+                }
             }
         })
     }

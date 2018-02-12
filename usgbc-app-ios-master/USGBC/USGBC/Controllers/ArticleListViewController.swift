@@ -39,6 +39,7 @@ class ArticleListViewController: UIViewController {
     override func viewDidLoad() {
         
         DispatchQueue.main.async {
+            self.nodata.isHidden = true
             Utility.showLoading()
             self.initViews()
             AppUtility.lockOrientation(.all)
@@ -154,6 +155,11 @@ class ArticleListViewController: UIViewController {
                             //self.filterArticles = self.filterArticles.sorted(by: {$0.postedDate > $1.postedDate})
                             DispatchQueue.main.async {
                                 self.filterArticles = self.articles
+                                if(self.filterArticles.count == 0){
+                                    self.nodata.isHidden = false
+                                }else{
+                                    self.nodata.isHidden = true
+                                }
                                 self.collectionView.reloadData()                                
                                 Utility.hideLoading()
                             }
@@ -379,16 +385,36 @@ class ArticleListViewController: UIViewController {
                     self.articles = articles!
                     self.lastRecordsCount = articles!.count
                     self.filterArticles = self.articles
+                    self.pageNumber += articles!.count + 1
                     self.collectionView.setContentOffset(.zero, animated: false)
+                    if(self.filterArticles.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
+                    Utility.hideLoading()
                     self.collectionView.reloadData()
                     print(self.filterArticles.count)
                 }else{
-                    self.articles.append(contentsOf: articles!)
-                    self.lastRecordsCount = articles!.count
-                    self.filterArticles = self.articles
-                    self.collectionView.reloadData()
-                    self.loading = false
-                    print(self.filterArticles.count)
+                    if(articles!.count > 0){
+                        self.articles.append(contentsOf: articles!)
+                        self.lastRecordsCount = articles!.count
+                        self.filterArticles = self.articles
+                        self.pageNumber += articles!.count + 1
+                        self.collectionView.reloadData()
+                        if(self.filterArticles.count == 0){
+                            self.nodata.isHidden = false
+                        }else{
+                            self.nodata.isHidden = true
+                        }
+                        self.loading = false
+                        print(self.filterArticles.count)
+                        Utility.hideLoading()
+                    }else{
+                        Utility.showToast(message: "That was all")
+                        Utility.hideLoading()
+                        self.loading = true
+                    }
                 }
             }else{
                 Utility.hideLoading()
@@ -430,11 +456,6 @@ extension ArticleListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterArticles.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterArticles.count
     }
     
@@ -533,12 +554,13 @@ extension ArticleListViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        if indexPath.row == filterArticles.count-1 && !loading && lastRecordsCount == pageSize {
-//            loading = true
-//            loadType = "more"
-//            pageNumber += 1
-//            loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
-//        }
+        if indexPath.row == filterArticles.count-1 && !loading {
+            loading = true
+            loadType = "more"
+            Utility.showLoading()
+            pageNumber += 1
+            loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -577,9 +599,11 @@ extension ArticleListViewController: UISearchBarDelegate {
             hideSearch()
             loadType = "init"
             pageNumber = 0
-            //loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            self.loading = true
             filterArticles = articles
             collectionView.reloadData()
+            Utility.showLoading()
+            loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
         }
     }
     

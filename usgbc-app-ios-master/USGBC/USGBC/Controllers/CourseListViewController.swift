@@ -51,11 +51,13 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        self.pageNumber = 0
+        self.loading = true
         loadFilters()
         self.collectionView.keyboardDismissMode = .onDrag
         if(isFiltered || courses.count == 0){
             Utility.showLoading()
-            loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            loadCourses(category: category, search: searchText, size: 50, page: pageNumber, loadType: loadType)
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -132,7 +134,7 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
             searchBar.resignFirstResponder()
             hideSearch()
         }
-        loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        loadCourses(category: category, search: searchText,size: 50, page: pageNumber, loadType: loadType)
     }
     
     @IBAction func handleFilter(_ sender: Any) {
@@ -176,7 +178,7 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
     }
     
     //To load courses from server
-    func loadCourses(category: String, search: String, page: Int, loadType: String){
+    func loadCourses(category: String, search: String, size : Int, page: Int, loadType: String){
         Utility.showLoading()
         var parameter = Payloads().makePayloadForCourses(continuousarr: continuousarray, versionarr: versionarrar, categoryarr: categoryarray, formatarr: formatarray, levelarr: levelarray, languagearr: languagearr)
         if(search.characters.count > 0){
@@ -187,23 +189,33 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
             }
         }
         
-        ApiManager.shared.getCoursesNew(category: category, parameter: parameter, search: search, page: page, callback: { (courses, error) in
+        ApiManager.shared.getCoursesNew(category: category, parameter: parameter, search: search, size: size, page: page, callback: { (courses, error) in
             if(error == nil){
-                Utility.hideLoading()
                 if(loadType == "init"){
                     self.courses = courses!
                     self.lastRecordsCount = courses!.count
                     self.filterCourses = self.courses
+                    self.pageNumber += courses!.count + 1
                     self.collectionView.setContentOffset(.zero, animated: false)
-                    self.collectionView.reloadData()
-                    print(self.filterCourses.count)
-                }else{
-                    self.courses.append(contentsOf: courses!)
-                    self.lastRecordsCount = courses!.count
-                    self.filterCourses = self.courses
                     self.collectionView.reloadData()
                     self.loading = false
                     print(self.filterCourses.count)
+                }else{
+                    if(courses!.count > 0){
+                        self.courses.append(contentsOf: courses!)
+                        self.lastRecordsCount = courses!.count
+                        self.filterCourses = self.courses
+                        self.pageNumber += courses!.count + 1
+                        self.collectionView.reloadData()
+                        self.loading = false
+                        print(self.filterCourses.count)
+                    }else{
+                        self.loading = true
+                        Utility.showToast(message: "That was all")
+                    }
+                }
+                DispatchQueue.main.async{
+                    Utility.hideLoading()
                 }
             }else{
                 var statuscode = error?._code as! Int
@@ -354,6 +366,8 @@ extension CourseListViewController: UICollectionViewDelegate, UICollectionViewDa
 //        if UI_USER_INTERFACE_IDIOM() == .pad {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CourseRegularCell", for: indexPath) as! CourseRegularCell
             cell.updateViews(course: course)
+        cell.contentView.layer.cornerRadius = 5
+        cell.contentView.layer.masksToBounds = true
             return cell
 //        }else{
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CourseCompactCell", for: indexPath) as! CourseCompactCell
@@ -369,11 +383,11 @@ extension CourseListViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterCourses.count-1 && !loading && lastRecordsCount == pageSize {
+        if indexPath.row == filterCourses.count-1 && !loading {
             loading = true
             loadType = "more"
             pageNumber += 1
-            loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            loadCourses(category: category, search: searchText,size: 50, page: pageNumber, loadType: loadType)
         }
     }
     
@@ -399,14 +413,20 @@ extension CourseListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
-        loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        loadCourses(category: category, search: searchText, size: 50, page: pageNumber, loadType: loadType)
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        loadType = "init"
-        pageNumber = 0
-        ApiManager.shared.stopAllSessions()
-        loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        DispatchQueue.main.async{
+            self.loadType = "init"
+            self.pageNumber = 0
+            self.searchText = searchText
+            ApiManager.shared.stopAllSessions()
+            Utility.showLoading()
+            self.loading = true
+            self.loadCourses(category: self.category, search: self.searchText, size: 50, page: self.pageNumber, loadType: self.loadType)
+        }
+        
     }
     
 }
@@ -480,7 +500,7 @@ extension CourseListViewController: CourseFilterDelegate {
             searchText = ""
             loadType = "init"
             pageNumber = 0
-            loadCourses(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            loadCourses(category: category, search: searchText, size: 50, page: pageNumber, loadType: loadType)
         }
     }
 }

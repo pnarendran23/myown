@@ -10,7 +10,8 @@ import UIKit
 import SwiftyJSON
 
 class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate{
-
+    var rating = ""
+    var version = ""
     @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var category = "all"
@@ -29,6 +30,7 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.isHidden = true
         initViews()
         
     }
@@ -152,7 +154,9 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
     //To load JSON from file
     func loadPeople(category: String, search: String, page: Int, loadType: String){
         Utility.showLoading()
-        ApiManager.shared.getPeopleNew (category: category, search: search, page: page, callback:{ (people, error) in
+        var parameter = category.replacingOccurrences(of: " ", with: "%20")
+        parameter = parameter.replacingOccurrences(of: "&", with: "%26")
+        ApiManager.shared.getPeopleNew(rating: rating, size: 50, parameter : parameter, version: version, category: category, search: self.searchText, page: page, callback: { (people:[People]?, error:NSError?) in
             if(error == nil){
                 DispatchQueue.main.async {
                     Utility.hideLoading()                 
@@ -163,6 +167,11 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                     self.filterPeople = self.people
                     self.collectionView.setContentOffset(.zero, animated: false)
                     self.collectionView.reloadData()
+                    if(self.filterPeople.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterPeople.count)
                 }else{
                     self.people.append(contentsOf: people!)
@@ -170,6 +179,11 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                     self.filterPeople = self.people
                     self.collectionView.reloadData()
                     self.loading = false
+                    if(self.filterPeople.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.filterPeople.count)
                 }
             }else{
@@ -209,11 +223,6 @@ extension DirectoryPeopleListViewController: UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterPeople.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterPeople.count
     }
     

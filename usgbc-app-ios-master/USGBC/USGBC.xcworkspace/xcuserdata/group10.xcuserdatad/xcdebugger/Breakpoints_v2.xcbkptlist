@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/DirectoryOrganizationFilterViewController.swift"
-            timestampString = "539777613.090559"
+            filePath = "USGBC/Requests/ApiManager.swift"
+            timestampString = "539962476.812155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "loadOrganizationsCount()"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "updatePersonalProfilepic(image:path:action:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.090997"
+            timestampString = "539962476.813488"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1711"
-            endingLineNumber = "1711"
-            landmarkName = "getPeopleCount(category:callback:)"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
+            landmarkName = "updatePersonalProfilepic(image:path:action:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.09139"
+            filePath = "USGBC/Controllers/WalkThroughViewController.swift"
+            timestampString = "539860118.634994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1712"
-            endingLineNumber = "1712"
-            landmarkName = "getPeopleCount(category:callback:)"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,253 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.0914969"
+            filePath = "USGBC/Controllers/WalkThroughViewController.swift"
+            timestampString = "539860118.635219"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1718"
-            endingLineNumber = "1718"
-            landmarkName = "getPeopleCount(category:callback:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.091596"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1719"
-            endingLineNumber = "1719"
-            landmarkName = "getPeopleCount(category:callback:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.091687"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1702"
-            endingLineNumber = "1702"
-            landmarkName = "getPeopleCount(category:callback:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "USGBC.ApiManager.getPeopleCount(category: Swift.String, callback: (Swift.Optional&lt;Swift.Int&gt;, Swift.Optional&lt;__ObjC.NSError&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "USGBC"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/usgbc-app-ios-master/USGBC/USGBC/Requests/ApiManager.swift"
-                  timestampString = "539769717.3443871"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1703"
-                  endingLineNumber = "1703"
-                  offsetFromSymbolStart = "1043">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Alamofire.DataResponse&lt;Any&gt;) -&gt; () in USGBC.ApiManager.getPeopleCount(category: Swift.String, callback: (Swift.Optional&lt;Swift.Int&gt;, Swift.Optional&lt;__ObjC.NSError&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "USGBC"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/usgbc-app-ios-master/USGBC/USGBC/Requests/ApiManager.swift"
-                  timestampString = "539769717.348418"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1704"
-                  endingLineNumber = "1704"
-                  offsetFromSymbolStart = "39">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.091777"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1027"
-            endingLineNumber = "1027"
-            landmarkName = "getCoursesNew(category:parameter:search:page:callback:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.091863"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1032"
-            endingLineNumber = "1032"
-            landmarkName = "getCoursesNew(category:parameter:search:page:callback:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/DirectoryPeopleFilterViewController.swift"
-            timestampString = "539777613.09197"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "loadPeopleCount()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Requests/ApiManager.swift"
-            timestampString = "539777613.0923409"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1414"
-            endingLineNumber = "1414"
-            landmarkName = "getCredits(rating:size:parameter:version:credit:search:page:callback:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/CreditListViewController.swift"
-            timestampString = "539777613.092442"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "loadCredits(rating:version:credit:search:page:loadType:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "USGBC.CreditListViewController.loadCredits(rating: Swift.String, version: Swift.String, credit: Swift.String, search: Swift.String, page: Swift.Int, loadType: Swift.String) -&gt; ()"
-                  moduleName = "USGBC"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/usgbc-app-ios-master/USGBC/USGBC/Controllers/CreditListViewController.swift"
-                  timestampString = "539777358.44832"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "156"
-                  endingLineNumber = "156"
-                  offsetFromSymbolStart = "1381">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;USGBC.Credit&gt;&gt;, Swift.Optional&lt;__ObjC.NSError&gt;) -&gt; () in USGBC.CreditListViewController.loadCredits(rating: Swift.String, version: Swift.String, credit: Swift.String, search: Swift.String, page: Swift.Int, loadType: Swift.String) -&gt; ()"
-                  moduleName = "USGBC"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/usgbc-app-ios-master/USGBC/USGBC/Controllers/CreditListViewController.swift"
-                  timestampString = "539777358.4503959"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "157"
-                  endingLineNumber = "157"
-                  offsetFromSymbolStart = "37">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/CreditListViewController.swift"
-            timestampString = "539777613.09365"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "278"
-            endingLineNumber = "278"
-            landmarkName = "collectionView(_:willDisplay:forItemAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/CreditListViewController.swift"
-            timestampString = "539777613.094196"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "277"
-            endingLineNumber = "277"
-            landmarkName = "collectionView(_:willDisplay:forItemAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/CreditListViewController.swift"
-            timestampString = "539777613.094788"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "274"
-            endingLineNumber = "274"
-            landmarkName = "collectionView(_:willDisplay:forItemAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "USGBC/Controllers/CreditListViewController.swift"
-            timestampString = "539777613.0954289"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "276"
-            endingLineNumber = "276"
-            landmarkName = "collectionView(_:willDisplay:forItemAt:)"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "onboardingConfigurationItem(_:index:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

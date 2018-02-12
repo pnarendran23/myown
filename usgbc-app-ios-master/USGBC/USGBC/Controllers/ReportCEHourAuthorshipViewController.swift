@@ -289,7 +289,7 @@ class ReportCEHourAuthorshipViewController: UIViewController {
         ceReport.url = "https://www.usgbc.org/test-link"//url
         ceReport.hours = ceHours
         ceReport.cehour_type = ceType
-        ceReport.email = "esingh@usgbc.org"//Utility().getUserDetail()
+        ceReport.email = Utility().getUserDetail()
         Utility.showLoading()
         ApiManager.shared.reportCEHours(ceReport: ceReport, callback: {(json, error) in
             if(error == nil){

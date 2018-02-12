@@ -49,6 +49,7 @@ class CourseFilterViewController: UIViewController {
         if let selectionIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
+        self.tableView.reloadData()
     }
     
     func initViews(){
@@ -156,7 +157,11 @@ class CourseFilterViewController: UIViewController {
                     self.totalCount = count!
                 }
                 Utility.hideLoading()
+                self.tableView.reloadData()
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) courses"
+            }else{
+                Utility.showToast(message: "Something went wrong")
+                self.tableView.reloadData()
             }
         })
     }
@@ -192,6 +197,28 @@ extension CourseFilterViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            var temp = NSMutableArray()
+            if(indexPath.row == 0){
+                temp = self.continuousarray
+            }else if(indexPath.row == 1){
+                temp = self.versionarrar
+            }else if(indexPath.row == 2){
+                temp = self.categoryarray
+            }else if(indexPath.row == 3){
+                temp = self.formatarray
+            }else if(indexPath.row == 4){
+                temp = self.levelarray
+            }else if(indexPath.row == 5){
+                temp = self.languagearr
+            }
+            if(temp.count > 0){
+                var str = temp.componentsJoined(by: ", ")
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+                cell.textLabel?.text = filters[indexPath.row].name
+                cell.detailTextLabel?.text = str
+                return cell
+            }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
         cell.filterLabel.text = filters[indexPath.row].name
         return cell

@@ -45,6 +45,7 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.isHidden = true
         self.collectionView.keyboardDismissMode = .onDrag
         initViews()
     }
@@ -261,7 +262,7 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
             parameter = search + "%20AND%20(" + parameter + ")"
         }
         
-        ApiManager.shared.getResources(category: category, parameter : parameter, search: search, page: page, callback: { (resources:[Resource]?, error:NSError?) in
+        ApiManager.shared.getResources(category: category, parameter : parameter, size: 50, search: search, page: page, callback: { (resources:[Resource]?, error:NSError?) in
             if(error == nil){
                 if(loadType == "init"){
                     self.resources = resources!
@@ -269,13 +270,28 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
                     self.filterResources = self.resources
                     self.collectionView.setContentOffset(.zero, animated: false)
                     self.collectionView.reloadData()
+                    if(self.filterResources.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
                     print(self.resources.count)
                 }else{
+                    if(resources!.count > 0){
                     self.resources.append(contentsOf: resources!)
                     self.lastRecordsCount = resources!.count
                     self.filterResources = self.resources
                     self.collectionView.reloadData()
                     self.loading = false
+                    if(self.filterResources.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
+                    }else{
+                        self.loading = true
+                        Utility.showToast(message: "That was all")
+                    }
                     print(self.filterResources.count)
                 }
                 Utility.hideLoading()
@@ -325,11 +341,6 @@ extension ResourceLeedListViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(filterResources.count == 0){
-            self.nodata.isHidden = false
-        }else{
-            self.nodata.isHidden = true
-        }
         return filterResources.count
     }
     
@@ -378,11 +389,15 @@ extension ResourceLeedListViewController: UICollectionViewDelegate, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterResources.count-1 && !loading && lastRecordsCount == pageSize {
-            loading = true
-            loadType = "more"
-            pageNumber += 1
-            loadResources(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        
+        if indexPath.row == filterResources.count-1 && !loading {
+            DispatchQueue.main.async {
+                Utility.showLoading()
+                self.loading = true
+                self.loadType = "more"
+                self.pageNumber += 1
+                self.loadResources(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
+            }
         }
     }
     
@@ -413,10 +428,15 @@ extension ResourceLeedListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        loadType = "init"
-        pageNumber = 0
-        ApiManager.shared.stopAllSessions()
-        loadResources(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        DispatchQueue.main.async {
+            Utility.showLoading()
+            self.searchText = searchText
+            self.loading = true
+            self.loadType = "init"
+            self.pageNumber = 0
+            ApiManager.shared.stopAllSessions()
+            self.loadResources(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
+        }
     }
 }
 

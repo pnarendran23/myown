@@ -18,6 +18,7 @@ class FavoriteListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.isHidden = true
         initViews()
     }
     
@@ -45,6 +46,11 @@ class FavoriteListViewController: UIViewController {
             print("favorites count: \(self.favorites.count)")
         }else{
             self.favorites = Array(favorites_array)
+        }
+        if(self.favorites.count > 0){
+            self.nodata.isHidden = true
+        }else{
+            self.nodata.isHidden = false
         }
         tableView.reloadData()
     }
@@ -86,11 +92,6 @@ class FavoriteListViewController: UIViewController {
 // MARK: UITableView delegates
 extension FavoriteListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(favorites.count > 0){
-            self.nodata.isHidden = true
-        }else{
-            self.nodata.isHidden = false
-        }
         return favorites.count
     }
     
