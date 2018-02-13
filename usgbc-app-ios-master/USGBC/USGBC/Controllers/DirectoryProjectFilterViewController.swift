@@ -9,11 +9,11 @@
 import UIKit
 
 protocol ProjectFilterDelegate: class {
-    func userDidSelectedFilter(filter: String, totalCount: Int)
+    func userDidSelectedFilter(filter: String, totalCount: Int, selfilter : [String])
 }
 
 class DirectoryProjectFilterViewController: UIViewController {
-    
+    var selectedfilter : [String] = ["all","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
     var filter: String!
     weak var delegate: ProjectFilterDelegate?
     fileprivate var filterChanged = false
@@ -51,30 +51,47 @@ class DirectoryProjectFilterViewController: UIViewController {
             }
         }
     }
-    
+    var countDict = NSMutableDictionary()
     func loadTotalProjectsCount(){
-        ApiManager.shared.getProjectsCount(category: filter, size: 50, callback: { (count, error) in
-            if(error == nil){
-                if(self.filter == "All"){
-                    self.totalCount = count!
+        var v : [String] = []
+        ApiManager.shared.getProjectscounts(callback: {(people, error) in
+         print(people)
+            var tempdict = NSMutableDictionary()
+            if(people != nil && error == nil){
+                for item in people!{
+                    var s = item as! NSDictionary
+                    tempdict[s["key"] as! String] = s["doc_count"] as! Int
                 }
-                DispatchQueue.main.async {
-                    Utility.hideLoading()
-                }
-                self.totalResultsLabel.text = "\(count!) of \(self.totalCount) projects"
+                self.countDict = tempdict
+                self.tableView.reloadData()
+                print(tempdict)
             }else{
-                DispatchQueue.main.async {
-                    Utility.hideLoading()
-                    Utility.showToast(message: "Something went wrong")
-                }
+                
             }
+            
+            
         })
+//            if(error == nil){
+//                if(self.filter == "All"){
+//                    self.totalCount = count!
+//                }
+//                DispatchQueue.main.async {
+//                    Utility.hideLoading()
+//                }
+//                self.totalResultsLabel.text = "\(count!) of \(self.totalCount) projects"
+//            }else{
+//                DispatchQueue.main.async {
+//                    Utility.hideLoading()
+//                    Utility.showToast(message: "Something went wrong")
+//                }
+//            }
+        
     }
     
     @IBAction func handleDone(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedFilter(filter: filter, totalCount: totalCount)//.lowercased()).replacingOccurrences(of: " ", with: "-"))
+                delegate.userDidSelectedFilter(filter: filter, totalCount: totalCount, selfilter: self.selectedfilter)//.lowercased()).replacingOccurrences(of: " ", with: "-"))
                 //delegate.userDidSelectedFilter(filter: filter)
             }
         }
@@ -103,23 +120,39 @@ extension DirectoryProjectFilterViewController: UITableViewDelegate, UITableView
             cell.accessoryType = .none
         }
         cell.subFilterLabel.text = filters[indexPath.row].name
+        if(filters[indexPath.row].name == "All"){
+            var temp = 0
+            for (item,value) in countDict{
+                temp += value as! Int
+            }
+            cell.subFilterLabel.text = "\(filters[indexPath.row].name) (\(temp))"
+        }else{
+            if(countDict.count > 0 && countDict[filters[indexPath.row].name] != nil){
+                cell.subFilterLabel.text = "\(filters[indexPath.row].name) (\(countDict[filters[indexPath.row].name] as! Int))"
+            }else{
+                cell.subFilterLabel.text = "\(filters[indexPath.row].name) (0)"
+            }
+        }
+        
+        if(selectedfilter[indexPath.row] != ""){
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: selectedIndexPath) {
-            cell.accessoryType = .none
-        }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .checkmark
+        if(selectedfilter[indexPath.row] == ""){
+            selectedfilter[indexPath.row] = filters[indexPath.row].name
+        }else{
+            selectedfilter[indexPath.row] = ""
         }
         selectedIndexPath = indexPath
-        DispatchQueue.main.async {
-                Utility.showLoading()
-        }
-        //filter = filters[indexPath.row].value
+        
         filter = filters[indexPath.row].name
         filterChanged = true
-        loadTotalProjectsCount()
+        self.tableView.reloadData()
     }
 }

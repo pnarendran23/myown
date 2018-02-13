@@ -16,6 +16,8 @@ class ReportCEHourAuthorshipViewController: UIViewController {
     @IBOutlet weak var providerTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var urlTextField: UITextField!
+    var edit = false
+    var ceReport = CEReport()
     @IBOutlet weak var greenAssociateRadioButton: DLRadioButton!
     @IBOutlet weak var bdcRadioButton: DLRadioButton!
     @IBOutlet weak var omRadioButton: DLRadioButton!
@@ -35,6 +37,35 @@ class ReportCEHourAuthorshipViewController: UIViewController {
     var endDates: NSDate!
     var leedSpecific: String = ""
     var cred_specific_record: [SpecificCredentials] = []
+    
+    
+    override func viewDidAppear(_ animated: Bool) {        
+//        v.edit = true
+//        v.ceReport.start_date = self.selected_array.field_ce_course_from_date_value
+//        v.ceReport.end_date = self.selected_array.field_ce_course_to_date_value
+//        v.ceReport.title = self.selected_array.field_ce_course_title_value
+//        v.ceReport.provider = self.selected_array.field_ce_course_provider_value
+//        v.ceReport.hours = self.selected_array.field_ce_hours_reported_value
+//        v.ceReport.description = self.selected_array.field_ce_course_desc_value
+//        v.ceReport.url = self.selected_array.field_ce_url_value
+        if(edit == true){
+            self.titleTextField.text = ceReport.title
+            self.providerTextField.text = ceReport.provider
+            self.ceHoursTextField.text = ceReport.hours
+            self.descriptionTextView.text = ceReport.description
+            self.urlTextField.text = ceReport.url
+            var dateformat = DateFormatter()
+            dateformat.dateFormat = "dd MMM yyyy"
+            var dt = dateformat.date(from: ceReport.start_date) as! NSDate
+            self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            startDates = dt
+            dt = dateformat.date(from: ceReport.end_date) as! NSDate
+            self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            endDates = dt
+            
+        }
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -278,9 +309,8 @@ class ReportCEHourAuthorshipViewController: UIViewController {
         }
         if(leedSpecific == ""){
             Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
-            return
+            //return
         }
-        let ceReport = CEReport()
         ceReport.title = title
         ceReport.provider = provider
         ceReport.start_date = startDate

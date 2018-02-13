@@ -10,15 +10,23 @@ import UIKit
 import Foundation
 
 class Payloads {
-
-    func makePayloadForResources(typearray : [String], formatarray : [String], ratingarray :[String], versionarray : [String], accessarray : [String], languagearray : [String]) -> String{
+    func makePayloadForResources(typearray : [String], formatarray : [String], ratingarray :[String], versionarray : [String], accessarray : [String], languagearray : [String], currentcategory : String) -> String{
+    var size = 0
     var typestring = String()
     var formatstring = String()
     var accessstring = String()
     var versionstring = String()
     var languagestring = String()
     var ratingstring = String()
-    
+        if(currentcategory == "leed"){
+                size = 7
+        }else if(currentcategory == "adv"){
+            size = 5
+        }else{
+            size = 3
+        }
+    print("cc is",currentcategory)
+        if(typearray.count < size){
     for str in typearray{
     if(typestring.characters.count > 0){
     typestring = typestring + "%20OR%20" + str
@@ -26,12 +34,13 @@ class Payloads {
     typestring = "field_res_type:" + str
     }
     }
+        }
     
     for str in formatarray{
     if(formatstring.characters.count > 0){
     formatstring = formatstring + "%20OR%20" + str
     }else{
-    if(typestring.characters.count == 0){
+    if(typestring.characters.count == 0 || typestring.characters.count == size){
     formatstring = "field_format:" + str
     }else{
     formatstring = "%20AND%20field_format:" + str
@@ -40,13 +49,20 @@ class Payloads {
     }
     
     for str in ratingarray{
+        var s = str
+        var arr = NSArray()
+        if(str.contains(":")){
+            arr = str.components(separatedBy: ":") as NSArray
+            s = arr[1] as! String
+            //ratingstring = "%20AND%20field_res_rating:" + arr[1]
+        }
     if(ratingstring.characters.count > 0){
-    ratingstring = ratingstring + "%20OR%20" + str
+    ratingstring = ratingstring + "%20OR%20" + s
     }else{
     if(typestring.characters.count > 0 || formatstring.characters.count > 0){
-    ratingstring = "%20AND%20field_res_rating:" + str
+    ratingstring = "%20AND%20field_res_rating:" + s
     }else{
-    ratingstring = "field_res_rating:" + str
+    ratingstring = "field_res_rating:" + s
     }
     }
     }
@@ -90,6 +106,7 @@ class Payloads {
     print(typestring+formatstring+ratingstring+accessstring+versionstring+languagestring)
     var parameter = typestring+formatstring+ratingstring+accessstring+versionstring+languagestring
     parameter = parameter.replacingOccurrences(of: " ", with: "%20")
+        parameter = parameter.replacingOccurrences(of: "partners", with: "partner")
     return parameter
 }
 
@@ -104,21 +121,26 @@ class Payloads {
         for s in continuousarr{
             var str = s as! String
             if(continuousstring.characters.count > 0){
-                continuousstring = continuousstring + "%20OR%20" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                continuousstring = continuousstring + "%20OR%20" + "\"" + str + "\""
             }else{
-                continuousstring = "Continuing%20education:" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                continuousstring = "Continuing%20education:" + "\"" + str + "\""
             }
         }
         
         for s in versionarr{
             var str = s as! String
             if(versionstring.characters.count > 0){
-                versionstring = versionstring + "%20OR%20" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                versionstring = versionstring + "%20OR%20" + "\"" + str + "\""
             }else{
                 if(continuousstring.characters.count == 0){
-                    versionstring = "Rating%20system%20version:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    versionstring = "Rating%20system%20version:" + "\"" + str + "\""
                 }else{
-                    versionstring = "%20AND%20Rating%20system%20version:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    versionstring = "%20AND%20Rating%20system%20version:" + "\"" + str + "\""
                 }
             }
         }
@@ -126,12 +148,15 @@ class Payloads {
         for s in categoryarr{
             var str = s as! String
             if(categorystring.characters.count > 0){
-                categorystring = categorystring + "%20OR%20" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                categorystring = categorystring + "%20OR%20" + "\"" + str + "\""
             }else{
                 if(continuousstring.characters.count > 0 || versionstring.characters.count > 0){
-                    categorystring = "%20AND%20LEED%20credit%20category:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    categorystring = "%20AND%20LEED%20credit%20category:" + "\"" + str + "\""
                 }else{
-                    categorystring = "LEED%20credit%20category:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    categorystring = "LEED%20credit%20category:" + "\"" + str + "\""
                 }
             }
         }
@@ -139,38 +164,45 @@ class Payloads {
         for s in formatarr{
             var str = s as! String
             if(formatstring.characters.count > 0){
-                formatstring = formatstring + "%20OR%20" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                formatstring = formatstring + "%20OR%20" + "\"" + str + "\""
             }else{
                 if(continuousstring.characters.count > 0 || versionstring.characters.count > 0 || categorystring.characters.count > 0){
-                    formatstring = "%20AND%20Course%20format:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    formatstring = "%20AND%20Course%20format:" + "\"" + str + "\""
                 }else{
-                    formatstring = "Course%20format:" + str
+                    str = str.replacingOccurrences(of: ":", with: "%3A")
+                    formatstring = "Course%20format:" + "\"" + str + "\""
                 }
             }
         }
         
         for s in levelarr{
             var str = s as! String
+            str = str.replacingOccurrences(of: ":", with: "%3A")
             if(levelstring.characters.count > 0){
-                levelstring = levelstring + "%20OR%20" + str
+                str = str.replacingOccurrences(of: ":", with: "%3A")
+                levelstring = levelstring + "%20OR%20" + "\"" + str + "\""
             }else{
+                str = str.replacingOccurrences(of: ":", with: "%3A")
                 if(continuousstring.characters.count > 0 || versionstring.characters.count > 0 || categorystring.characters.count > 0 || formatstring.characters.count > 0){
-                    levelstring = "%20AND%20Course%20level:" + str
+                    levelstring = "%20AND%20Course%20level:" + "\"" + str + "\""
                 }else{
-                    levelstring = "Course%20level:" + str
+                    levelstring = "Course%20level:" + "\"" + str + "\""
                 }
             }
         }
         
         for s in languagearr{
             var str = s as! String
+            str = str.replacingOccurrences(of: ":", with: "%3A")
             if(languagestring.characters.count > 0){
-                languagestring = languagestring + "%20OR%20" + str
+                languagestring = languagestring + "%20OR%20" + "\"" + str + "\""
             }else{
                 if(continuousstring.characters.count > 0 || versionstring.characters.count > 0 || categorystring.characters.count > 0 || formatstring.characters.count > 0 || levelstring.characters.count > 0){
-                    languagestring = "%20AND%20Course%20language:" + str
+                    languagestring = "%20AND%20Course%20language:" + "\"" + str + "\""
                 }else{
-                    languagestring = "Course%20language:" + str
+                    languagestring = "Course%20language:" + "\"" + str + "\""
                 }
             }
         }

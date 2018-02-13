@@ -10,7 +10,7 @@ import UIKit
 import SwiftyJSON
 
 class CreditListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
-
+    var selectedfilter : [String] = ["all","","","","","","","","","","","","",""]
     @IBOutlet weak var nodata: UILabel!
     fileprivate var searchText = ""
     fileprivate var pageNumber = 0
@@ -42,6 +42,9 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
         searchText = searchBar.text!
         self.pageNumber = 0
         self.collectionView.keyboardDismissMode = .onDrag
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
         initViews()
     }
@@ -156,7 +159,6 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
     func loadCredits(rating: String, version: String, credit: String, search: String, page: Int, loadType: String){
         Utility.showLoading()
         var parameter = category.replacingOccurrences(of: " ", with: "%20")
-        parameter = parameter.replacingOccurrences(of: "&", with: "%26")
         ApiManager.shared.getCredits(rating: rating, size: 50, parameter : parameter, version: version, credit: credit, search: search, page: page, callback: { (credits:[Credit]?, error:NSError?) in
             if(error == nil){
                 Utility.hideLoading()
@@ -173,8 +175,11 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                         self.nodata.isHidden = true
                     }
                     print(self.filterCredits.count)
-                    
-                }else{                    
+                    DispatchQueue.main.async {
+                        Utility.hideLoading()
+                    }
+                }else{
+                    if(credits!.count > 0){
                     self.credits.append(contentsOf: credits!)
                     self.lastRecordsCount = credits!.count
                     self.filterCredits.removeAll()
@@ -188,6 +193,13 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     }
                     self.loading = false
                     print(self.filterCredits.count)
+                    }else{
+                        DispatchQueue.main.async {
+                            Utility.hideLoading()
+                            Utility.showToast(message: "That was all")
+                            self.loading = true
+                        }
+                    }
                 }
             }else{
                 var statuscode = error?._code
@@ -213,6 +225,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                 viewController.filter = credit
                 viewController.totalCount = totalCount
                 viewController.category = category
+                viewController.selectedfilter = selectedfilter
             }
         }
     }
@@ -283,10 +296,12 @@ extension CreditListViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == filterCredits.count-1 && !loading {
-            loading = true
-            loadType = "more"
-            pageNumber += 1
-            loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
+            DispatchQueue.main.async {
+                self.loading = true
+                self.loadType = "more"
+                self.pageNumber += 1
+                self.loadCredits(rating: self.rating, version: self.version, credit: self.credit, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
+            }
         }
     }
     
@@ -321,24 +336,45 @@ extension CreditListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        loadType = "init"
-        pageNumber = 0
-        searchBar.showsCancelButton = false
-        ApiManager.shared.stopAllSessions()
-        Utility.showLoading()
-        loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
+        DispatchQueue.main.async {
+            self.loadType = "init"
+            self.pageNumber = 0
+            self.searchBar.showsCancelButton = false
+            ApiManager.shared.stopAllSessions()
+            Utility.showLoading()
+            self.loadCredits(rating: self.rating, version: self.version, credit: self.credit, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
+        }
     }
 }
 
 //MARK: - Credit Filter Delegate
 extension CreditListViewController: CreditFilterDelegate {
-    func userDidSelectedFilter(filter: String, totalCount: Int, category : String) {
+    func userDidSelectedFilter(filter: String, totalCount: Int, category : String, selfiter : [String]) {
         credit = filter
+        self.selectedfilter = selfiter
         self.totalCount = totalCount
         searchText = ""
-        self.category = category
+        self.selectedfilter = selfiter
+        var s = filter
+        var temp = [String]()
+        for str in selfiter{
+            if(str != "" && str.lowercased() != "all"){
+                temp.append("%22" + str + "%22")
+            }
+        }
+        s = temp.joined(separator: " OR ")
+        s = s.replacingOccurrences(of: ":", with: "%3A")
+        s = s.replacingOccurrences(of: " ", with: "%20")
+        if(filter == "All"){
+            
+        }else{
+            //category = "\(s as! String)"
+        }
+        s = s.replacingOccurrences(of: "&", with: "%26")
+        self.category = s
         pageNumber = 0
         loadType = "init"
-        loadCredits(rating: rating, version: version, credit: credit, search: searchText, page: pageNumber, loadType: loadType)
+        
+        loadCredits(rating: rating, version: version, credit: s, search: searchText, page: pageNumber, loadType: loadType)
     }
 }

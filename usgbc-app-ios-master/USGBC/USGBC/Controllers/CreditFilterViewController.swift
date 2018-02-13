@@ -10,18 +10,19 @@ import UIKit
 import RealmSwift
 
 protocol CreditFilterDelegate: class {
-    func userDidSelectedFilter(filter: String, totalCount: Int, category : String)
+    func userDidSelectedFilter(filter: String, totalCount: Int, category : String, selfiter : [String])
 }
 
 class CreditFilterViewController: UIViewController {
     var category = ""
+    var selectedfilter : [String] = ["all","","","","","","","","","","","","",""]
     var filter: String!
     fileprivate var filters: [CreditFilter] = []
     fileprivate var filterChanged = false
     weak var delegate: CreditFilterDelegate?
     fileprivate var selectedIndexPath = IndexPath(row: 0, section: 0)
     
-    @IBOutlet weak var totalResultsLabel: UILabel!
+    //@IBOutlet weak var totalResultsLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var totalCount = 0
     var countsDictionary : NSMutableDictionary!
@@ -31,7 +32,7 @@ class CreditFilterViewController: UIViewController {
         DispatchQueue.main.async {
             Utility.showLoading()
             self.getcounts()
-            self.totalResultsLabel.text = ""
+            //self.totalResultsLabel.text = ""
         }
     }
     
@@ -86,7 +87,7 @@ class CreditFilterViewController: UIViewController {
     @IBAction func handleDone(){
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"), totalCount: totalCount, category : category )
+                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"), totalCount: totalCount, category : category, selfiter:  self.selectedfilter )
             }
         }
         dismiss(animated: true, completion: nil)
@@ -115,21 +116,24 @@ extension CreditFilterViewController: UITableViewDelegate, UITableViewDataSource
             cell.accessoryType = .none
         }
         cell.subFilterLabel.text = filters[indexPath.row].name + " (\(countsDictionary[filters[indexPath.row].name]!))"
+        if(selectedfilter[indexPath.row] != ""){
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: selectedIndexPath) {
-            cell.accessoryType = .none
+        if(selectedfilter[indexPath.row] == ""){
+            selectedfilter[indexPath.row] = filters[indexPath.row].name
+        }else{
+            selectedfilter[indexPath.row] = ""
         }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .checkmark
-        }
-        category = filters[indexPath.row].name
         selectedIndexPath = indexPath
+        
         filter = filters[indexPath.row].name
         filterChanged = true
-        print(filter)
-        loadTotalCreditsCount()
+        self.tableView.reloadData()
     }
 }

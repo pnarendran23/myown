@@ -17,10 +17,11 @@ class CEActivity {
     var field_ce_course_title_value = ""
     var field_ce_course_provider_value = ""
     var field_ce_course_from_date_value = ""
+    var field_ce_course_to_date_value = ""
     var field_ce_course_desc_value = ""
     var field_ce_specialty_value = ""
     var Nid = ""
-    
+    var field_ce_url_value = ""
     init() {}
     
     init(json: JSON) {
@@ -32,8 +33,10 @@ class CEActivity {
         field_ce_course_title_value = json["field_ce_course_title_value"].stringValue
         field_ce_course_provider_value = json["field_ce_course_provider_value"].stringValue
         field_ce_course_from_date_value = json["field_ce_course_from_date_value"].stringValue
+        field_ce_course_to_date_value = json["field_ce_course_to_date_value"].stringValue
         field_ce_course_desc_value = json["field_ce_course_desc_value"].stringValue
         field_ce_specialty_value = json["field_ce_specialty_value"].stringValue
+        field_ce_url_value = json["field_ce_course_url_value"].stringValue
         print(field_ce_specialty_value)
         Nid = json["Nid"].stringValue
     }

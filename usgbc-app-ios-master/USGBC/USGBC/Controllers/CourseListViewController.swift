@@ -37,12 +37,26 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
     var levelarray = NSMutableArray()
     var languagearr = NSMutableArray()
     var isFiltered = false
+    var totalCount = 0
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
-    
+    func getcounts(){
+        var parameter = Payloads().makePayloadForCourses(continuousarr: continuousarray, versionarr: versionarrar, categoryarr: categoryarray, formatarr: formatarray, levelarr: levelarray, languagearr: languagearr)
+        parameter = parameter.replacingOccurrences(of: "\"", with: "%22")
+        ApiManager.shared.getCourseCount(category: "all", parameter: parameter, callback: { (count, error) in
+            if(error == nil){
+                    self.totalCount = count!
+                Utility.hideLoading()
+            }else{
+                Utility.showToast(message: "Something went wrong")
+                
+            }
+        })
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.getcounts()
         initViews()
         //initCollectionHeaderView()
         //loadFilters()
@@ -181,6 +195,7 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
     func loadCourses(category: String, search: String, size : Int, page: Int, loadType: String){
         Utility.showLoading()
         var parameter = Payloads().makePayloadForCourses(continuousarr: continuousarray, versionarr: versionarrar, categoryarr: categoryarray, formatarr: formatarray, levelarr: levelarray, languagearr: languagearr)
+        parameter = parameter.replacingOccurrences(of: "\"", with: "%22")
         if(search.characters.count > 0){
             if(parameter.characters.count > 0){
                 parameter = search + "%20AND%20(" + parameter + ")"
@@ -254,7 +269,7 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
                 viewController.courseLevel = courseLevel
                 viewController.courseLanguage = courseLanguage
                 
-                
+                viewController.totalCount = totalCount
                 viewController.continuousarray = self.continuousarray
                 viewController.versionarrar = self.versionarrar
                 viewController.levelarray = self.levelarray

@@ -44,6 +44,7 @@ class ResourceCredentialingListViewController: UIViewController, UIPopoverContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.text = "No data found"
         self.nodata.isHidden = true
         self.collectionView.keyboardDismissMode = .onDrag
         initViews()
@@ -169,7 +170,8 @@ class ResourceCredentialingListViewController: UIViewController, UIPopoverContro
     //To load JSON from file
     func loadResources(category: String, search: String, page: Int, loadType: String){
         Utility.showLoading()        
-        var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr)
+        var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr, currentcategory : "credentialing")
+        
         if(search.characters.count > 0){
             parameter = search + "%20AND%20(" + parameter + ")"
         }

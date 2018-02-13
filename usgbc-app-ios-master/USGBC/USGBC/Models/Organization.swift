@@ -19,15 +19,23 @@ class Organization{
     init() {}
     
     init(json: JSON) {
-        title = (json["title"].arrayValue.first?.stringValue)!
-        image = (json["image"].arrayValue.first?.stringValue)!
+        if(json["title"] != nil){
+            title = (json["title"].arrayValue.first?.stringValue)!
+        }
+        if(json["image"] != nil){
+            image = (json["image"].arrayValue.first?.stringValue)!
+        }
         if(json["address"] != nil){
             address =  (json["address"].arrayValue.first?.stringValue)!
         }else{
             address = ""
         }
-        level = (json["level"].arrayValue.first?.stringValue)!
-        ID = (json["id"].arrayValue.first?.stringValue)!
+        if(json["level"] != nil){
+            level = (json["level"].arrayValue.first?.stringValue)!
+        }
+        if(json["id"] != nil){
+            ID = (json["id"].arrayValue.first?.stringValue)!
+        }
     }
     
     func getLevelImage() -> UIImage {

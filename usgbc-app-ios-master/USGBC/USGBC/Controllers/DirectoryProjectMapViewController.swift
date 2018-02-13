@@ -303,7 +303,7 @@ extension DirectoryProjectMapViewController: UISearchBarDelegate {
 
 //MARK: - Organization Filter Delegate
 extension DirectoryProjectMapViewController: ProjectFilterDelegate {
-    func userDidSelectedFilter(filter: String, totalCount: Int) {
+    func userDidSelectedFilter(filter: String, totalCount: Int, selfilter : [String]) {
         category = filter
         searchText = ""
         pageNumber = 0

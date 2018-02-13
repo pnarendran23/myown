@@ -18,12 +18,7 @@ class ArticleCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.contentView.layer.cornerRadius = 10.0
-        self.contentView.layer.borderWidth = 1.0
         self.contentView.layer.borderColor = UIColor.clear.cgColor
-        self.contentView.layer.masksToBounds = true
-        self.layer.cornerRadius = 5.0
-        self.layer.masksToBounds = true
 //        @IBOutlet weak var providerLabel: UILabel!
 //
 //        @IBOutlet weak var channelLabel: UILabel!
@@ -72,6 +67,7 @@ class ArticleCell: UICollectionViewCell {
         //channelLabel.text = article.channel.uppercased()
         providerLabel.text = article.username.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
         //dateLabel.sizeToFit()
+        
     }
 
 }

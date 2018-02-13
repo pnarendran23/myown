@@ -10,12 +10,12 @@ import UIKit
 import SwiftyJSON
 
 class DirectoryProjectListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate {
-
+    var selectedfilter : [String] = ["all","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
     fileprivate var searchText = ""
     fileprivate var category = "All"
     fileprivate var loadType = "init"
     fileprivate var pageNumber = 0
-    fileprivate var pageSize = 40
+    fileprivate var pageSize = 50
     fileprivate var lastRecordsCount = 0
     fileprivate var loading = false
     fileprivate var searchOpen = false
@@ -23,7 +23,7 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
     var filterProjects: [Project] = []
     var totalCount = 0
     var from = 0
-    var size = 40
+    var size = 50
     var filterChanged = false
     
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
@@ -87,6 +87,10 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
         tabBarController?.navigationItem.rightBarButtonItems = [mapBarButton, filterBarButton, searchBarButton]
         tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
         tabBarController?.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadProjectsWithPagination(from: from, size: size, category: category, search: searchText, loadType: loadType)
     }
     
@@ -231,16 +235,60 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
                     self.collectionView.reloadData()
                     print("init")
                     print(self.filterProjects.count)
-                    self.from = self.projects.count
-                }else{
-                    self.projects.append(contentsOf: projects!)
-                    self.lastRecordsCount = projects!.count
-                    self.filterProjects = self.projects
-                    self.collectionView.reloadData()
+                    self.from += self.projects.count
                     self.loading = false
-                    print("more")
-                    print(self.filterProjects.count)
-                    self.from = self.projects.count
+                    self.pageNumber += self.projects.count
+                    DispatchQueue.main.async {
+                        if(self.filterProjects.count > 0){
+                            self.nodata.isHidden = true
+                        }else{
+                            self.nodata.isHidden = false
+                        }
+                        Utility.hideLoading()
+                    }
+                    
+                }else{
+                    if(projects!.count > 0){
+                        self.projects.append(contentsOf: projects!)
+                        self.lastRecordsCount = projects!.count
+                        self.filterProjects = self.projects
+                        self.collectionView.reloadData()
+                        self.loading = false
+                        self.pageNumber += self.projects.count
+                        print("more")
+                        print(self.filterProjects.count)
+                        self.from += self.projects.count
+                        DispatchQueue.main.async {
+                            if(self.filterProjects.count > 0){
+                                self.nodata.isHidden = true
+                            }else{
+                                self.nodata.isHidden = false
+                            }
+                            Utility.hideLoading()
+                        }
+                    }else{
+                        self.loading = true
+                        DispatchQueue.main.async {
+                            Utility.hideLoading()
+                            if(self.filterProjects.count > 0){
+                                self.nodata.isHidden = true
+                            }else{
+                                self.nodata.isHidden = false
+                            }
+                            Utility.showToast(message: "That was all")
+                        }
+                    }
+                }
+            }else{
+                var statuscode = error?._code
+                if(statuscode != -999){
+                    Utility.hideLoading()
+                    if(self.filterProjects.count > 0){
+                        self.nodata.isHidden = true
+                    }else{
+                        self.nodata.isHidden = false
+                    }
+                    Utility.showToast(message: "Something went wrong, try again later!")
                 }
             }
         })
@@ -257,6 +305,7 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
                 viewController.delegate = self
                 viewController.filter = category
                 viewController.totalCount = totalCount
+                viewController.selectedfilter = selectedfilter
             }
         }
     }
@@ -322,13 +371,19 @@ extension DirectoryProjectListViewController: UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterProjects.count-1 && !loading && lastRecordsCount == pageSize {
-            loading = true
-            loadType = "more"
-            pageNumber += 1
-            //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
-            //loadProjectsWithPagination(filterChanged: filterChanged, id: self.scrollId, category: category, loadType: loadType)
-            loadProjectsWithPagination(from: from, size: size, category: category, search: searchText, loadType: loadType)
+        if indexPath.row == filterProjects.count-1 && !loading {
+            DispatchQueue.main.async {
+                Utility.showLoading()
+                self.loadType = "more"
+                self.pageNumber = 0
+                //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
+                self.from += 1
+                self.pageNumber = self.from
+                self.loading = true
+                ApiManager.shared.stopAllSessions()
+                Utility.showLoading()
+                self.loadProjectsWithPagination(from: self.from, size: self.size, category: self.category, search: self.searchText, loadType: self.loadType)
+            }
         }
     }
     
@@ -363,22 +418,43 @@ extension DirectoryProjectListViewController: UISearchBarDelegate {
         
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {            
-            loadType = "init"
-            pageNumber = 0
-            //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
-            from = 0
-            ApiManager.shared.stopAllSessions()
-            Utility.showLoading()
-            loadProjectsWithPagination(from: from, size: size, category: category, search: searchText, loadType: loadType)
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
+            DispatchQueue.main.async {
+                Utility.showLoading()
+                self.searchText = searchTxt
+                self.loadType = "init"
+                self.pageNumber = 0
+                //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
+                self.from = 0
+                self.loading = false
+                ApiManager.shared.stopAllSessions()
+                Utility.showLoading()
+                self.loadProjectsWithPagination(from: self.from, size: self.size, category: self.category, search: self.searchText, loadType: self.loadType)
+            }
+        
     }
     
 }
 
 //MARK: - Organization Filter Delegate
 extension DirectoryProjectListViewController: ProjectFilterDelegate {
-    func userDidSelectedFilter(filter: String, totalCount: Int) {
-        category = filter
+    func userDidSelectedFilter(filter: String, totalCount: Int, selfilter : [String]) {
+        self.selectedfilter = selfilter
+        var s = filter
+        var temp = [String]()
+        for str in selfilter{
+            if(str != "" && str.lowercased() != "all"){
+                temp.append("%22" + str + "%22")
+            }
+        }
+        s = temp.joined(separator: " OR ")
+        s = s.replacingOccurrences(of: ":", with: "%3A")        
+        s = s.replacingOccurrences(of: " ", with: "%20")
+        if(filter == "All"){
+            
+        }else{
+            category = "\(s as! String)"
+        }
         searchText = ""
         pageNumber = 0
         loadType = "init"
@@ -388,6 +464,9 @@ extension DirectoryProjectListViewController: ProjectFilterDelegate {
         //loadProjectsWithPagination(filterChanged: filterChanged, id: self.scrollId, category: category, loadType: loadType)
         from = 0
         size = 40
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadProjectsWithPagination(from: from, size: size, category: category, search: searchText, loadType: loadType)
     }
 }

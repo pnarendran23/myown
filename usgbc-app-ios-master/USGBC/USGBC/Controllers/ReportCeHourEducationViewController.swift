@@ -11,7 +11,7 @@ import DLRadioButton
 import SwiftyJSON
 
 class ReportCeHourEducationViewController: UIViewController {
-    
+    var edit = false
     @IBOutlet weak var scrollview: UIScrollView!
     @IBOutlet weak var endlbl: UILabel!
     @IBOutlet weak var startlbl: UILabel!
@@ -29,12 +29,34 @@ class ReportCeHourEducationViewController: UIViewController {
     @IBOutlet weak var grRadioButton: DLRadioButton!
     @IBOutlet weak var noneRadioButton: DLRadioButton!
     @IBOutlet weak var ceHoursTextField: UITextField!
-    
+    var ceReport = CEReport()
     let ceType: String = "5301"
     var startDates: NSDate!
     var endDates: NSDate!
     var leedSpecific: String = ""
     var cred_specific_record: [SpecificCredentials] = []
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if(edit == true){
+            self.idTextField.text = ceReport.course_id
+            self.titleTextField.text = ceReport.title
+            self.providerTextField.text = ceReport.provider
+            self.ceHoursTextField.text = ceReport.hours
+            self.descriptionTextView.text = ceReport.description
+            self.urlTextField.text = ceReport.url
+            var dateformat = DateFormatter()
+            dateformat.dateFormat = "dd MMM yyyy"
+            var dt = dateformat.date(from: ceReport.start_date) as! NSDate
+            self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            startDates = dt
+            dt = dateformat.date(from: ceReport.end_date) as! NSDate
+            self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            endDates = dt
+            
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -285,9 +307,8 @@ class ReportCeHourEducationViewController: UIViewController {
         }
         if(leedSpecific == ""){
             Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
-            return
+            //return
         }
-        let ceReport = CEReport()
         ceReport.course_id = (id?.isEmpty)! ? "" : id!
         ceReport.title = title
         ceReport.provider = provider
@@ -297,7 +318,7 @@ class ReportCeHourEducationViewController: UIViewController {
         ceReport.url = "https://www.usgbc.org/test-link"//url
         ceReport.hours = ceHours
         ceReport.cehour_type = ceType
-        ceReport.email = "esingh@usgbc.org"//Utility().getUserDetail()
+        ceReport.email = Utility().getUserDetail()
         Utility.showLoading()
         ApiManager.shared.reportCEHours(ceReport: ceReport, callback: {(json, error) in
             if(error == nil){

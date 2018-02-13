@@ -21,6 +21,7 @@ class ArticleListViewController: UIViewController {
     fileprivate var pageNumber = 0
     fileprivate var pageSize = 40
     fileprivate var lastRecordsCount = 0
+    var selectedfilter : [String] = ["all","","","","","","","","",""]
     fileprivate var loading = false
     fileprivate var searchOpen = false
     fileprivate var articles: [Article] = []
@@ -48,12 +49,15 @@ class ArticleListViewController: UIViewController {
             if((self.searchBar.text?.characters.count)! > 0){
                 self.searchData(keyword: self.searchBar.text!)
             }else{
+                DispatchQueue.main.async {
+                    Utility.showLoading()
+                }
             self.getData()
             }
         }
         
         //loadAllFirestoreData(category: "All")
-        //loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        //getData()
     }
     
     func loadFirestoreData(category: String){
@@ -123,22 +127,57 @@ class ArticleListViewController: UIViewController {
     
     func searchData(keyword : String){
         
-        ApiManager.shared.searchArticlesfromElastic(category: category, size: 50, keyword: keyword, callback: {(articles, error) in
+        ApiManager.shared.searchArticlesfromElastic(category: category, page: self.pageNumber, size: 50, keyword: keyword, callback: {(articles, error) in
             
             //(category: "all", search: "", page: 0, callback:  { (articles, error) in
             if(error == nil){
-                //self.filterArticles = self.filterArticles.sorted(by: {$0.postedDate > $1.postedDate})
-                DispatchQueue.main.async {
-                    self.filterArticles = articles!
-                    self.collectionView.reloadData()
-                    Utility.hideLoading()
+                Utility.hideLoading()
+                if(self.loadType == "init"){
+                    self.articles = articles!
+                    self.lastRecordsCount = articles!.count
+                    self.filterArticles = self.articles
+                    self.pageNumber += articles!.count + 1
+                    self.collectionView.setContentOffset(.zero, animated: false)
+                    self.loading = false
+                    DispatchQueue.main.async {
+                        if(self.filterArticles.count == 0){
+                            self.nodata.isHidden = false
+                        }else{
+                            self.nodata.isHidden = true
+                        }
+                        Utility.hideLoading()
+                        self.collectionView.reloadData()
+                    }
+                    print(self.filterArticles.count)
+                }else{
+                    if(articles!.count > 0){
+                        self.articles.append(contentsOf: articles!)
+                        self.lastRecordsCount = articles!.count
+                        self.filterArticles = self.articles
+                        self.pageNumber += articles!.count + 1
+                        self.collectionView.reloadData()
+                        if(self.filterArticles.count == 0){
+                            self.nodata.isHidden = false
+                        }else{
+                            self.nodata.isHidden = true
+                        }
+                        self.loading = false
+                        DispatchQueue.main.async {
+                            print(self.filterArticles.count)
+                            Utility.hideLoading()
+                        }
+                    }else{
+                        DispatchQueue.main.async {
+                            Utility.showToast(message: "That was all")
+                            Utility.hideLoading()
+                            self.loading = true
+                        }
+                    }
                 }
-                
             }else{
-                //Utility.hideLoading()
-                var statuscode = error?._code
-                if(statuscode != -999){
-                Utility.showToast(message: "Something went wrong")
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong, try again later!")
                 }
             }
             //self.loadAllFirestoreData(category: self.category)
@@ -147,31 +186,58 @@ class ArticleListViewController: UIViewController {
 
     
     func getData(){
-        ApiManager.shared.getArticlesfromElastic(category: category, size : 50, callback: {(articles, error) in
+        ApiManager.shared.getArticlesfromElastic(category: category, page : pageNumber, size : 50, callback: {(articles, error) in
         
-        //(category: "all", search: "", page: 0, callback:  { (articles, error) in
-                        if(error == nil){
-                            self.articles = articles!
-                            //self.filterArticles = self.filterArticles.sorted(by: {$0.postedDate > $1.postedDate})
-                            DispatchQueue.main.async {
-                                self.filterArticles = self.articles
-                                if(self.filterArticles.count == 0){
-                                    self.nodata.isHidden = false
-                                }else{
-                                    self.nodata.isHidden = true
-                                }
-                                self.collectionView.reloadData()                                
-                                Utility.hideLoading()
-                            }
-                            
-                      }else{
-                            //Utility.hideLoading()
-                            var statuscode = error?._code
-                            if(statuscode != -999){
-                                Utility.showToast(message: "Something went wrong")
-                            }
+            if(error == nil){
+                Utility.hideLoading()
+                if(self.loadType == "init"){
+                    self.articles = articles!
+                    self.lastRecordsCount = articles!.count
+                    self.filterArticles = self.articles
+                    self.pageNumber += articles!.count + 1
+                    self.collectionView.setContentOffset(.zero, animated: false)
+                    if(self.filterArticles.count == 0){
+                        self.nodata.isHidden = false
+                    }else{
+                        self.nodata.isHidden = true
+                    }
+                    DispatchQueue.main.async {
+                        Utility.hideLoading()
+                    }
+                    self.collectionView.reloadData()
+                    print(self.filterArticles.count)
+                }else{
+                    if(articles!.count > 0){
+                        self.articles.append(contentsOf: articles!)
+                        self.lastRecordsCount = articles!.count
+                        self.filterArticles = self.articles
+                        self.pageNumber += articles!.count + 1
+                        self.collectionView.reloadData()
+                        if(self.filterArticles.count == 0){
+                            self.nodata.isHidden = false
+                        }else{
+                            self.nodata.isHidden = true
                         }
-            //self.loadAllFirestoreData(category: self.category)
+                        self.loading = false
+                        print(self.filterArticles.count)
+                        DispatchQueue.main.async {
+                            Utility.hideLoading()
+                        }
+                    }else{
+                        Utility.showToast(message: "That was all")
+                        DispatchQueue.main.async {
+                            Utility.hideLoading()
+                        }
+                        self.loading = true
+                    }
+                }
+            }else{
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong, try again later!")
+                }
+            }
+            
                     })
     }
     
@@ -331,7 +397,7 @@ class ArticleListViewController: UIViewController {
             searchBar.resignFirstResponder()
             hideSearch()
         }
-        //loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        //getData()
         loadAllFirestoreData(category: category)
     }
     
@@ -378,48 +444,8 @@ class ArticleListViewController: UIViewController {
     //MARK: - Load Articles
     func loadArticles(category: String, search: String, page: Int, loadType: String){
         Utility.showLoading()
-        ApiManager.shared.getArticlesNew(category: category, search: search, page: page, callback: { (articles, error) in
-            if(error == nil){
-                Utility.hideLoading()
-                if(loadType == "init"){
-                    self.articles = articles!
-                    self.lastRecordsCount = articles!.count
-                    self.filterArticles = self.articles
-                    self.pageNumber += articles!.count + 1
-                    self.collectionView.setContentOffset(.zero, animated: false)
-                    if(self.filterArticles.count == 0){
-                        self.nodata.isHidden = false
-                    }else{
-                        self.nodata.isHidden = true
-                    }
-                    Utility.hideLoading()
-                    self.collectionView.reloadData()
-                    print(self.filterArticles.count)
-                }else{
-                    if(articles!.count > 0){
-                        self.articles.append(contentsOf: articles!)
-                        self.lastRecordsCount = articles!.count
-                        self.filterArticles = self.articles
-                        self.pageNumber += articles!.count + 1
-                        self.collectionView.reloadData()
-                        if(self.filterArticles.count == 0){
-                            self.nodata.isHidden = false
-                        }else{
-                            self.nodata.isHidden = true
-                        }
-                        self.loading = false
-                        print(self.filterArticles.count)
-                        Utility.hideLoading()
-                    }else{
-                        Utility.showToast(message: "That was all")
-                        Utility.hideLoading()
-                        self.loading = true
-                    }
-                }
-            }else{
-                Utility.hideLoading()
-                Utility.showToast(message: "Something went wrong, try again later!")
-            }
+        ApiManager.shared.getArticlesNew(category: category, search: search, page: page, size : 50, callback: { (articles, error) in
+            
         })
     }
     
@@ -443,6 +469,7 @@ class ArticleListViewController: UIViewController {
                 let articleFilterViewController = rootViewController.topViewController as! ArticleFilterViewController
                 articleFilterViewController.delegate = self
                 articleFilterViewController.filter = category
+                articleFilterViewController.selectedfilter = selectedfilter
                 articleFilterViewController.totalCount = totalCount
             }
         }
@@ -559,7 +586,7 @@ extension ArticleListViewController: UICollectionViewDelegate, UICollectionViewD
             loadType = "more"
             Utility.showLoading()
             pageNumber += 1
-            loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            getData()
         }
     }
     
@@ -586,14 +613,20 @@ extension ArticleListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
-        //loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        //getData()
         filterArticles = articles
         collectionView.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if((searchBar.text?.characters.count)! > 0){
-            self.searchData(keyword: searchBar.text!)
+            DispatchQueue.main.async {
+                self.loadType = "init"
+                self.pageNumber = 0
+                self.loading = true
+                Utility.showLoading()
+                self.searchData(keyword: searchBar.text!)
+            }
         }else{
             searchBar.showsCancelButton = false
             hideSearch()
@@ -603,7 +636,7 @@ extension ArticleListViewController: UISearchBarDelegate {
             filterArticles = articles
             collectionView.reloadData()
             Utility.showLoading()
-            loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
+            getData()
         }
     }
     
@@ -615,14 +648,33 @@ extension ArticleListViewController: UISearchBarDelegate {
 
 //MARK: - Article Filter Delegate
 extension ArticleListViewController: ArticleFilterDelegate {
-    func userDidSelectedFilter(filter: String, totalCount: Int) {
-        category = filter
+    func userDidSelectedFilter(filter: String, selfilter : [String], totalCount: Int) {
+        var temp = [String]()
+        for item in selfilter{
+            if(item != "" && item.lowercased() != "all"){
+                temp.append(item)
+            }
+        }
+        var result = "all"
+        if(temp.count > 0){
+            result = temp.joined(separator: " OR ")
+            result = result.replacingOccurrences(of: " ", with: "%20")
+            print(result)
+            category = "%28field_p_channel:" + result + "%29"
+        }else{
+            category = result
+        }
+        
         self.totalCount = totalCount
         searchText = ""
         pageNumber = 0
+        self.selectedfilter = selfilter
         loadType = "init"
-        //loadArticles(category: category, search: searchText, page: pageNumber, loadType: loadType)
-        loadAllFirestoreData(category: category)
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        getData()
+        //loadAllFirestoreData(category: category)
     }
 }
 

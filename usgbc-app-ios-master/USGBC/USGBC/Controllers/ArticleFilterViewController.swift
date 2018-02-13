@@ -10,7 +10,7 @@ import UIKit
 import FirebaseFirestore
 
 protocol ArticleFilterDelegate: class {
-    func userDidSelectedFilter(filter: String, totalCount: Int)
+    func userDidSelectedFilter(filter: String, selfilter : [String], totalCount: Int)
 }
 
 class ArticleFilterViewController: UIViewController {
@@ -21,6 +21,7 @@ class ArticleFilterViewController: UIViewController {
     fileprivate var filters: [ArticleFilter] = []
     fileprivate var selectedIndexPath = IndexPath(row: 0, section: 0)
     var totalCount = 0
+    var selectedfilter : [String] = ["all","","","","","","","","",""]
     let defaultStore = Firestore.firestore()
     var countsDictionary : NSMutableDictionary!
     @IBOutlet weak var tableView: UITableView!
@@ -31,7 +32,7 @@ class ArticleFilterViewController: UIViewController {
         self.tableView.contentInset = UIEdgeInsets.zero
         DispatchQueue.main.async {
             Utility.showLoading()
-            
+            self.tableView.allowsMultipleSelection = true
             self.tableView.frame.origin.y = 0
             self.initViews()
             self.getcounts()
@@ -114,7 +115,7 @@ class ArticleFilterViewController: UIViewController {
     @IBAction func handleDone(_ sender: Any) {
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedFilter(filter: filter/*(filter.lowercased()).replacingOccurrences(of: " ", with: "-")*/, totalCount: totalCount)
+                delegate.userDidSelectedFilter(filter: filter, selfilter : selectedfilter, totalCount: totalCount)
             }
         }
         dismiss(animated: true, completion: nil)
@@ -145,21 +146,29 @@ extension ArticleFilterViewController: UITableViewDelegate, UITableViewDataSourc
         }else{
             cell.accessoryType = .none
         }
+        
+        if(selectedfilter[indexPath.row] != ""){
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
         cell.subFilterLabel.text = "\(filters[indexPath.row].name) (\(self.countsDictionary[filters[indexPath.row].name] as! Int))"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //self.totalArticlesLabel.text = "Please wait"
-        if let cell = tableView.cellForRow(at: selectedIndexPath) {
-            cell.accessoryType = .none
-        }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .checkmark
+        if(selectedfilter[indexPath.row] == ""){
+            selectedfilter[indexPath.row] = filters[indexPath.row].name
+        }else{
+            selectedfilter[indexPath.row] = ""
         }
         selectedIndexPath = indexPath
+        
         filter = filters[indexPath.row].name
         filterChanged = true
+        self.tableView.reloadData()
         //loadTotalArticlesCount(category: filter.lowercased())
         //loadFirestoreData(category: filter)
         

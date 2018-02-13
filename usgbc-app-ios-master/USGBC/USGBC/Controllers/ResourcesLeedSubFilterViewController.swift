@@ -20,7 +20,6 @@ class ResourcesLeedSubFilterViewController: UIViewController {
     var accessarray : [String] = []
     var languagearray : [String] = []
     
-    var filterString: [String] = []
     weak var delegate: ResourcesLeedSubFilterDelegate?
     fileprivate var filterChanged = false
     var filter: ResourcesLeedFilter!
@@ -32,9 +31,7 @@ class ResourcesLeedSubFilterViewController: UIViewController {
         super.viewDidLoad()
         initViews()
         print("Filter String")
-        filterString.forEach { (temp) in
-            print(temp)
-        }
+        
     }
 
     func initViews(){
@@ -48,7 +45,7 @@ class ResourcesLeedSubFilterViewController: UIViewController {
     @IBAction func handleApply(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedSubFilter(filter: filter, changed: filterChanged, selectedFilter: filterString.joined(separator: "+"), typearray : typearray, formatarray : formatarray, ratingarray :ratingarray, versionarray: versionarray, accessarray : accessarray, languagearray : languagearray)
+                delegate.userDidSelectedSubFilter(filter: filter, changed: filterChanged, selectedFilter: "", typearray : typearray, formatarray : formatarray, ratingarray :ratingarray, versionarray: versionarray, accessarray : accessarray, languagearray : languagearray)
             }
         }
         navigationController?.popViewController(animated: true)
@@ -106,22 +103,13 @@ extension ResourcesLeedSubFilterViewController: UITableViewDelegate, UITableView
             if let cell = tableView.cellForRow(at: selectedIndexPath) {
                 cell.accessoryType = .none
                 filter.subFilters[selectedIndexPath.row].selected = false
-                if((filterString.index(of: filter.subFilters[selectedIndexPath.row].value)) != nil){
-                    filterString.remove(at: filterString.index(of: filter.subFilters[selectedIndexPath.row].value)!)
-                }
-                
+
             }
             if let cell = tableView.cellForRow(at: indexPath) {
                 cell.accessoryType = .checkmark
                 filterChanged = true
                 filter.subFilters[indexPath.row].selected = true
-                if(filterString.count == 1 && (filterString.first?.isEmpty)!){
-                    //if(filterString.first?.isEmpty)!{
-                    filterString[0] = filter.subFilters[indexPath.row].value
-                    //}
-                }else{
-                    filterString.append(filter.subFilters[indexPath.row].value)
-                }
+       
                 
 
             }
@@ -138,7 +126,9 @@ extension ResourcesLeedSubFilterViewController: UITableViewDelegate, UITableView
                 tableView.cellForRow(at: indexPath)?.accessoryType = .none
                 filter.subFilters[indexPath.row].selected = false
                 filterChanged = true
-                filterString.remove(at: filterString.index(of: filter.subFilters[indexPath.row].value)!)
+                
+                print(filter.subFilters[indexPath.row])
+                
                 if(filter.name == "Type"){
                     if(typearray.contains(currentword)){
                         typearray.remove(at: typearray.index(of: currentword)!)
@@ -148,7 +138,7 @@ extension ResourcesLeedSubFilterViewController: UITableViewDelegate, UITableView
                         formatarray.remove(at: formatarray.index(of: currentword)!)
                     }
                 }else if(filter.name == "Rating System"){
-                    if(typearray.contains(currentword)){
+                    if(ratingarray.contains(currentword)){
                         ratingarray.remove(at: ratingarray.index(of: currentword)!)
                     }
                 }else if(filter.name == "Versions"){
@@ -161,13 +151,7 @@ extension ResourcesLeedSubFilterViewController: UITableViewDelegate, UITableView
                 tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
                 filter.subFilters[indexPath.row].selected = true
                 filterChanged = true
-                if(filterString.count == 1 && (filterString.first?.isEmpty)!){
-                    //if(filterString.first?.isEmpty)!{
-                    filterString[0] = filter.subFilters[indexPath.row].value
-                    //}
-                }else{
-                    filterString.append(filter.subFilters[indexPath.row].value)
-                }
+                
                 
                 if(filter.name == "Type"){
                         typearray.append(currentword)
@@ -182,6 +166,6 @@ extension ResourcesLeedSubFilterViewController: UITableViewDelegate, UITableView
             }
         }
         print("Selected Filter: ")
-        print(filterString.joined(separator: "+"))
+        //print(filterString.joined(separator: "+"))
     }
 }

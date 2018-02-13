@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 protocol PeopleFilterDelegate: class {
-    func userDidSelectedFilter(filter: String)
+    func userDidSelectedFilter(filter: String,selfilter : [String])
 }
 
 class DirectoryPeopleFilterViewController: UIViewController {
@@ -28,6 +28,7 @@ class DirectoryPeopleFilterViewController: UIViewController {
     var all = 0, chapter_members = 0, experts = 0, leed_fellows = 0, member_employees = 0, usgbc_faculty = 0, usgbc_staff = 0, usgbc_students = 0
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.keyboardDismissMode = .onDrag
         initViews()
         loadFilters()
         loadPeopleCount()
@@ -57,18 +58,26 @@ class DirectoryPeopleFilterViewController: UIViewController {
         
         var strarr = [String]()
         for str in filters{
-            if(str.name == "experts"){
-                strarr.append("all/all/expert")
-            }else if(str.name == "usgbc staffs"){
-                strarr.append("all/all/usgbc-staff")
-            }else if(str.name == "leed fellows"){
-                strarr.append("all/all/leed-fellow")
-            }else if(str.name == "usgbc students"){
-                strarr.append("all/all/usgbc-student")
+            if(str.name.lowercased() == "experts"){
+                strarr.append("expert")
+            }else if(str.name.lowercased() == "usgbc staff"){
+                strarr.append("usgbc staff")
+            }else if(str.name.lowercased() == "member employees"){
+                strarr.append("member employee")
+            }else if(str.name.lowercased() == "chapter members"){
+                strarr.append("chapter members")
+            }else if(str.name.lowercased() == "usgbc faculty"){
+                strarr.append("usgbc faculty")
+            }else if(str.name.lowercased() == "usgbc students"){
+                strarr.append("usgbc student")
+            }else if(str.name.lowercased() == "leed fellows"){
+                strarr.append("leed fellow")
             }else{
-                strarr.append(str.name)
+                strarr.append("")
             }
+            print(str.name)
         }
+        
         self.filters.removeAll()
         self.tableView.reloadData()
         DispatchQueue.main.async {
@@ -76,16 +85,16 @@ class DirectoryPeopleFilterViewController: UIViewController {
         }
         ApiManager.shared.getdirectorycounts(category : "peoplelist", strarr :strarr, callback: {(people, error) in
                 var people = people! as! NSMutableDictionary
-                if(error == nil && people.count == strarr.count){
+                if(error == nil){
                     print(people)
                     self.all = people["all"] as! Int
-                    self.chapter_members = people["chapter-members"] as! Int
-                    self.experts = people["experts"] as! Int
-                    self.leed_fellows = people["leed-fellows"] as! Int
-                    self.member_employees = people["member-employees"] as! Int
-                    self.usgbc_faculty = people["usgbc-faculty"] as! Int
-                    self.usgbc_staff = people["usgbc-staff"] as! Int
-                    self.usgbc_students = people["usgbc-students"] as! Int
+                    self.chapter_members = people["chapter%20members"] as! Int
+                    self.experts = people["expert"] as! Int
+                    self.leed_fellows = people["leed%20fellow"] as! Int
+                    self.member_employees = people["member%20employee"] as! Int
+                    self.usgbc_faculty = people["usgbc%20faculty"] as! Int
+                    self.usgbc_staff = people["usgbc%20staff"] as! Int
+                    self.usgbc_students = people["usgbc%20student"] as! Int
                     DispatchQueue.main.async {
                         Utility.hideLoading()
                     }
@@ -108,11 +117,11 @@ class DirectoryPeopleFilterViewController: UIViewController {
 //            }
 //        }
     }
-    
+    var selectedfilter : [String] = ["","","","","","","",""]
     @IBAction func handleDone(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"))
+                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"),selfilter : selectedfilter)
             }
         }
         dismiss(animated: true, completion: nil)
@@ -156,19 +165,33 @@ extension DirectoryPeopleFilterViewController: UITableViewDelegate, UITableViewD
         }else if(filters[indexPath.row].name.lowercased() == "leed fellows"){
             cell.subFilterLabel.text = "\(filters[indexPath.row].name) (\(self.leed_fellows))"
         }
+        
+        if(filters[indexPath.row].selected){
+            cell.accessoryType = .checkmark
+            selectedIndexPath = indexPath
+        }else{
+            cell.accessoryType = .none
+        }
+        
+        if(selectedfilter[indexPath.row] != ""){
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: selectedIndexPath) {
-            cell.accessoryType = .none
-        }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .checkmark
+        if(selectedfilter[indexPath.row] == ""){
+            selectedfilter[indexPath.row] = filters[indexPath.row].name
+        }else{
+            selectedfilter[indexPath.row] = ""
         }
         selectedIndexPath = indexPath
+        
         filter = filters[indexPath.row].name
         filterChanged = true
-        loadPeopleCount()
+        self.tableView.reloadData()
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 protocol OrganizationFilterDelegate: class {
-    func userDidSelectedFilter(filter: String)
+    func userDidSelectedFilter(filter: String, selfilter : [String])
 }
 
 class DirectoryOrganizationFilterViewController: UIViewController {
@@ -21,6 +21,7 @@ class DirectoryOrganizationFilterViewController: UIViewController {
     fileprivate var selectedIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: OrganizationFilterDelegate?
     var totalCount = 0
+    var selectedfilter : [String] = ["","","","","",""]
     var all = 0, education = 0, homes = 0, roundtable = 0, members = 0, regions = 0
     @IBOutlet weak var clearFilterButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
@@ -101,7 +102,7 @@ class DirectoryOrganizationFilterViewController: UIViewController {
     @IBAction func handleDone(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
-                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"))
+                delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"), selfilter : selectedfilter)
             }
         }
         dismiss(animated: true, completion: nil)
@@ -141,19 +142,35 @@ extension DirectoryOrganizationFilterViewController: UITableViewDelegate, UITabl
         }else if(filters[indexPath.row].name.lowercased() == "regions"){
             cell.subFilterLabel.text = "\(filters[indexPath.row].name) (\(self.regions))"
         }
+        
+        if(filters[indexPath.row].selected){
+            cell.accessoryType = .checkmark
+            selectedIndexPath = indexPath
+        }else{
+            cell.accessoryType = .none
+        }
+        
+        if(selectedfilter[indexPath.row] != ""){
+            cell.accessoryType = .checkmark
+        }else{
+            cell.accessoryType = .none
+        }
+        
         return cell
+     
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: selectedIndexPath) {
-            cell.accessoryType = .none
-        }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.accessoryType = .checkmark
+        if(selectedfilter[indexPath.row] == ""){
+            selectedfilter[indexPath.row] = filters[indexPath.row].name
+        }else{
+            selectedfilter[indexPath.row] = ""
         }
         selectedIndexPath = indexPath
+        
         filter = filters[indexPath.row].name
         filterChanged = true
+        self.tableView.reloadData()
         //self.isloading = true
         //Utility.showLoading()
         //loadOrganizationsCount()

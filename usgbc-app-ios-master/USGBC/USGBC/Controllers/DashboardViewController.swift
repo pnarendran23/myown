@@ -49,7 +49,8 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        refreshQuickMenu()
+        
     }
     
     func changeorientation(){
@@ -114,12 +115,14 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
     var layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadArticleJson()
-        self.initViews()
-        self.loadQuickMenus()
-        self.loadSettingsMenus()
-        self.setDefaultQuickMenu()
-        self.initQuickMenu()
+        initViews()
+        loadArticleJson()
+        loadQuickMenus()
+        loadSettingsMenus()
+        setDefaultQuickMenu()
+        initQuickMenu()
+        getPreviousNotifications()
+        loadNotifications()
         self.articleCollectionView.frame.origin.y = 1.1 * (self.articleslbl.frame.size.height + self.articleslbl.frame.origin.y)
         actualrect = self.articleCollectionView.frame
         h = self.articleCollectionView.frame.size.height
@@ -246,8 +249,12 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
         var menuImage:[String] = []
         controllers.removeAll()
         settings[1].sectionList.forEach { (section) in
+            print("settings is",settings)
+            
             if(section.selected == true){
                 quickMenus.forEach({ quickMenu in
+                    print("quickmenu name is",quickMenu.name)
+                    print("section name is",section.name)
                     if(quickMenu.name == section.name){
                         backColor.append(UIColor.hex(hex: Colors.primaryColor))
                         menuImage.append(quickMenu.image)
@@ -315,7 +322,7 @@ class DashboardViewController: UIViewController,UIGestureRecognizerDelegate, UIC
             Utility.showLoading()
         }
         Utility.showLoading()
-        ApiManager.shared.getArticlesfromElastic(category: "All", size: 10, callback: {(articles, error) in
+        ApiManager.shared.getArticlesfromElastic(category: "All", page: 0, size: 10, callback: {(articles, error) in
             if(error == nil){
                 //Utility.hideLoading()
                 self.articles = articles!

@@ -257,9 +257,9 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
     //To load JSON from file
     func loadResources(category: String, search: String, page: Int, loadType: String){
         Utility.showLoading()
-        var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr)
+        var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr, currentcategory : "leed")
         if(search.characters.count > 0){
-            parameter = search + "%20AND%20(" + parameter + ")"
+            parameter = search + "%20AND%20%25" + parameter + "%25"
         }
         
         ApiManager.shared.getResources(category: category, parameter : parameter, size: 50, search: search, page: page, callback: { (resources:[Resource]?, error:NSError?) in

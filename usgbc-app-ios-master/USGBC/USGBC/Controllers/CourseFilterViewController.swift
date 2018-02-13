@@ -19,7 +19,6 @@ class CourseFilterViewController: UIViewController {
     var formatarray = NSMutableArray()
     var levelarray = NSMutableArray()
     var languagearr = NSMutableArray()
-    
     var filters: [CourseFilter] = []
     weak var delegate: CourseFilterDelegate?
     fileprivate var filterChanged = false
@@ -45,7 +44,7 @@ class CourseFilterViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewDidAppear(animated)        
         if let selectionIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
@@ -150,12 +149,9 @@ class CourseFilterViewController: UIViewController {
         //filter = ((courseLevel.isEmpty) ? "all" : courseLevel) + "/" + ((continuingEducation.isEmpty) ? "all" : continuingEducation) + "/" + ((ratingSystemVersion.isEmpty) ? "all" : ratingSystemVersion) + "/" + ((leedCreditCategory.isEmpty) ? "all" : leedCreditCategory) + "/" + ((courseFormat.isEmpty) ? "all" : courseFormat) + "/" + ((courseLanguage.isEmpty) ? "all" : courseLanguage) + "/" + ((courseFeature.isEmpty) ? "all" : courseFeature)
         Utility.showLoading()
         var parameter = Payloads().makePayloadForCourses(continuousarr: continuousarray, versionarr: versionarrar, categoryarr: categoryarray, formatarr: formatarray, levelarr: levelarray, languagearr: languagearr)
-        
+        parameter = parameter.replacingOccurrences(of: "\"", with: "%22")
         ApiManager.shared.getCourseCount(category: filter, parameter: parameter, callback: { (count, error) in
-            if(error == nil){
-                if(self.filter == "all/all/all/all/all/all/all"){
-                    self.totalCount = count!
-                }
+            if(error == nil){                
                 Utility.hideLoading()
                 self.tableView.reloadData()
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) courses"

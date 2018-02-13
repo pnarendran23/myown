@@ -41,6 +41,7 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
             Utility.hideLoading()
         }
     }
+    var selectedfilter : [String] = ["all","","","","","","",""]
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -174,9 +175,11 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                     }
                     print(self.filterPeople.count)
                 }else{
+                    if(people!.count > 0){
                     self.people.append(contentsOf: people!)
                     self.lastRecordsCount = people!.count
                     self.filterPeople = self.people
+                        self.pageNumber += people!.count
                     self.collectionView.reloadData()
                     self.loading = false
                     if(self.filterPeople.count == 0){
@@ -185,6 +188,13 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                         self.nodata.isHidden = true
                     }
                     print(self.filterPeople.count)
+                    }else{
+                        DispatchQueue.main.async {
+                            Utility.hideLoading()
+                            self.loading = true
+                            Utility.showToast(message: "That was ")
+                        }
+                    }
                 }
             }else{
                 var statuscode = error?._code
@@ -206,6 +216,7 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                 let viewController = rootViewController.topViewController as! DirectoryPeopleFilterViewController
                 viewController.delegate = self
                 viewController.filter = category
+                viewController.selectedfilter = selectedfilter
             }
         }
     }
@@ -271,7 +282,7 @@ extension DirectoryPeopleListViewController: UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == filterPeople.count-1 && !loading && lastRecordsCount == pageSize {
+        if indexPath.row == filterPeople.count-1 && !loading {
             loading = true
             loadType = "more"
             pageNumber += 1
@@ -314,13 +325,17 @@ extension DirectoryPeopleListViewController: UISearchBarDelegate {
        
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            loadType = "init"
-            pageNumber = 0
-            DispatchQueue.main.async {
-                ApiManager.shared.stopAllSessions()
-                Utility.showLoading()
-                self.loadPeople(category: self.category, search: searchText, page: self.pageNumber, loadType: self.loadType)
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
+        
+        DispatchQueue.main.async {
+            self.searchText = searchTxt
+            self.loadType = "init"
+            self.pageNumber = 0
+            Utility.showLoading()
+            self.loading = true
+            self.pageNumber = 0
+            ApiManager.shared.stopAllSessions()
+                self.loadPeople(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
             }
         
     }
@@ -328,11 +343,25 @@ extension DirectoryPeopleListViewController: UISearchBarDelegate {
 
 //MARK: - Organization Filter Delegate
 extension DirectoryPeopleListViewController: PeopleFilterDelegate {
-    func userDidSelectedFilter(filter: String) {
-        category = filter
-        searchText = ""
-        pageNumber = 0
-        loadType = "init"
+    func userDidSelectedFilter(filter: String, selfilter : [String]) {
+        self.selectedfilter = selfilter
+        var temp = [String]()
+        for item in selfilter{
+            if(item != "" && item.lowercased() != "all"){
+                temp.append(item)
+            }
+        }
+        var result = "all"
+        if(temp.count > 0){
+            result = temp.joined(separator: " OR ")
+            result = result.replacingOccurrences(of: " ", with: "%20")
+            print(result)
+            category = "%28relationships:" + result + "%29"
+        }else{
+            category = result
+        }
+        category = category.replacingOccurrences(of: "partners", with: "partner")
+        self.pageNumber = 0
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadPeople(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)

@@ -143,7 +143,7 @@ extension ResourcesCredentialingSubFilterViewController: UITableViewDelegate, UI
                         formatarray.remove(at: formatarray.index(of: currentword)!)
                     }
                 }else if(filter.name == "Rating System"){
-                    if(typearray.contains(currentword)){
+                    if(ratingarray.contains(currentword)){
                         ratingarray.remove(at: ratingarray.index(of: currentword)!)
                     }
                 }else if(filter.name == "Versions"){

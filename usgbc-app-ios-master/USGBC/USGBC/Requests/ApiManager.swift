@@ -78,6 +78,8 @@ class ApiManager {
         }
     }
     
+    
+    
     func createUser(firstName: String, lastName: String, email: String, password: String, phone: String,  callback: @escaping (String?, NSError?) -> ()){
         let params = ["partneralias": partneralias, "partnerpwd": partnerpwd, "firstname": firstName, "lastname": lastName, "email": email, "pwd": password, "phone": phone, "acceptlegalterms": "1"]
         print(params)
@@ -374,7 +376,11 @@ class ApiManager {
     }
     
     func reportCEHours(ceReport: CEReport, callback: @escaping (JSON?, NSError?) -> ()){
-        let parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
+        var parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
+        
+        if(ceReport.Nid != ""){
+            parameters["Nid"] = ceReport.Nid
+        }
         
         print(parameters)
         
@@ -647,19 +653,20 @@ class ApiManager {
     }
     
     
-    func getArticlesfromElastic(category: String, size : Int, callback: @escaping ([Article]?, NSError?) -> ()){
+    func getArticlesfromElastic(category: String,page: Int, size : Int, callback: @escaping ([Article]?, NSError?) -> ()){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         //https://elastic:dKoop4HDVLk54kt6eI6rgCDg@996d58b7610023f635201f31c2f7cb4d.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_ios_
         var url = elasticbaseURL + "articles_ios/_search"
         var params: [String: Any] = [:]
         var articles = [Article]()
-        if(category == "All"){
-            params = ["size": size]
+        params = ["from": page, "size": size]
+        if(category.lowercased() == "all"){
+            
         }else{
-            let cat = "\"\(category)\""
+            let cat = "\(category)"
             url += "?q=\(cat)"
-            url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = ["size": size]
+            //url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+            //params = ["size": size]
         }
         a = Alamofire.request(url, method: .get, parameters: params)
             .validate()
@@ -670,8 +677,7 @@ class ApiManager {
                     if let jsonString = response.data {
                         let json = JSON(data: jsonString)
                         for (_,subJson):(String, JSON) in json["hits"]["hits"] {
-                            if(category == "All"){
-                                let article = Article()
+                            let article = Article()
                             article.title = (subJson["_source"]["title"].arrayValue.first?.stringValue)!
                            article.title = (article.title).replacingOccurrences(of: "&#039;", with: "\'")
                             article.ID = (subJson["_source"]["field_p_id"].arrayValue.first?.stringValue)!
@@ -688,28 +694,6 @@ class ApiManager {
                             }
                             article.username = (subJson["_source"]["field_p_author"].arrayValue.first?.stringValue)!
                             articles.append(article)
-                            }else{
-                                let article = Article()
-                                if(subJson["_source"]["field_p_channel"].exists()){
-                                    article.channel = (subJson["_source"]["field_p_channel"].arrayValue.first?.stringValue)!
-                                }
-                                if(category == article.channel){
-                                    article.title = (subJson["_source"]["title"].arrayValue.first?.stringValue)!
-                                    article.title = (article.title).replacingOccurrences(of: "&#039;", with: "\'")
-                                    article.ID = (subJson["_source"]["field_p_id"].arrayValue.first?.stringValue)!
-                                    article.image = (subJson["_source"]["field_p_image"].arrayValue.first?.stringValue)!
-                                    article.imageSmall = (subJson["_source"]["field_p_image"].arrayValue.first?.stringValue)!
-                                    
-                                    
-                                    if(subJson["_source"]["field_p_posteddate"].exists()){
-                                        article.postedDate = (subJson["_source"]["field_p_posteddate"].arrayValue.first?.stringValue)!
-                                    }else{
-                                        article.postedDate = "2014-06-03 10:33"
-                                    }
-                                    article.username = (subJson["_source"]["field_p_author"].arrayValue.first?.stringValue)!
-                                    articles.append(article)
-                                }
-                            }
                         }
                         
                             //article.addData(document: document)
@@ -726,19 +710,26 @@ class ApiManager {
     }
     
     
-    func searchArticlesfromElastic(category: String, size : Int, keyword:String, callback: @escaping ([Article]?, NSError?) -> ()){
+    func searchArticlesfromElastic(category: String, page : Int, size : Int, keyword:String, callback: @escaping ([Article]?, NSError?) -> ()){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "articles_ios/_search"
-        url.append("?q=\(keyword)")
         var params: [String: Any] = [:]
         var articles = [Article]()
-        if(category == "All"){
-            params = [ "size": size]
+        params = ["from": page, "size": size]
+        if(category.lowercased() == "all"){
+            if(keyword.characters.count > 0){
+                url += "?q=\(keyword)"
+            }
         }else{
-            let cat = "\"\(category)\""
-            url += "?q=\(cat)"
-            url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = [ "size": size]
+            let cat = "\(category)"
+            if(keyword.characters.count > 0){
+                    url += "?q=\(keyword)%20AND%20\(cat)"
+            }else{
+                url += "?q=\(cat)"
+            }
+            
+            //url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+            //params = ["size": size]
         }
         a = Alamofire.request(url, method: .get, parameters: params)
             .validate()
@@ -749,7 +740,6 @@ class ApiManager {
                     if let jsonString = response.data {
                         let json = JSON(data: jsonString)
                         for (_,subJson):(String, JSON) in json["hits"]["hits"] {
-                            if(category == "All"){
                                 let article = Article()
                                 article.title = (subJson["_source"]["title"].arrayValue.first?.stringValue)!
                                 article.title = (article.title).replacingOccurrences(of: "&#039;", with: "\'")
@@ -767,28 +757,6 @@ class ApiManager {
                                 }
                                 article.username = (subJson["_source"]["field_p_author"].arrayValue.first?.stringValue)!
                                 articles.append(article)
-                            }else{
-                                let article = Article()
-                                if(subJson["_source"]["field_p_channel"].exists()){
-                                    article.channel = (subJson["_source"]["field_p_channel"].arrayValue.first?.stringValue)!
-                                }
-                                if(category == article.channel){
-                                    article.title = (subJson["_source"]["title"].arrayValue.first?.stringValue)!
-                                    article.title = (article.title).replacingOccurrences(of: "&#039;", with: "\'")
-                                    article.ID = (subJson["_source"]["field_p_id"].arrayValue.first?.stringValue)!
-                                    article.image = (subJson["_source"]["field_p_image"].arrayValue.first?.stringValue)!
-                                    article.imageSmall = (subJson["_source"]["field_p_image"].arrayValue.first?.stringValue)!
-                                    
-                                    
-                                    if(subJson["_source"]["field_p_posteddate"].exists()){
-                                        article.postedDate = (subJson["_source"]["field_p_posteddate"].arrayValue.first?.stringValue)!
-                                    }else{
-                                        article.postedDate = "2014-06-03 10:33"
-                                    }
-                                    article.username = (subJson["_source"]["field_p_author"].arrayValue.first?.stringValue)!
-                                    articles.append(article)
-                                }
-                            }
                         }
                         
                         //article.addData(document: document)
@@ -844,8 +812,8 @@ class ApiManager {
         }
     }
     
-    func getArticlesNew(category: String, search: String, page: Int, callback: @escaping ([Article]?, NSError?) -> ()){
-        var parameters = ["from": "\(page)"]
+    func getArticlesNew(category: String, search: String, page: Int, size: Int, callback: @escaping ([Article]?, NSError?) -> ()){
+        var parameters = ["from": "\(page)", "size": "\(size)"]
         if(search != ""){
             parameters["search"] = search
         }
@@ -1030,14 +998,22 @@ class ApiManager {
     func getCoursesNew(category: String, parameter : String, search: String, size: Int, page: Int, callback: @escaping ([Course]?, NSError?) -> ()){
         var parameters = ["from": "\(page)", "size" : size] as! [String:Any]
         if(search != ""){
-            parameters["search"] = search
+            //parameters["search"] = search
         }
         var url = ""
+        var param = parameter.replacingOccurrences(of: "\"", with: "%22")
         if(parameter.characters.count > 0){
-            url = elasticbaseURL + "courses_ios/_search?q="+parameter
+            url = elasticbaseURL + "courses_ios/_search?q="+param
         }else{
             url = elasticbaseURL + "courses_ios/_search"
         }
+        if(search.characters.count > 0 && param.characters.count > 0){
+            url = elasticbaseURL + "courses_ios/_search?q=%22"+search+"%22%20AND%20"+param
+        }else if(search.characters.count > 0 && param.characters.count == 0){
+            url = elasticbaseURL + "courses_ios/_search?q="+search
+        }
+        
+        
         //"\(baseUrlMobileDEV)/resourceslist/\(category)"
         a = Alamofire.request(url, method: .get, parameters : parameters)
             .validate()
@@ -1359,8 +1335,49 @@ class ApiManager {
         }
     }
     
+    
+    func getProjectscounts(callback: @escaping (NSMutableArray?, NSError?) -> ()){
+        var params: [String: Any] = [:]
+        var arr = NSMutableArray()
+        params = ["size": 0,"aggs": ["item": ["terms": ["field": "field_prjt_rating_system_version"]]]
+        ]
+        var header = ["Content-Type" : "application/json", "partneralias" : partneralias, "partnerpwd" : partnerpwd]
+            var url = elasticbaseURL + "projects_ios/_search"
+        a = Alamofire.request(url, method: .post, parameters: params, encoding : JSONEncoding.default)
+                .validate()
+                .responseJSON { response in
+                    print(response.request!)
+                    switch response.result {
+                    case .success( _):
+                        if let jsonString = response.data {
+                            var people: [People] = []
+                            let json = JSON(data: jsonString)
+                            do {
+                                let JSON = try JSONSerialization.jsonObject(with: response.data!, options: JSONSerialization.ReadingOptions(rawValue: JSONSerialization.ReadingOptions.RawValue(0)))
+                                guard let JSONDictionary: NSDictionary = JSON as? NSDictionary else {
+                                    return
+                                }
+                                arr = (((JSONDictionary["aggregations"] as! NSDictionary)["item"] as! NSDictionary)["buckets"] as! NSArray).mutableCopy() as! NSMutableArray
+                                print(JSONDictionary)
+                                callback(arr,nil)
+                            }catch let JSONError as NSError {
+                                print("\(JSONError)")
+                                callback(nil,nil)
+                            }
+                            
+                        }
+                    case .failure(let error):
+                        print("message: Error 4xx / 5xx: \(error)")
+                        callback(nil, error as NSError)
+                    }
+            }
+    }
+    
+    
     func getdirectorycounts(category: String,strarr : [String], callback: @escaping (NSMutableDictionary?, NSError?) -> ()){
         let group = DispatchGroup()
+        var params: [String: Any] = [:]
+        params = ["from": 0, "size": 50]
         var articleFilters: [String] = []
         var countsDict = NSMutableDictionary()
         var plural = ""
@@ -1374,85 +1391,38 @@ class ApiManager {
         }
         for str in strarr {
             group.enter()
-            var s = str.replacingOccurrences(of: " ", with: "-")
+            var s = str.replacingOccurrences(of: " ", with: "%20")
             s = s.lowercased()
-            var url = "\(baseUrlMobileDEV)/\(category)/\(s)"
-            a = Alamofire.request(url, method: .get)
+            var url = elasticbaseURL + "people_ios/_search"
+            if(s.characters.count > 0){
+            url = url + "?q=" + "%28" + s + "%29"
+            }
+            a = Alamofire.request(url, method: .get, parameters : params)
                 .validate()
                 .responseJSON { response in
                     print(response.request!)
                     switch response.result {
                     case .success( _):
                         if let jsonString = response.data {
-                            var count = 0
                             let json = JSON(data: jsonString)
-                            
-                            do {
-                                let JSON = try JSONSerialization.jsonObject(with: response.data!, options: JSONSerialization.ReadingOptions(rawValue: JSONSerialization.ReadingOptions.RawValue(0)))
-                                guard let JSONDictionary: NSDictionary = JSON as? NSDictionary else {
-                                    print("Not a Dictionary")
-                                    var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                   countsDict[s] = 0
-                                    // put in function
-                                    group.leave()
-                                    return
-                                }
-                                print("JSONDictionary! \(JSONDictionary)")
-                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                if(JSONDictionary[plural] != nil){
-                                    var arr = JSONDictionary[plural] as! NSArray
-                                    if(arr.count == 0){
-                                        var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                        countsDict[s] = 0
-                                        // put in function
-                                        group.leave()
-                                    }else{
-                                        var dict = arr.firstObject as! NSDictionary
-                                        if(dict[singular] != nil){
-                                            var data = dict[singular] as! NSDictionary
-                                            if(data["totalCount"] != nil){
-                                                let count = Int(data["totalCount"] as! String)
-                                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                                countsDict[s] = count
-                                                group.leave()
-                                            }else{
-                                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                                countsDict[s] = 0
-                                                // put in function
-                                                group.leave()
-                                            }
-                                        }else{
-                                            var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                            countsDict[s] = 0
-                                            // put in function
-                                            group.leave()
-                                        }
-                                    }
-                                }else{
-                                    var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                    countsDict[s] = 0
-                                    // put in function
-                                    group.leave()
-                                }
-                                
+                            let totalRecords = json["hits"]["total"].intValue
+                            if(s == ""){
+                                countsDict["all"] = totalRecords
+                            }else{
+                                countsDict[s] = totalRecords
                             }
-                            catch let JSONError as NSError {
-                                print("\(JSONError)")
-                                var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                                countsDict[s] = 0
-                                // put in function
-                                group.leave()
-                            }
-                            
-                            
                         }
                         //callback(count, nil)
+                        group.leave()
+                        
                     case .failure(let error):
                         print("message: Error 4xx / 5xx: \(error)")
                         //callback(nil, error as NSError)
-                        var s = url.replacingOccurrences(of: "\(self.baseUrlMobileDEV)/\(category)/", with: "")
-                        countsDict[s] = 0
-                        // put in function
+                        if(s == ""){
+                            countsDict["all"] = 0
+                        }else{
+                            countsDict[s] = 0
+                        }
                         group.leave()
                     }
             }
@@ -1631,60 +1601,18 @@ class ApiManager {
         
         //let url = "\(baseUrlMobileDEV)/\(rating)/\(version)/\(credit)/creditslist".replacingOccurrences(of: "&", with: "%26")
         var url = elasticbaseURL + "organization_ios/_search"
-        if(parameter == "All"){
-            url = url + "?q=" + search
-        }else{
-            //url = url + "?q=" + search //+ "%20AND%20(field_credit_category:" + parameter + ")"
-        }
-        
-        if(search.characters.count > 0 && parameter.characters.count > 0){
-            
-        }else if(search.characters.count > 0 && parameter == "All"){
-            url = url + "?q=" + search
-        }else if(search.characters.count == 0 && parameter == "All"){
-            
-        }else if(search.characters.count == 0 && parameter.characters.count > 0){
-            //url = url //+ "?q=field_credit_category:" + parameter
-        }
-        
-        url = elasticbaseURL + "organization_ios/_search"
-        if(parameter == "all"){
+        if(parameter.lowercased() == "all"){
             if(search.characters.count > 0){
                 url = url + "?q=" + search
+            }else{
+                //url = url
             }
         }else{
-            var parameter = category.lowercased()
-            parameter = parameter.replacingOccurrences(of: "-", with: " ")
-            if(parameter == "regions"){
-                parameter = "type:chapter"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "members"){
-                parameter = "type:organization"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "education partners"){
-                parameter = "relationship:education partner"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "homes partners"){
-                parameter = "(type:organization AND relationship:home partner)"
-                if(search.characters.count > 0){
-                    parameter = search + " AND " + parameter
-                }
-            }else if(parameter == "leed international roundtable member"){
-                parameter = "(type:organization AND relationship:leed international roundtable member)"
-                if(search.characters.count > 0){
-                    parameter = search + " AND " + parameter
-                }
+            if(search.characters.count > 0){
+                url = url + "?q=" + search + "%20AND%20" + parameter
+            }else{
+                url = url + "?q=" + parameter
             }
-            parameter = parameter.replacingOccurrences(of: " ", with: "%20")
-            parameter = parameter.replacingOccurrences(of: "&", with: "%26")
-            url = url + "?q="+parameter
-            //url = url + "?q=" + search //+ "%20AND%20(field_credit_category:" + parameter + ")"
         }
         
         
@@ -1746,60 +1674,18 @@ class ApiManager {
         
         //let url = "\(baseUrlMobileDEV)/\(rating)/\(version)/\(credit)/creditslist".replacingOccurrences(of: "&", with: "%26")
         var url = elasticbaseURL + "people_ios/_search"
-        if(parameter == "All"){
-            url = url + "?q=" + search
-        }else{
-            //url = url + "?q=" + search //+ "%20AND%20(field_credit_category:" + parameter + ")"
-        }
-        
-        if(search.characters.count > 0 && parameter.characters.count > 0){
-            
-        }else if(search.characters.count > 0 && parameter == "All"){
-            url = url + "?q=" + search
-        }else if(search.characters.count == 0 && parameter == "All"){
-            
-        }else if(search.characters.count == 0 && parameter.characters.count > 0){
-            //url = url //+ "?q=field_credit_category:" + parameter
-        }
-        
-        url = elasticbaseURL + "people_ios/_search"
-        if(parameter == "all"){
+        if(parameter.lowercased() == "all"){
             if(search.characters.count > 0){
                 url = url + "?q=" + search
+            }else{
+                //url = url
             }
         }else{
-            var parameter = category.lowercased()
-            parameter = parameter.replacingOccurrences(of: "-", with: " ")
-            if(parameter == "regions"){
-                parameter = "type:chapter"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "members"){
-                parameter = "type:organization"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "education partners"){
-                parameter = "relationship:education partner"
-                if(search.characters.count > 0){
-                    parameter = search + " AND (" + parameter + ")"
-                }
-            }else if(parameter == "homes partners"){
-                parameter = "(type:organization AND relationship:home partner)"
-                if(search.characters.count > 0){
-                    parameter = search + " AND " + parameter
-                }
-            }else if(parameter == "leed international roundtable member"){
-                parameter = "(type:organization AND relationship:leed international roundtable member)"
-                if(search.characters.count > 0){
-                    parameter = search + " AND " + parameter
-                }
+            if(search.characters.count > 0){
+                url = url + "?q=" + search + "%20AND%20" + parameter
+            }else{
+                url = url + "?q=" + parameter
             }
-            parameter = parameter.replacingOccurrences(of: " ", with: "%20")
-            parameter = parameter.replacingOccurrences(of: "&", with: "%26")
-            url = url + "?q="+parameter
-            //url = url + "?q=" + search //+ "%20AND%20(field_credit_category:" + parameter + ")"
         }
         
         
@@ -2062,23 +1948,31 @@ class ApiManager {
     func getProjectsElasticWithpaginationNew(from: Int, sizee: Int, search: String, category: String, callback: @escaping (Int?, [Project]?, NSError?) -> () ){
         // Old API var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var url = elasticbaseURL + "projects_ios/_search"
-        let searchText = "\"\(search)\""
+        let searchText = "\(search)"
         if(!search.isEmpty){
             url = elasticbaseURL + "projects_ios/_search?q=\(searchText)"
             url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         }
         print(url)
         var params: [String: Any] = [:]
+        params = [ "size": sizee, "from":from]
         if(category == "All"){
-            params = [ "size": sizee]
+            
         }else{
-            let cat = "\"\(category)\""
-            url = elasticbaseURL + "projects_ios/_search?q= \(cat)"
+            let cat = "\(category)"
+            url = elasticbaseURL + "projects_ios/_search?q=\(cat)"
             if(!search.isEmpty){
-                url = elasticbaseURL + "projects_ios/_search?q=\(searchText)AND\(cat)"
+                url = elasticbaseURL + "projects_ios/_search?q=%22\(searchText)%22 AND %28\(cat)%29"
             }
-            url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            params = [ "size": sizee]
+            url = url.replacingOccurrences(of: "%25", with: "")
+            url = url.replacingOccurrences(of: " ", with: "%20")
+            //url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+            //params = [ "size": sizee]
+        }
+        if(category.characters.count == 0 && search.characters.count == 0){
+            url = elasticbaseURL + "projects_ios/_search"
+        }else if(category.characters.count == 0 && search.characters.count > 0){
+            url = elasticbaseURL + "projects_ios/_search?q=%22\(searchText)%22"
         }
         //print(params)
 //        if let theJSONData = try?  JSONSerialization.data(
@@ -2223,10 +2117,18 @@ class ApiManager {
     
     func getResources(category: String, parameter : String, size: Int, search: String, page: Int, callback: @escaping ([Resource]?, NSError?) -> ()){
         var parameters = ["from": "\(page)", "size": size] as! [String: Any]
-        if(search != ""){
-            parameters["search"] = search
+        var url = elasticbaseURL + "resources_ios/_search"//"\(baseUrlMobileDEV)/resourceslist/\(category)"
+        if(parameter == ""){
+             url = elasticbaseURL + "resources_ios/_search"
+        }else{
+            if(search != ""){
+                url = url + "?q=" + search + "%28" + parameter + "%29"
+                //parameters["search"] = search
+            }else{
+                url = url + "?q=%28" + parameter + "%29"
+            }
         }
-        let url = elasticbaseURL + "resources_ios/_search?q="+parameter//"\(baseUrlMobileDEV)/resourceslist/\(category)"
+        
         a = Alamofire.request(url, method: .get, parameters : parameters)
             .validate()
             .responseJSON { response in
@@ -2318,7 +2220,10 @@ class ApiManager {
     }
     
     func getResourcesCount(category: String, parameter : String, callback: @escaping (Int?, NSError?) -> ()){
-     let url = elasticbaseURL + "resources_ios/_search?q="+parameter//"\(baseUrlMobileDEV)/resourceslist/\
+     var url = elasticbaseURL + "resources_ios/_search?q=%28"+parameter+"%29"//"\(baseUrlMobileDEV)/resourceslist/\
+        if(parameter == ""){
+            url = elasticbaseURL + "resources_ios/_search"
+        }
         a = Alamofire.request(url, method: .get)
             .validate()
             .responseJSON { response in

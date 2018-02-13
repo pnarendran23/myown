@@ -85,7 +85,7 @@ class CreditDetailsViewController: UIViewController{
     
     func loadCreditDetails(){
         Utility.showLoading()
-        ApiManager.shared.getCreditDetailsfromelasticOnlyOne(id: creditId) { (creditDetails, error) in
+        ApiManager.shared.getCreditDetails(id: creditId) { (creditDetails, error) in
             if(error == nil){
                 Utility.hideLoading()
                 self.creditDetails = creditDetails!

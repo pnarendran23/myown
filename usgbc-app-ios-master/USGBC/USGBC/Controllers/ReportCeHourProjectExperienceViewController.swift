@@ -11,7 +11,7 @@ import DLRadioButton
 import DropDown
 
 class ReportCeHourProjectExperienceViewController: UIViewController {
-    
+    @IBOutlet weak var contentsize: UIView!
     @IBOutlet weak var leedIdTextField: UITextField!
     @IBOutlet weak var projectNameTextField: UITextField!
     @IBOutlet weak var greenAssociateRadioButton: DLRadioButton!
@@ -24,8 +24,6 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
     @IBOutlet weak var noneRadioButton: DLRadioButton!
     @IBOutlet weak var ceHoursTextField: UITextField!
     @IBOutlet weak var involvementContainer: UIView!
-    @IBOutlet weak var startDateTF: ImageTextField!
-    @IBOutlet weak var endDateTF: ImageTextField!
     @IBOutlet weak var teamRoleTF: UITextField!
     @IBOutlet weak var descriptionTV: UITextView!
     @IBOutlet weak var involvementHeightConstraint: NSLayoutConstraint! //240
@@ -54,6 +52,13 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
     var leedSpecific: String = ""
     var cred_specific_record: [SpecificCredentials] = []
     
+    override func viewDidLayoutSubviews() {
+        self.scrollview.contentSize = CGSize(width :self.view.frame.size.width, height: UIScreen.main.bounds.size.height * 4)
+    }
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         involvementHeightConstraint.constant = 0
@@ -63,7 +68,67 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
         projectDetailsContainer.isHidden = true
         tableView.isHidden = true
         DropDown.startListeningToKeyboard()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapped(_:)))
+        tap.numberOfTapsRequired = 1
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapped1(_:)))
+        tap1.numberOfTapsRequired = 1
+        self.startlbl.tag = 0        
+        self.endlbl.tag = 1
+        //self.scrollview.keyboardDismissMode = .onDrag
+        self.startlbl.layer.cornerRadius = 5
+        self.startlbl.layer.masksToBounds = true
+        self.startlbl.layer.borderColor = UIColor.lightGray.cgColor
+        self.startlbl.layer.borderWidth = 1.0;
+        self.endlbl.layer.cornerRadius = 5
+        self.startlbl.textAlignment = .center
+        self.endlbl.textAlignment = .center
+        self.endlbl.layer.masksToBounds = true
+        self.endlbl.layer.borderColor = UIColor.lightGray.cgColor
+        self.endlbl.layer.borderWidth = 1.0;
+        self.startlbl.isUserInteractionEnabled = true
+        self.endlbl.isUserInteractionEnabled = true
+        self.startlbl.addGestureRecognizer(tap)
+        self.endlbl.addGestureRecognizer(tap1)
+        
         initViews()
+    }
+    
+    func doubleTapped(_ recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+        if(recognizer.view!.tag == 0){
+            print("start label")
+        }else{
+            print("end label")
+        }
+        let currentDate = Date()
+        var dateComponents = DateComponents()
+        dateComponents.month = -3
+        let threeMonthAgo = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
+            if let dt = date {
+                self.startDates = dt as NSDate
+                self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            }
+        }
+    }
+    
+    func doubleTapped1(_ recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+        if(recognizer.view!.tag == 0){
+            print("start label")
+        }else{
+            print("end label")
+        }
+        let currentDate = Date()
+        var dateComponents = DateComponents()
+        dateComponents.month = -3
+        let threeMonthAgo = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
+            if let dt = date {
+                self.endDates = dt as NSDate
+                self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
+            }
+        }
     }
     
     func initViews(){
@@ -240,6 +305,7 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
             }
         }
     }
+    @IBOutlet weak var scrollview: UIScrollView!
     
     func handleSearchProjectLEED(_ sender: Any){
         guard let leedID = leedIdTextField.text, !leedID.isEmpty else {
@@ -278,6 +344,8 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
             print("Error!")
         }
     }
+    @IBOutlet weak var startlbl: UILabel!
+    @IBOutlet weak var endlbl: UILabel!
     
     func handleSearchProjectName(_ sender: Any){
         guard let projectName = projectNameTextField.text, !projectName.isEmpty else {
@@ -340,6 +408,112 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
         if(projects.count == 0 ){
             Utility.showToast(message: NSLocalizedString("Please select project.", comment: "validation"))
             return
+        }else{
+            let id = projects.first?.pid
+            let title = projects.first?.title
+            guard let startDate = self.startlbl.text, !startDate.isEmpty else {
+                startlbl.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter start date.", comment: "validation"))
+                return
+            }
+            guard let endDate = endlbl.text, !endDate.isEmpty else {
+                endlbl.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter end date.", comment: "validation"))
+                return
+            }
+            guard let description = descriptionTV.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter description.", comment: "validation"))
+                return
+            }
+            
+            guard let role = roleDropDown.selectedItem, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please select role.", comment: "validation"))
+                return
+            }
+            guard let firstname = refFistNameTF.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter first name.", comment: "validation"))
+                return
+            }
+            
+            guard let lastname = refLastNameTF.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter last name.", comment: "validation"))
+                return
+            }
+            guard let company = refCompanyTF.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter company.", comment: "validation"))
+                return
+            }
+            
+            guard let email = refEmailTF.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter email.", comment: "validation"))
+                return
+            }
+            guard let phone = refPhoneTF.text, !description.isEmpty else {
+                descriptionTV.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter phone number.", comment: "validation"))
+                return
+            }
+            
+            guard let ceHours = ceHoursTextField.text, !ceHours.isEmpty else {
+                ceHoursTextField.shake()
+                Utility.showToast(message: NSLocalizedString("Please enter ce hours.", comment: "validation"))
+                return
+            }
+            let calendar = NSCalendar.current
+            
+            // Replace the hour (time) of both dates with 00:00
+            let date1 = calendar.startOfDay(for: startDates as Date)
+            let date2 = calendar.startOfDay(for: endDates as Date)
+            
+            let components = calendar.dateComponents([.second], from: date1, to: date2)
+            if(components.second! < 0){
+                
+                Utility.showToast(message: NSLocalizedString("Invalid date range.", comment: "validation"))
+                return
+            }
+            if(leedSpecific == ""){
+                Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
+                return
+            }
+            let ceReport = CEReport()
+            ceReport.course_id = (id?.isEmpty)! ? "" : id!
+            ceReport.title = title!
+            ceReport.start_date = startDate
+            ceReport.end_date = endDate
+            ceReport.description = description
+            ceReport.url = "https://www.usgbc.org/test-link"//url
+            ceReport.hours = ceHours
+            ceReport.cehour_type = ceType
+            ceReport.email = Utility().getUserDetail()
+            ceReport.role = role
+            ceReport.company = company
+            ceReport.fname = firstname
+            ceReport.lname = lastname
+            ceReport.phone = phone
+            
+            
+            Utility.showLoading()
+            ApiManager.shared.reportCEHours(ceReport: ceReport, callback: {(json, error) in
+                if(error == nil){
+                    Utility.hideLoading()
+                    let message = json!["result"]["message"].stringValue
+                    if(!message.isEmpty){
+                        Utility.showToast(message: message)
+                        self.navigationController?.popViewController(animated: true)
+                    }else{
+                        Utility.showToast(message: "\(json!)")
+                    }
+                }else{
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong!")
+                }
+            })
         }
     }
     
@@ -357,7 +531,6 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
     }
     
     @IBAction func handleStartDate(_ sender: Any) {
-        startDateTF.resignFirstResponder()
         let currentDate = Date()
         var dateComponents = DateComponents()
         dateComponents.month = -3
@@ -366,13 +539,12 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
         DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
             if let dt = date {
                 self.startDates = dt as NSDate
-                self.startDateTF.text = "\(self.convertDate(date: dt as NSDate))"
+                self.startlbl.text = "\(self.convertDate(date: dt as NSDate))"
             }
         }
     }
     
     @IBAction func handleEndDate(_ sender: Any) {
-        endDateTF.resignFirstResponder()
         let currentDate = Date()
         var dateComponents = DateComponents()
         dateComponents.month = -3
@@ -381,7 +553,7 @@ class ReportCeHourProjectExperienceViewController: UIViewController {
         DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", minimumDate: threeMonthAgo, maximumDate: currentDate, datePickerMode: .date) { (date) in
             if let dt = date {
                 self.endDates = dt as NSDate
-                self.endDateTF.text = "\(self.convertDate(date: dt as NSDate))"
+                self.endlbl.text = "\(self.convertDate(date: dt as NSDate))"
             }
         }
     }
@@ -413,6 +585,8 @@ extension ReportCeHourProjectExperienceViewController: UITableViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        projects = [LEEDProject]()
+        projects.append(leedProjects[indexPath.row])
         projectNameLabel.text = "Connected: \(self.leedProjects[indexPath.row].title)"
         projectIDLabel.text = "Project ID: \(self.leedProjects[indexPath.row].pid)"
         showContainers()

@@ -13,5 +13,12 @@ class PublicationDetailsViewController: PSPDFViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
+        self.thumbnailController.stickyHeaderEnabled = true        
+        self.thumbnailController.filterSegment.tintColor = UIColor.hex(hex: Colors.primaryColor)
     }
+    
+    
+    
+    
 }

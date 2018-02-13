@@ -11,7 +11,8 @@ import DLRadioButton
 import SwiftyJSON
 
 class ReportCEHourVolunteerWorkViewController: UIViewController {
-
+    var edit = false
+    var ceReport = CEReport()
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var providerTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -290,7 +291,6 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
             Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
             return
         }
-        let ceReport = CEReport()
         ceReport.title = title
         ceReport.provider = provider
         ceReport.start_date = startDate
@@ -299,7 +299,7 @@ class ReportCEHourVolunteerWorkViewController: UIViewController {
         ceReport.url = "https://www.usgbc.org/test-link"//url
         ceReport.hours = ceHours
         ceReport.cehour_type = ceType
-        ceReport.email = "esingh@usgbc.org"//Utility().getUserDetail()
+        ceReport.email = Utility().getUserDetail()
         Utility.showLoading()
         ApiManager.shared.reportCEHours(ceReport: ceReport, callback: {(json, error) in
             if(error == nil){

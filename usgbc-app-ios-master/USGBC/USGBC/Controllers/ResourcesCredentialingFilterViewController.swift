@@ -47,6 +47,7 @@ class ResourcesCredentialingFilterViewController: UIViewController {
         if let selectionIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectionIndexPath, animated: animated)
         }
+        self.tableView.reloadData()
     }
     
     func initViews(){
@@ -59,13 +60,13 @@ class ResourcesCredentialingFilterViewController: UIViewController {
     }
     
     func loadResourcesLeedCount(){
- let parameter = Payloads().makePayloadForResources(typearray: typearray, formatarray: formatarray, ratingarray: ratingarray, versionarray: versionarray, accessarray: accessarray, languagearray: languagearray)
+ let parameter = Payloads().makePayloadForResources(typearray: typearray, formatarray: formatarray, ratingarray: ratingarray, versionarray: versionarray, accessarray: accessarray, languagearray: languagearray, currentcategory : "credentialing")
         
         filter = ((type.isEmpty) ? "all" : type) + "/" + ((ratingSystem.isEmpty) ? "all" : ratingSystem) + "/" + ((versions.isEmpty) ? "all" : versions) + "/" + ((language.isEmpty) ? "all" : language) + "/" + ((format.isEmpty) ? "all" : format) +  "/" + ((access.isEmpty) ? "all" : access)
         print(filter)
         ApiManager.shared.getResourcesCount(category: filter, parameter: parameter) { count, error in
             if(error == nil){
-                if(self.filter == "7456+5048+2016/all/all/all/all/all"){
+                if(parameter == ""){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) resources"
@@ -144,6 +145,28 @@ extension ResourcesCredentialingFilterViewController: UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var temp = [String]()
+        if(indexPath.row == 0){
+            temp = self.typearray
+        }else if(indexPath.row == 1){
+            temp = self.formatarray
+        }else if(indexPath.row == 2){
+            temp = self.ratingarray
+        }else if(indexPath.row == 3){
+            temp = self.versionarray
+        }else if(indexPath.row == 4){
+            temp = self.accessarray
+        }else if(indexPath.row == 5){
+            temp = self.languagearray
+        }
+        if(temp.count > 0){
+            var str = temp.joined(separator: ", ")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+            cell.textLabel?.text = filters[indexPath.row].name
+            cell.detailTextLabel?.text = str
+            return cell
+        }
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
         cell.filterLabel.text = filters[indexPath.row].name
         return cell

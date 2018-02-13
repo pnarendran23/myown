@@ -21,5 +21,11 @@ class CEReport {
     var description = ""
     var url = ""
     var provider = ""
+    var role = ""
+    var company = ""
+    var phone = ""
+    var Nid = ""
+    var fname = ""
+    var lname = ""
     var course_id = ""
 }

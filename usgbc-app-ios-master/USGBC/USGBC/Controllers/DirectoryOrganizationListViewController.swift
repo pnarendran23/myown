@@ -16,7 +16,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
     var category = "all"
     var rating = "all"
     var version = "all"
-    
+    var selectedfilter : [String] = ["all","","","","",""]
     fileprivate var loadType = "init"
     fileprivate var pageNumber = 0
     fileprivate var pageSize = 50
@@ -32,6 +32,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView.keyboardDismissMode = .onDrag
         self.nodata.isHidden = true
         initViews()
         
@@ -198,6 +199,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                         }
                         print(self.filterOrganizations.count)
                     }else{
+                        self.loading = true
                         Utility.showToast(message: "That was all")      
                     }
                 }
@@ -224,6 +226,7 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                 let viewController = rootViewController.topViewController as! DirectoryOrganizationFilterViewController
                 viewController.delegate = self
                 viewController.filter = category
+                viewController.selectedfilter = selectedfilter
             }
         }
     }
@@ -351,11 +354,25 @@ extension DirectoryOrganizationListViewController: UISearchBarDelegate {
 
 //MARK: - Organization Filter Delegate
 extension DirectoryOrganizationListViewController: OrganizationFilterDelegate {
-    func userDidSelectedFilter(filter: String) {
-        category = filter
-        searchText = ""
-        pageNumber = 0
-        loadType = "init"
+    func userDidSelectedFilter(filter: String,selfilter : [String]) {
+        self.selectedfilter = selfilter
+        var temp = [String]()
+        for item in selfilter{
+            if(item != "" && item.lowercased() != "all"){
+                temp.append(item)
+            }
+        }
+        var result = "all"
+        if(temp.count > 0){
+            result = temp.joined(separator: " OR ")
+            result = result.replacingOccurrences(of: " ", with: "%20")
+            print(result)
+            category = "%28relationship:" + result + "%29"
+        }else{
+            category = result
+        }
+        category = category.replacingOccurrences(of: "partners", with: "partner")
+        self.pageNumber = 0
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadOrganizations(rating: self.rating, version: self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)

@@ -10,21 +10,49 @@ import UIKit
 import PSPDFKit
 import RealmSwift
 
-class PublicationDeviceListViewController: UIViewController {
+class PublicationDeviceListViewController: UIViewController, UISearchBarDelegate {
 
     var publications: [Publication] = []
     var filterPublications: [Publication] = []
     let apiManager = ApiManager()
     var searchOpen = false
     
+    @IBOutlet weak var nodata: UILabel!
     @IBOutlet weak var collectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView.keyboardDismissMode = .onDrag
+        self.searchBar.delegate = self
+        self.nodata.isHidden = true
         initViews()
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //self.loadLocalPublications()
+        self.filterPublications = actualdata
+        if(searchText.characters.count == 0){
+            self.filterPublications = actualdata
+            self.collectionView.reloadData()
+        }else{
+        var temp = [Publication]()
+        for publicate in filterPublications{
+            if(publicate.fileDescription.lowercased().contains(searchText.lowercased())){
+                temp.append(publicate)
+            }
+        }
+        self.filterPublications = temp
+        self.collectionView.reloadData()
+        }
+        if(filterPublications.count > 0){
+            self.nodata.isHidden = true
+        }else{
+            self.nodata.isHidden = false
+        }
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -58,7 +86,7 @@ class PublicationDeviceListViewController: UIViewController {
     
     func handleSearch(){
         if(!searchOpen){
-            collectionViewTopConstraint.constant = 44
+            collectionViewTopConstraint.constant = 54
             UIView.animate(withDuration: 1.0,
                            delay: 0.0,
                            usingSpringWithDamping: 0.0,
@@ -81,12 +109,19 @@ class PublicationDeviceListViewController: UIViewController {
             searchOpen = false
         }
     }
-    
+    var actualdata = [Publication]()
     //To load JSON from file
     func loadLocalPublications(){
         let realm = try! Realm()
         publications = Array(realm.objects(Publication.self))
         filterPublications = publications
+        actualdata = filterPublications
+        if(filterPublications.count > 0){
+            self.nodata.isHidden = true
+        }else{
+            self.nodata.isHidden = false
+        }
+        print(filterPublications.first)
         collectionView.reloadData()
     }
     
@@ -169,6 +204,15 @@ extension PublicationDeviceListViewController: UICollectionViewDelegate, UIColle
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PublicationCompactCell", for: indexPath) as! PublicationCompactCell
         cell.updateViews(publication: publication)
         return cell
+    }
+    
+    func filterTableViewForEnterText(searchText: String) {
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchText)
+        
+        let array = (self.filterPublications as NSArray).filtered(using: searchPredicate)
+        var temp = array as! [String]
+        print(temp.count)
+        self.collectionView.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

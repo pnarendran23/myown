@@ -170,7 +170,7 @@ class ResourceAdvAndPolicyListViewController: UIViewController, UIPopoverControl
     //To load JSON from file
     func loadResources(category: String, search: String, page: Int, loadType: String){
         Utility.showLoading()
-       var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr)
+       var parameter = Payloads().makePayloadForResources(typearray: typearr, formatarray: formatarr, ratingarray: ratingarr, versionarray: versionarr, accessarray: accessarr, languagearray: languagearr, currentcategory : "adv")
         if(search.characters.count > 0){
             parameter = search + "%20AND%20(" + parameter + ")"
         }
