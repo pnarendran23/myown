@@ -307,7 +307,7 @@ class ReportCeHourEducationViewController: UIViewController {
         }
         if(leedSpecific == ""){
             Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
-            //return
+            return
         }
         ceReport.course_id = (id?.isEmpty)! ? "" : id!
         ceReport.title = title

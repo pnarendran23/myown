@@ -281,6 +281,10 @@ extension DirectoryProjectMapViewController: UISearchBarDelegate {
         loadType = "init"
         pageNumber = 0
         //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadProjectsElastic(search: searchText, category: category)
     }
     

@@ -207,6 +207,10 @@ class Utility{
         AWBanner.showWithDuration(4.5, delay: 0.0, message: NSLocalizedString(message, comment: ""), backgroundColor: UIColor.hex(hex: Colors.drawerBackground), textColor: UIColor.white, originY: 64)
     }
     
+    static func showToastDontClose(message:String){
+        AWBanner.showWithDuration(0, delay: 0.0, message: NSLocalizedString(message, comment: ""), backgroundColor: UIColor.hex(hex: Colors.drawerBackground), textColor: UIColor.white, originY: 64)
+    }
+    
     static func showLoading(){
         DispatchQueue.main.async {
             SVProgressHUD.setDefaultStyle(.custom)

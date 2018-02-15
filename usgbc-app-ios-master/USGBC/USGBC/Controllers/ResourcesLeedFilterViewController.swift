@@ -77,7 +77,7 @@ class ResourcesLeedFilterViewController: UIViewController {
         
         ApiManager.shared.getResourcesCount(category: filter, parameter: parameter ) { count, error in
             if(error == nil){
-                if(parameter == ""){
+                if(parameter == "%28field_res_type:%28%22Addenda%22%20OR%20%22Calculators%22%20OR%20%22Checklists%22%20OR%20%22Certification%22%20OR%20%22Guidance%22%20OR%20%22Rating%20system%22%20OR%20%22Standards%22%29%29"){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) resources"
@@ -95,7 +95,6 @@ class ResourcesLeedFilterViewController: UIViewController {
     }
     
     @IBAction func handleClearFilter(_ sender: Any) {
-        if(self.filter != "2780+2783+2781+4996+2782+1361+965/all/all/all/all/all"){
             filter = "2780+2783+2781+4996+2782+1361+965/all/all/all/all/all"
             type = "2780+2783+2781+4996+2782+1361+965"
             format = ""
@@ -124,7 +123,7 @@ class ResourcesLeedFilterViewController: UIViewController {
             self.languagearray = []
             self.tableView.reloadData()
             loadResourcesLeedCount()
-        }
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

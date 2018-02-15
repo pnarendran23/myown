@@ -215,6 +215,18 @@ class CourseListViewController: UIViewController, UIPopoverControllerDelegate, U
                     self.collectionView.reloadData()
                     self.loading = false
                     print(self.filterCourses.count)
+                    DispatchQueue.main.async {
+                        if(courses!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(courses!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
                 }else{
                     if(courses!.count > 0){
                         self.courses.append(contentsOf: courses!)
@@ -428,6 +440,10 @@ extension CourseListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadCourses(category: category, search: searchText, size: 50, page: pageNumber, loadType: loadType)
     }
 

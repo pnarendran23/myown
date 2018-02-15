@@ -33,7 +33,7 @@ class CourseRegularCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         titleLabel.attributedText = Utility.linespacedString(string: course.title, lineSpace: 2)
         let paragraph = NSMutableParagraphStyle()
-        paragraph.alignment = .center
+        paragraph.alignment = .left
         titleLabel.attributedText = NSAttributedString(string: (titleLabel.attributedText?.string)!,attributes: [NSParagraphStyleAttributeName : paragraph])
         providerLabel.text = course.provider_name
         self.layer.cornerRadius = 5

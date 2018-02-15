@@ -6,6 +6,7 @@ target 'USGBC' do
   use_frameworks!
 
   # Pods for USGBC
+  pod 'SwiftyPickerPopover'
   pod 'ParallaxHeader'
   pod 'SimpleImageViewer', '~> 1.1.1'
   pod 'Fabric'

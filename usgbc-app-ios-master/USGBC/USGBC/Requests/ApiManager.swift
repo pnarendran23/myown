@@ -376,10 +376,12 @@ class ApiManager {
     }
     
     func reportCEHours(ceReport: CEReport, callback: @escaping (JSON?, NSError?) -> ()){
-        var parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
+        var parameters = [String: Any]()
         
         if(ceReport.Nid != ""){
-            parameters["Nid"] = ceReport.Nid
+            parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id, "Nid":ceReport.Nid]
+        }else{
+           parameters = ["email": ceReport.email, "partneralias": ceReport.partneralias, "partnerpwd": ceReport.partnerpwd, "hours": ceReport.hours, "cehour_type": ceReport.cehour_type, "cehour_specialty": ceReport.cehour_specialty, "title": ceReport.title, "start_date": ceReport.start_date, "end_date": ceReport.end_date, "description": ceReport.description, "url": ceReport.url, "provider": ceReport.provider, "course_id": ceReport.course_id]
         }
         
         print(parameters)
@@ -570,7 +572,6 @@ class ApiManager {
         }
         
         cell.progressView.isHidden = false
-        
         Alamofire.download(ApiEndPoints.downloadPublication + "?key=" + publication.fileKey, headers: headers,  to: destination)
             .downloadProgress { progress in
                 //print("Download Progress: \(progress.fractionCompleted)")
@@ -587,9 +588,12 @@ class ApiManager {
                         callback(publication, nil)
                     }
                 }catch {
+                    callback(nil, nil)
                     print(error.localizedDescription)
                 }
-            }
+            }else if(response.error != nil){
+                callback(nil, response.error as! NSError)
+                }
             cell.progressView.isHidden = true
         }
     }
@@ -619,6 +623,8 @@ class ApiManager {
             "Authorization": "Basic " + helper.getTokenDetail(),
             "Content-Type": "application/x-www-form-urlencoded"
         ]
+        
+        
         let parameters = ["partnerpwd":partnerpwd,"token":helper.getTokenDetail(),"partneralias":partneralias,"email":email]
         let url = "\(baseUrlMobileDEV)/getPublications.json"
         print(headers)
@@ -1840,7 +1846,7 @@ class ApiManager {
     }
     
     func getProjectsMap(category: String, search: String, page: Int, callback: @escaping ([Project]?, NSError?) -> ()){
-        var parameters = ["from": "\(page)"]
+        var parameters = ["from": "\(page)","size":"50"]
         if(search != ""){
             parameters["keys"] = search
         }
@@ -2118,14 +2124,15 @@ class ApiManager {
     func getResources(category: String, parameter : String, size: Int, search: String, page: Int, callback: @escaping ([Resource]?, NSError?) -> ()){
         var parameters = ["from": "\(page)", "size": size] as! [String: Any]
         var url = elasticbaseURL + "resources_ios/_search"//"\(baseUrlMobileDEV)/resourceslist/\(category)"
+        var str = "%22" + search + "%22"
         if(parameter == ""){
              url = elasticbaseURL + "resources_ios/_search"
         }else{
             if(search != ""){
-                url = url + "?q=" + search + "%28" + parameter + "%29"
+                url = url + "?q=" + str + "" + parameter + ""
                 //parameters["search"] = search
             }else{
-                url = url + "?q=%28" + parameter + "%29"
+                url = url + "?q=" + parameter + ""
             }
         }
         
@@ -2220,7 +2227,7 @@ class ApiManager {
     }
     
     func getResourcesCount(category: String, parameter : String, callback: @escaping (Int?, NSError?) -> ()){
-     var url = elasticbaseURL + "resources_ios/_search?q=%28"+parameter+"%29"//"\(baseUrlMobileDEV)/resourceslist/\
+     var url = elasticbaseURL + "resources_ios/_search?q="+parameter+""//"\(baseUrlMobileDEV)/resourceslist/\
         if(parameter == ""){
             url = elasticbaseURL + "resources_ios/_search"
         }

@@ -66,7 +66,7 @@ class ResourcesAdvAndPolicyFilterViewController: UIViewController {
         print(filter)
         ApiManager.shared.getResourcesCount(category: filter, parameter:  parameter) { count, error in
             if(error == nil){
-                if(parameter == ""){
+                if(parameter == "%28field_res_type:%28%22Advocacy%20briefs%22%20OR%20%22LEED%20case%20studies%22%20OR%20%22Market%20briefs%22%20OR%20%22Public%20policies%22%20OR%20%22Reports%22%29%29"    ){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) resources"

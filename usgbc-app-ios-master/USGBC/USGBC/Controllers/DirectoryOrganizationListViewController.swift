@@ -179,6 +179,18 @@ class DirectoryOrganizationListViewController: UIViewController, UIPopoverContro
                     }else{
                         self.nodata.isHidden = true
                     }
+                    DispatchQueue.main.async {
+                        if(organizations!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(organizations!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
                     print(self.filterOrganizations.count)
                 }else{
                     if(organizations!.count > 0){
@@ -325,6 +337,7 @@ extension DirectoryOrganizationListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
+        self.loading = true        
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadOrganizations(rating : self.rating, version : self.version, category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType )

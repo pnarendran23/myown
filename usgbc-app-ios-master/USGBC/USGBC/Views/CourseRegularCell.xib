@@ -33,8 +33,8 @@
                             <constraint firstAttribute="width" secondItem="mKW-rQ-enW" secondAttribute="height" multiplier="8:5" constant="96" id="ELv-my-6JA"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFu-nb-soo">
-                        <rect key="frame" x="0.0" y="152" width="320" height="66"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFu-nb-soo">
+                        <rect key="frame" x="5" y="152" width="310" height="66"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="66" id="5IU-rS-ipM"/>
                         </constraints>
@@ -43,7 +43,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zfX-aC-3rV" customClass="SwiftyStarRatingView" customModule="SwiftyStarRatingView">
-                        <rect key="frame" x="110" y="260" width="100" height="12"/>
+                        <rect key="frame" x="5" y="260" width="100" height="12"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.098039215690000001" green="0.58039215690000001" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -62,8 +62,8 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Green Building Research Institute (GBRI)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-0C-nu4">
-                        <rect key="frame" x="0.0" y="225" width="320" height="27"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Green Building Research Institute (GBRI)" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-0C-nu4">
+                        <rect key="frame" x="5" y="225" width="310" height="27"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="27" id="6hN-fz-9qO"/>
                         </constraints>
@@ -76,22 +76,22 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="vFu-nb-soo" firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" id="21N-xg-d5M"/>
-                <constraint firstItem="vFu-nb-soo" firstAttribute="trailing" secondItem="mKW-rQ-enW" secondAttribute="trailing" id="4BO-kK-5mA"/>
-                <constraint firstAttribute="trailing" secondItem="zfX-aC-3rV" secondAttribute="trailing" constant="110" id="5ai-em-ts8"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="trailing" secondItem="mKW-rQ-enW" secondAttribute="trailing" constant="-5" id="4BO-kK-5mA"/>
+                <constraint firstAttribute="trailing" secondItem="zfX-aC-3rV" secondAttribute="trailing" constant="215" id="5ai-em-ts8"/>
                 <constraint firstAttribute="trailing" secondItem="mKW-rQ-enW" secondAttribute="trailing" id="8w2-24-owg"/>
                 <constraint firstItem="zfX-aC-3rV" firstAttribute="top" secondItem="LKX-0C-nu4" secondAttribute="bottom" constant="8" symbolic="YES" id="ANz-TB-7dF"/>
-                <constraint firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" id="BCR-Wa-iFj"/>
-                <constraint firstItem="zfX-aC-3rV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="110" id="GnZ-uk-5wG"/>
-                <constraint firstItem="LKX-0C-nu4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="HCp-Gz-EnS"/>
-                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Hlk-mM-owH"/>
+                <constraint firstAttribute="trailing" secondItem="LKX-0C-nu4" secondAttribute="trailing" constant="5" id="BCR-Wa-iFj"/>
+                <constraint firstItem="zfX-aC-3rV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="GnZ-uk-5wG"/>
+                <constraint firstItem="LKX-0C-nu4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="HCp-Gz-EnS"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="Hlk-mM-owH"/>
                 <constraint firstItem="vFu-nb-soo" firstAttribute="top" secondItem="mKW-rQ-enW" secondAttribute="bottom" constant="12" id="LF3-RP-P98"/>
                 <constraint firstItem="LKX-0C-nu4" firstAttribute="top" secondItem="vFu-nb-soo" secondAttribute="bottom" constant="7" id="Niy-l1-SHU"/>
                 <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="LKX-0C-nu4" secondAttribute="leading" id="RU2-kL-OEU"/>
                 <constraint firstAttribute="bottom" secondItem="zfX-aC-3rV" secondAttribute="bottom" constant="8" id="SE9-ZI-eVg"/>
                 <constraint firstItem="mKW-rQ-enW" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="cF3-wt-gq4"/>
-                <constraint firstAttribute="trailing" secondItem="vFu-nb-soo" secondAttribute="trailing" id="i8x-VP-Fhg"/>
+                <constraint firstAttribute="trailing" secondItem="vFu-nb-soo" secondAttribute="trailing" constant="5" id="i8x-VP-Fhg"/>
                 <constraint firstItem="mKW-rQ-enW" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="jte-ie-gcA"/>
-                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="mKW-rQ-enW" secondAttribute="leading" id="q1D-LG-CFN"/>
+                <constraint firstItem="vFu-nb-soo" firstAttribute="leading" secondItem="mKW-rQ-enW" secondAttribute="leading" constant="5" id="q1D-LG-CFN"/>
                 <constraint firstItem="vFu-nb-soo" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="uhC-oc-BKS"/>
             </constraints>
             <connections>

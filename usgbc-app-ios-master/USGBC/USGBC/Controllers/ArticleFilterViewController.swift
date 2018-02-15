@@ -115,6 +115,10 @@ class ArticleFilterViewController: UIViewController {
     @IBAction func handleDone(_ sender: Any) {
         if(filterChanged){
             if let delegate = self.delegate {
+                var t = ["","","","","","","","","",""]
+                if(t == selectedfilter){
+                    selectedfilter = ["all","","","","","","","","",""]
+                }
                 delegate.userDidSelectedFilter(filter: filter, selfilter : selectedfilter, totalCount: totalCount)
             }
         }
@@ -161,9 +165,19 @@ extension ArticleFilterViewController: UITableViewDelegate, UITableViewDataSourc
         //self.totalArticlesLabel.text = "Please wait"
         if(selectedfilter[indexPath.row] == ""){
             selectedfilter[indexPath.row] = filters[indexPath.row].name
+            if(indexPath.row == 0){                
+                    selectedfilter = ["all","","","","","","","","",""]
+            }
         }else{
             selectedfilter[indexPath.row] = ""
         }
+        
+        if(indexPath.row > 0){
+            selectedfilter[0] = ""
+        }
+        
+        
+        
         selectedIndexPath = indexPath
         
         filter = filters[indexPath.row].name

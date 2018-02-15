@@ -18,35 +18,35 @@ class Payloads {
     var versionstring = String()
     var languagestring = String()
     var ratingstring = String()
-        if(currentcategory == "leed"){
-                size = 7
-        }else if(currentcategory == "adv"){
-            size = 5
-        }else{
-            size = 3
-        }
+
     print("cc is",currentcategory)
-        if(typearray.count < size){
     for str in typearray{
     if(typestring.characters.count > 0){
-    typestring = typestring + "%20OR%20" + str
+    typestring = typestring + "%20OR%20%22" + str + "%22"
     }else{
-    typestring = "field_res_type:" + str
+    typestring = "%28field_res_type:%28%22" + str + "%22"
     }
-    }
-        }
+    }        
     
+        if(typestring.characters.count > 0){
+                typestring = typestring + "%29%29"
+        }
+        
     for str in formatarray{
     if(formatstring.characters.count > 0){
     formatstring = formatstring + "%20OR%20" + str
     }else{
-    if(typestring.characters.count == 0 || typestring.characters.count == size){
-    formatstring = "field_format:" + str
+    if(typestring.characters.count == 0){
+    formatstring = "%28field_format:%28%22" + str + "%22"
     }else{
-    formatstring = "%20AND%20field_format:" + str
+    formatstring = "%20AND%20%28field_format:%28%22" + str + "%22"
     }
     }
     }
+        
+        if(formatstring.characters.count > 0){
+            formatstring = formatstring + "%29%29"
+        }
     
     for str in ratingarray{
         var s = str
@@ -57,52 +57,67 @@ class Payloads {
             //ratingstring = "%20AND%20field_res_rating:" + arr[1]
         }
     if(ratingstring.characters.count > 0){
-    ratingstring = ratingstring + "%20OR%20" + s
+    ratingstring = ratingstring + "%20OR%20%22" + s + "%22"
     }else{
     if(typestring.characters.count > 0 || formatstring.characters.count > 0){
-    ratingstring = "%20AND%20field_res_rating:" + s
+    ratingstring = "%20AND%20%28field_res_rating:%28%22" + s + "%22"
     }else{
-    ratingstring = "field_res_rating:" + s
+    ratingstring = "%28field_res_rating:%28%22" + s + "%22"
     }
     }
     }
+        
+        if(ratingstring.characters.count > 0){
+            ratingstring = ratingstring + "%29%29"
+        }
     
     for str in accessarray{
     if(accessstring.characters.count > 0){
-    accessstring = accessstring + "%20AND%20" + str
+    accessstring = accessstring + "%20AND%20%22" + str + "%22"
     }else{
     if(typestring.characters.count > 0 || formatstring.characters.count > 0 || ratingstring.characters.count > 0){
-    accessstring = "%20AND%20field_res_members:" + str
+    accessstring = "%20AND%20%28field_res_members:%28%22" + str + "%22"
     }else{
-    accessstring = "field_res_members:" + str
+    accessstring = "%28field_res_members:%28%22" + str + "%22"
     }
     }
     }
+        
+        if(accessstring.characters.count > 0){
+            accessstring = accessstring + "%29%29"
+        }
     
     for str in versionarray{
     if(versionstring.characters.count > 0){
-    versionstring = versionstring + "%20OR%20" + str
+    versionstring = versionstring + "%20OR%20%22" + str + "%22"
     }else{
     if(typestring.characters.count > 0 || formatstring.characters.count > 0 || ratingstring.characters.count > 0 || accessstring.characters.count > 0){
-    versionstring = "%20AND%20field_res_version:" + str
+    versionstring = "%20AND%20%28field_res_version:%28%22" + str + "%22"
     }else{
-    versionstring = "field_res_version:" + str
+    versionstring = "%28field_res_version:%28%22" + str + "%22"
     }
     }
     }
+        
+        if(versionstring.characters.count > 0){
+            versionstring = versionstring + "%29%29"
+        }
     
     for str in languagearray{
     if(languagestring.characters.count > 0){
-    languagestring = languagestring + "%20OR%20" + str
+    languagestring = languagestring + "%20OR%20%22" + str + "%22"
     }else{
     if(typestring.characters.count > 0 || formatstring.characters.count > 0 || ratingstring.characters.count > 0 || accessstring.characters.count > 0 || versionstring.characters.count > 0){
-    languagestring = "%20AND%20field_res_language:" + str
+    languagestring = "%20AND%20%28field_res_language:%28%22" + str + "%22"
     }else{
-    languagestring = "field_res_language:" + str
+    languagestring = "%28field_res_language:%28%22" + str + "%22"
     }
     }
     }
-    
+        if(languagestring.characters.count > 0){
+            languagestring = languagestring + "%29%29"
+        }
+        
     print(typestring+formatstring+ratingstring+accessstring+versionstring+languagestring)
     var parameter = typestring+formatstring+ratingstring+accessstring+versionstring+languagestring
     parameter = parameter.replacingOccurrences(of: " ", with: "%20")

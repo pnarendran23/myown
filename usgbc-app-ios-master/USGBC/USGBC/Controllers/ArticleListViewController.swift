@@ -148,6 +148,18 @@ class ArticleListViewController: UIViewController {
                         Utility.hideLoading()
                         self.collectionView.reloadData()
                     }
+                    
+                    DispatchQueue.main.async {
+                        if(articles!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            Utility.showToast(message: "That was all")
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
+                    
                     print(self.filterArticles.count)
                 }else{
                     if(articles!.count > 0){
@@ -203,6 +215,18 @@ class ArticleListViewController: UIViewController {
                     }
                     DispatchQueue.main.async {
                         Utility.hideLoading()
+                    }
+                    DispatchQueue.main.async {
+                        if(articles!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(articles!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
                     }
                     self.collectionView.reloadData()
                     print(self.filterArticles.count)
@@ -613,9 +637,11 @@ extension ArticleListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
-        //getData()
-        filterArticles = articles
-        collectionView.reloadData()
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        getData()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

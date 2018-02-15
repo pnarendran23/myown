@@ -28,15 +28,20 @@ class CourseDetailsViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         loadCourseAccess()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if(helper.getTokenDetail() != ""){
             userDidLogin = true
         }
         initViews()
+        
     }
     
     
@@ -133,7 +138,7 @@ class CourseDetailsViewController: UIViewController{
     
     //To load JSON from file
     func loadCourseDetails(){
-        //Utility.showLoading()
+        
         ApiManager.shared.getCourseDetails(id: courseId, callback: { (courseDetails, error) in
             if(error == nil){
                 Utility.hideLoading()
@@ -158,14 +163,14 @@ class CourseDetailsViewController: UIViewController{
     //To load JSON from file
     func loadCourseLeaders(){
         if(onScreen){
-            //Utility.showLoading()
+            
             ApiManager.shared.getCourseLeaders(id: courseId, callback: { (courseLeaders, error) in
                 if(error == nil){
-                    //Utility.hideLoading()
+                    
                     self.courseDetails.leaders = courseLeaders!
                     self.initCourseLeaders()
                 }else{
-                    //Utility.hideLoading()
+                    
                     var statuscode = error?._code as! Int
                     if(statuscode != -999){
                         Utility.hideLoading()
@@ -179,14 +184,14 @@ class CourseDetailsViewController: UIViewController{
     //To load JSON from file
     func loadCourseResources(){
         if(onScreen){
-            //Utility.showLoading()
+            
             ApiManager.shared.getCourseResources(id: courseId, callback: { (resources, error) in
                 if(error == nil){
-                    //Utility.hideLoading()
+                    
                     self.courseDetails.resources = resources!
                     self.initCourseResources()
                 }else{
-                    //Utility.hideLoading()
+                    
                     var statuscode = error?._code as! Int
                     if(statuscode != -999){
                         Utility.hideLoading()
@@ -200,14 +205,14 @@ class CourseDetailsViewController: UIViewController{
     //To load JSON from file
     func loadCourseProviders(){
         if(onScreen){
-            //Utility.showLoading()
+            
             ApiManager.shared.getCourseProviders(id: courseId, callback: { (providers, error) in
                 if(error == nil){
-                    //Utility.hideLoading()
+                    
                     self.courseDetails.providers = providers!
                     self.initCourseProviders()
                 }else{
-                    //Utility.hideLoading()
+                    
                     var statuscode = error?._code as! Int
                     if(statuscode != -999){
                         Utility.hideLoading()
@@ -220,14 +225,14 @@ class CourseDetailsViewController: UIViewController{
     
     func loadCourseSessions(){
         if(onScreen){
-            //Utility.showLoading()
+            
             ApiManager.shared.getCourseSessions(id: courseId, callback: { (sessions, error) in
                 if(error == nil){
-                    //Utility.hideLoading()
+                    
                     self.courseDetails.sessions = sessions!
                     self.initCourseSessions()
                 }else{
-                    //Utility.hideLoading()
+                    
                     var statuscode = error?._code as! Int
                     if(statuscode != -999){
                         Utility.hideLoading()
@@ -240,10 +245,10 @@ class CourseDetailsViewController: UIViewController{
     
     func loadCourseAccess(){
         if(onScreen){
-            Utility.showLoading()
+            
             ApiManager.shared.getCourseAcces(id: courseId, email: Utility().getUserDetail(), callback: { (access, error) in
                 if(error == nil){
-                    //Utility.hideLoading()
+                    
                     //self.courseDetails.access = access!
                     self.access = access!
                     self.loadCourseDetails()
@@ -276,6 +281,9 @@ class CourseDetailsViewController: UIViewController{
         if(contents != nil && baseUrl != nil){
             contents = courseDetails.getCourseSessionsHtmlContents(contents: contents!) as String
             webView.loadHTMLString(contents!, baseURL: baseUrl)
+            DispatchQueue.main.async {
+                Utility.hideLoading()
+            }
         }
     }
     
@@ -324,6 +332,8 @@ extension CourseDetailsViewController: UIWebViewDelegate {
 
 extension CourseDetailsViewController: LoginDelegate {
     func loginDone() {
+        onScreen = true
+        (contents, baseUrl) = TemplateManager.shared.getTemplateContents(file: "courseTemplate")
         print("loginDone")
         initCourseDetails()
         initCourseResources()

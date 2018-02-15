@@ -176,7 +176,16 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     }
                     print(self.filterCredits.count)
                     DispatchQueue.main.async {
-                        Utility.hideLoading()
+                        if(credits!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(credits!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
                     }
                 }else{
                     if(credits!.count > 0){
@@ -196,7 +205,7 @@ class CreditListViewController: UIViewController, UIPopoverControllerDelegate, U
                     }else{
                         DispatchQueue.main.async {
                             Utility.hideLoading()
-                            Utility.showToast(message: "That was all")
+                                Utility.showToast(message: "That was all")
                             self.loading = true
                         }
                     }
@@ -325,6 +334,12 @@ extension CreditListViewController: UISearchBarDelegate {
         searchText = ""
         searchBar.resignFirstResponder()
         hideSearch()
+        self.pageNumber = 0
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        self.loadCredits(rating: self.rating, version: self.version, credit: self.credit, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

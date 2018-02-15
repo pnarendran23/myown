@@ -309,7 +309,7 @@ class ReportCEHourAuthorshipViewController: UIViewController {
         }
         if(leedSpecific == ""){
             Utility.showToast(message: NSLocalizedString("Select LEED Specific.", comment: "validation"))
-            //return
+            return
         }
         ceReport.title = title
         ceReport.provider = provider

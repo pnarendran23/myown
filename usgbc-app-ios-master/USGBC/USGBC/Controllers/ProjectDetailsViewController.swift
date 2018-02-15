@@ -112,13 +112,17 @@ class ProjectDetailsViewController: UIViewController {
     }
     
     func loadProjectDetails(){
-        Utility.showLoading()
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         ApiManager.shared.getProjectDetails(id: projectID) { (projectDetails, error) in
             if(error == nil){
-                Utility.hideLoading()
                 self.projectDetails = projectDetails!
                 self.updateViews()
                 self.isFavorite = FavoriteManager.getFavoriteStatus(title: projectDetails!.title, favoriteButton: self.favoriteButton)
+                if(self.segmentControl.selectedSegmentIndex == 0){
+                    (self.viewControllers[0] as! ProjectOverviewViewController).refreshData(projectDetails: self.projectDetails)
+                }
                 self.loadDataReportings(projectDetails: self.projectDetails)
                 self.loadProjectScorecard(id: self.projectDetails.project_id)
             }else{
@@ -160,6 +164,9 @@ class ProjectDetailsViewController: UIViewController {
         d5.score = projectDetails.human_score
         d5.url = "\(url)/humandata"
         dataReportings.append(d5)
+        if(self.segmentControl.selectedSegmentIndex == 2){
+            (viewControllers[2] as! ProjectDataReportingViewController).refreshData(reportings: dataReportings)
+        }
     }
     
     func loadProjectScorecard(id: String){
@@ -172,6 +179,12 @@ class ProjectDetailsViewController: UIViewController {
                 //self.getFavoriteStatus()
                 for item in self.navigationItem.rightBarButtonItems!{
                     item.isEnabled = true
+                }
+                if(self.segmentControl.selectedSegmentIndex == 1){
+                    (self.viewControllers[1] as! ProjectLEEDScoreViewController).refreshData(scorecards: self.scorecards)
+                }
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
                 }
             }else{
                 //Utility.hideLoading()

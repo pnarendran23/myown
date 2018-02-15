@@ -173,6 +173,18 @@ class DirectoryPeopleListViewController: UIViewController, UIPopoverControllerDe
                     }else{
                         self.nodata.isHidden = true
                     }
+                    DispatchQueue.main.async {
+                        if(people!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(people!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
                     print(self.filterPeople.count)
                 }else{
                     if(people!.count > 0){
@@ -315,6 +327,7 @@ extension DirectoryPeopleListViewController: UISearchBarDelegate {
         hideSearch()
         loadType = "init"
         pageNumber = 0
+        self.loading = true        
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadPeople(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)

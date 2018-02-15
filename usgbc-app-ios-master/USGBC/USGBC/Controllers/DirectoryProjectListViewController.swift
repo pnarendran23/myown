@@ -197,6 +197,18 @@ class DirectoryProjectListViewController: UIViewController, UIPopoverControllerD
                     }else{
                         self.nodata.isHidden = true
                     }
+                    DispatchQueue.main.async {
+                        if(projects!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(projects!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
                     print(self.filterProjects.count)
                 }else{
                     self.projects.append(contentsOf: projects!)
@@ -411,6 +423,7 @@ extension DirectoryProjectListViewController: UISearchBarDelegate {
         pageNumber = 0
         //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
         from = 0
+        self.loading = true        
         loadProjectsWithPagination(from: from, size: size, category: category, search: searchText, loadType: loadType)
     }
     

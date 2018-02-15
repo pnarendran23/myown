@@ -83,6 +83,7 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
         self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
         self.tabBarController?.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
         loadFilters()
+        self.pageNumber = 0
         loadResources(category: category, search: searchText, page: pageNumber, loadType: loadType)
     }
     
@@ -265,6 +266,7 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
         ApiManager.shared.getResources(category: category, parameter : parameter, size: 50, search: search, page: page, callback: { (resources:[Resource]?, error:NSError?) in
             if(error == nil){
                 if(loadType == "init"){
+                    
                     self.resources = resources!
                     self.lastRecordsCount = resources!.count
                     self.filterResources = self.resources
@@ -275,8 +277,22 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
                     }else{
                         self.nodata.isHidden = true
                     }
+                    self.pageNumber += resources!.count
+                    DispatchQueue.main.async {
+                        if(resources!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(resources!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
                     print(self.resources.count)
                 }else{
+                    self.pageNumber += resources!.count
                     if(resources!.count > 0){
                     self.resources.append(contentsOf: resources!)
                     self.lastRecordsCount = resources!.count
@@ -294,7 +310,7 @@ class ResourceLeedListViewController: UIViewController, UIPopoverControllerDeleg
                     }
                     print(self.filterResources.count)
                 }
-                Utility.hideLoading()
+                
             }else{
                 var statuscode = error?._code as! Int
                 if(statuscode != -999){
@@ -421,6 +437,11 @@ extension ResourceLeedListViewController: UISearchBarDelegate {
         searchText = ""
         searchBar.resignFirstResponder()
         hideSearch()
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        self.loadResources(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

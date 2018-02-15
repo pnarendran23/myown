@@ -9,11 +9,15 @@
 import UIKit
 import ParallaxHeader
 import SimpleImageViewer
+import SwiftyPickerPopover
+import SwiftyJSON
 
 class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var submitbtn: UIButton!
-    
+    var countries = [String : Any]()
+    var states = [String : Any]()
+    var countryjson = [String : Any]()
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     var accountInfoList : [AccountInfo] = []
     var defaultbtn = UIBarButtonItem()
@@ -23,6 +27,14 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
     var tempaccountdict : NSMutableDictionary!
     override func viewDidLoad() {
         super.viewDidLoad()
+                let path = Bundle.main.path(forResource: "countries", ofType: "json")
+                let jsonData = NSData(contentsOfFile:path!)
+                var publications: [Publication] = []
+                var localPublications: [Publication] = []
+                let json = JSON(data: jsonData! as Data)
+                print("Countries are", json["countries"])
+        countryjson = json.dictionaryObject!
+        countries = countryjson["countries"] as! [String : Any]
         self.spinner.center = CGPoint(x: self.view.frame.size.width/2,y:self.view.frame.size.height/2)
         self.submitbtn.isEnabled = false
         self.submitbtn.frame = CGRect(x:self.submitbtn.frame.origin.x,y:self.tableView.frame.origin.y + self.tableView.frame.size.height,width:self.submitbtn.frame.size.width,height:(self.view.frame.size.height - (self.tableView.frame.origin.y + self.tableView.frame.size.height)))
@@ -264,6 +276,7 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         var cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! TextwithLabel
         cell.txtfield.delegate = self
         cell.txtfield.isUserInteractionEnabled = true
+        cell.txtfield.keyboardType = .default
         cell.txtfield.tag = ( 1000 * indexPath.section) + indexPath.row
         if(indexPath.row == 1){
             cell.lbl.text = "First Name"
@@ -282,14 +295,17 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
             cell.txtfield.text = self.tempaccountdict["company"] as! String
         }else if(indexPath.row == 6){
             cell.lbl.text = "Email"
+            cell.txtfield.keyboardType = .emailAddress
             cell.txtfield.text = self.tempaccountdict["email"] as! String
         }
         else if(indexPath.row == 7){
             cell.lbl.text = "AIA#"
+            cell.txtfield.keyboardType = .numberPad
             cell.txtfield.text = self.tempaccountdict["aianumber"] as! String
         }
         else if(indexPath.row == 8){
             cell.lbl.text = "ASLA number"
+            cell.txtfield.keyboardType = .numberPad
             cell.txtfield.text = self.tempaccountdict["aslanumber"] as! String
         }
         if(indexPath.section == 1){
@@ -301,14 +317,17 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
             }else if(indexPath.row == 1){
                 cell.lbl.text = "City"
                 cell.txtfield.text = dict["mailingaddresscity"] as! String
-            }else if(indexPath.row == 2){
+            }else if(indexPath.row == 3){
+                cell.txtfield.isUserInteractionEnabled = false
                 cell.lbl.text = "Province"
                 cell.txtfield.text = dict["mailingaddressprovince"] as! String
-            }else if(indexPath.row == 3){
+            }else if(indexPath.row == 2){
                 cell.lbl.text = "Country"
+                cell.txtfield.isUserInteractionEnabled = false
                 cell.txtfield.text = dict["mailingaddresscountry"] as! String
             }else if(indexPath.row == 4){
                 cell.lbl.text = "Postal code"
+                cell.txtfield.keyboardType = .numberPad
                 cell.txtfield.text = dict["mailingaddresspostalcode"] as! String
             }
         }else if(indexPath.section == 2){
@@ -319,10 +338,12 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
             }else if(indexPath.row == 1){
                 cell.lbl.text = "City"
                 cell.txtfield.text = dict["billingaddresscity"] as! String
-            }else if(indexPath.row == 2){
-                cell.lbl.text = "Province"
-                cell.txtfield.text = dict["billingaddressprovince"] as! String
             }else if(indexPath.row == 3){
+                cell.lbl.text = "Province"
+                cell.txtfield.isUserInteractionEnabled = false
+                cell.txtfield.text = dict["billingaddressprovince"] as! String
+            }else if(indexPath.row == 2){
+                cell.txtfield.isUserInteractionEnabled = false
                 cell.lbl.text = "Country"
                 cell.txtfield.text = dict["billingaddresscountry"] as! String
             }else if(indexPath.row == 4){
@@ -488,6 +509,171 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
         if(indexPath.section == 3 && indexPath.row == 0){
             self.performSegue(withIdentifier: "aboutme", sender: nil)
         }else{
+            self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+            if((indexPath.section == 1 && indexPath.row == 2) || (indexPath.section == 2 && indexPath.row == 2)){
+                self.view.endEditing(true)
+                var temp = [String]()
+                for (item,value) in countries{
+                    var s = value as! String
+                    temp.append(s)
+                }
+                temp = temp.sorted()
+                var cell = tableView.cellForRow(at: indexPath) as! TextwithLabel
+                let p = StringPickerPopover(title: "Country", choices: temp)
+                    .setSelectedRow(0)
+                    .setDoneButton(title: "Done", color : UIColor.white,action: { (popover, selectedRow, selectedString) in
+                        print("done row \(selectedRow) \(selectedString)")
+                        if(indexPath.section == 1 && indexPath.row == 2){
+                            var dict = NSMutableDictionary()
+                            dict["mailingaddressstreet"] = (self.profile.mailingaddresscountry.isEmpty) ? "" : self.profile.mailingaddressstreet
+                            dict["mailingaddresscity"] = (self.profile.mailingaddresscity.isEmpty) ? "" : self.profile.mailingaddresscity
+                            dict["mailingaddressprovince"] = ""
+                            dict["mailingaddresscountry"] = temp[selectedRow]
+                            dict["mailingaddresspostalcode"] = (self.profile.mailingaddresspostalcode.isEmpty) ? "" : self.profile.mailingaddresspostalcode
+                            self.tempaccountdict["mailingaddress"] = dict
+                            
+                            self.tempaccountdict["mailingaddresscountry"] = temp[selectedRow]
+                            self.tableView.reloadData()
+                            DispatchQueue.main.async( execute: {
+                                self.spinner.isHidden = false
+                                self.view.isUserInteractionEnabled = false
+                                self.tableView.alpha = 0.3
+                                self.updateData()
+                            })
+                        }else{
+                            var dict = NSMutableDictionary()
+                            dict["billingaddressstreet"] = (self.profile.billingaddressstreet.isEmpty) ? "" : self.profile.billingaddressstreet
+                            dict["billingaddresscity"] = (self.profile.billingaddresscity.isEmpty) ? "" : self.profile.billingaddresscity
+                            dict["billingaddressprovince"] = ""
+                            dict["billingaddresscountry"] = temp[selectedRow]
+                            dict["billingaddresspostalcode"] = (self.profile.billingaddresspostalcode.isEmpty) ? "" : self.profile.billingaddresspostalcode
+                            self.tempaccountdict["billingaddress"] = dict
+                            
+                            self.tempaccountdict["billingaddresscountry"] = temp[selectedRow]
+                            self.tableView.reloadData()
+                            DispatchQueue.main.async( execute: {
+                                self.spinner.isHidden = false
+                                self.view.isUserInteractionEnabled = false
+                                self.tableView.alpha = 0.3
+                                self.updateData()
+                            })
+                        }
+                    })
+                    .setCancelButton(title: "Cancel", color : UIColor.white,action: { (_, _, _) in
+                        self.tableView.reloadData()
+                        print("cancel")}
+                )
+                
+                p.appear(originView: cell.contentView, baseViewController: self)
+            }else if((indexPath.section == 1 && indexPath.row == 3) || (indexPath.section == 2 && indexPath.row == 3)){
+                self.view.endEditing(true)
+                var temp = [String]()
+                for (item,value) in countries{
+                    var s = value as! String
+                    temp.append(s)
+                }
+                temp = temp.sorted()
+                var cell = tableView.cellForRow(at: indexPath) as! TextwithLabel
+                var current_code = ""
+                if(indexPath.section == 1 && indexPath.row == 3){
+                    if(self.tempaccountdict["mailingaddresscountry"] as! String == ""){
+                        Utility.showToast(message: "Please select country first")
+                        self.tableView.reloadData()
+                        return
+                    }
+                    var s = self.tempaccountdict["mailingaddresscountry"] as! String
+                    for (item,value) in countries{
+                        var str = value as! String
+                        if(str == s){
+                            current_code = item as! String
+                            break
+                        }
+                    }
+                    if((countryjson["divisions"] as! [String : Any])[current_code] != nil){
+                    states = (countryjson["divisions"] as! [String : Any])[current_code] as! [String : Any]
+                    temp = [String]()
+                    for (item,value) in states{
+                        var s = value as! String
+                        temp.append(s)
+                    }
+                    }else{
+                        temp.removeAll()
+                        temp.append(s)
+                    }
+                }else if(indexPath.section == 2 && indexPath.row == 3){
+                        if(self.tempaccountdict["billingaddresscountry"] as! String == ""){
+                            Utility.showToast(message: "Please select country first")
+                            self.tableView.reloadData()
+                            return
+                        }
+                    var s = self.tempaccountdict["mailingaddresscountry"] as! String
+                    for (item,value) in countries{
+                        var str = value as! String
+                        if(str == s){
+                            current_code = item as! String
+                            break
+                        }
+                    }
+                    if((countryjson["divisions"] as! [String : Any])[current_code] != nil){
+                    states = (countryjson["divisions"] as! [String : Any])[current_code] as! [String : Any]
+                    temp = [String]()
+                    for (item,value) in states{
+                        var s = value as! String
+                        temp.append(s)
+                    }
+                    }else{
+                        temp.removeAll()
+                        temp.append(s)
+                    }
+                }
+                
+                temp = temp.sorted()
+                let p = StringPickerPopover(title: "Province", choices: temp)
+                    .setSelectedRow(0)
+                    .setDoneButton(title: "Done", color : UIColor.white,action: { (popover, selectedRow, selectedString) in
+                        print("done row \(selectedRow) \(selectedString)")
+                        if(indexPath.section == 1 && indexPath.row == 3){
+                            var dict = NSMutableDictionary()
+                            dict["mailingaddressstreet"] = (self.profile.mailingaddresscountry.isEmpty) ? "" : self.profile.mailingaddressstreet
+                            dict["mailingaddresscity"] = (self.profile.mailingaddresscity.isEmpty) ? "" : self.profile.mailingaddresscity
+                            dict["mailingaddressprovince"] = temp[selectedRow]
+                            dict["mailingaddresscountry"] = self.tempaccountdict["mailingaddresscountry"]
+                            dict["mailingaddresspostalcode"] = (self.profile.mailingaddresspostalcode.isEmpty) ? "" : self.profile.mailingaddresspostalcode
+                            self.tempaccountdict["mailingaddress"] = dict
+                            
+                            self.tempaccountdict["mailingaddressprovince"] = temp[selectedRow]
+                            self.tableView.reloadData()
+                            DispatchQueue.main.async( execute: {
+                                self.spinner.isHidden = false
+                                self.view.isUserInteractionEnabled = false
+                                self.tableView.alpha = 0.3
+                                self.updateData()
+                            })
+                        }else{
+                            var dict = NSMutableDictionary()
+                            dict["billingaddressstreet"] = (self.profile.billingaddressstreet.isEmpty) ? "" : self.profile.billingaddressstreet
+                            dict["billingaddresscity"] = (self.profile.billingaddresscity.isEmpty) ? "" : self.profile.billingaddresscity
+                            dict["billingaddressprovince"] = temp[selectedRow]
+                            dict["billingaddresscountry"] = self.tempaccountdict["billingaddresscountry"]
+                            dict["billingaddresspostalcode"] = (self.profile.billingaddresspostalcode.isEmpty) ? "" : self.profile.billingaddresspostalcode
+                            self.tempaccountdict["billingaddress"] = dict
+                            self.tempaccountdict["billingaddressprovince"] = temp[selectedRow]
+                            self.tableView.reloadData()
+                            DispatchQueue.main.async( execute: {
+                                self.spinner.isHidden = false
+                                self.view.isUserInteractionEnabled = false
+                                self.tableView.alpha = 0.3
+                                self.updateData()
+                            })
+                        }
+                    })
+                    .setCancelButton(title: "Cancel", color : UIColor.white,action: { (_, _, _) in
+                        self.tableView.reloadData()
+                        print("cancel")}
+                )
+                
+                p.appear(originView: cell.contentView, baseViewController: self)
+            }else{
             let cell = tableView.cellForRow(at: indexPath)
             if(cell is TextwithLabel){
                 self.navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem.init(title: "Cancel", style: .plain, target: self, action: #selector(self.cancel(button:)))
@@ -501,7 +687,7 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
                     
                     self.navigationController?.navigationBar.topItem?.rightBarButtonItem = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.done(button:)))
                     
-                    
+                }
                 }
             }
         }
@@ -715,20 +901,22 @@ class accsettings: UIViewController, UITableViewDataSource,UITableViewDelegate,U
             self.tempaccountdict["mailingaddressstreet"] = textField.text
         }else if(textField.tag == 1001){
             self.tempaccountdict["mailingaddresscity"] = textField.text
-        }else if(textField.tag == 1002){
-            self.tempaccountdict["mailingaddressprovince"] = textField.text
         }else if(textField.tag == 1003){
-            self.tempaccountdict["mailingaddresscountry"] = textField.text
-        }else if(textField.tag == 1004){
+            //self.tempaccountdict["mailingaddressprovince"] = textField.text
+        }
+            //else if(textField.tag == 1003){
+//            self.tempaccountdict["mailingaddresscountry"] = textField.text
+//        }
+        else if(textField.tag == 1004){
             self.tempaccountdict["mailingaddresspostalcode"] = textField.text
         }else if(textField.tag == 2000){
             self.tempaccountdict["billingaddressstreet"] = textField.text
         }else if(textField.tag == 2001){
             self.tempaccountdict["billingaddresscity"] = textField.text
-        }else if(textField.tag == 2002){
-            self.tempaccountdict["billingaddressprovince"] = textField.text
         }else if(textField.tag == 2003){
-            self.tempaccountdict["billingaddresscountry"] = textField.text
+            //self.tempaccountdict["billingaddressprovince"] = textField.text
+        }else if(textField.tag == 2002){
+            //self.tempaccountdict["billingaddresscountry"] = textField.text
         }else if(textField.tag == 2004){
             self.tempaccountdict["billingaddresspostalcode"] = textField.text
         }

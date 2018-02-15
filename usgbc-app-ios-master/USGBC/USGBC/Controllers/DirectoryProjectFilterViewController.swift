@@ -91,6 +91,10 @@ class DirectoryProjectFilterViewController: UIViewController {
     @IBAction func handleDone(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
+                var t = ["","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
+                if(t == selectedfilter){
+                    selectedfilter = ["all","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
+                }
                 delegate.userDidSelectedFilter(filter: filter, totalCount: totalCount, selfilter: self.selectedfilter)//.lowercased()).replacingOccurrences(of: " ", with: "-"))
                 //delegate.userDidSelectedFilter(filter: filter)
             }
@@ -146,9 +150,19 @@ extension DirectoryProjectFilterViewController: UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(selectedfilter[indexPath.row] == ""){
             selectedfilter[indexPath.row] = filters[indexPath.row].name
+            if(indexPath.row == 0){
+                selectedfilter = ["all","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
+            }
         }else{
             selectedfilter[indexPath.row] = ""
         }
+        
+        if(indexPath.row > 0){
+            selectedfilter[0] = ""
+        }
+        
+        
+        
         selectedIndexPath = indexPath
         
         filter = filters[indexPath.row].name

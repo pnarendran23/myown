@@ -155,10 +155,11 @@ class OrganizationOverviewViewController: UIViewController {
     }
     
     func loadOrgDetails(){
-        Utility.showLoading()
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
         ApiManager.shared.getOrganizationDetails(id: organizationID, callback: { (organizationDetails, error) in
             if(error == nil){
-                Utility.hideLoading()
                 self.organizationDetails = organizationDetails!
                 self.isFavorite = FavoriteManager.getFavoriteStatus(title: organizationDetails!.title, favoriteButton: self.favoriteButton)
                 self.updateViews()
@@ -178,11 +179,12 @@ class OrganizationOverviewViewController: UIViewController {
         //Utility.showLoading()
         ApiManager.shared.getOrganizationLocations(id: "1749058", callback: { (locations, error) in
             if(error == nil){
-                //Utility.hideLoading()
                 self.locations = locations!
                 self.loadOrgEmployees(id: self.organizationID)
             }else{
-                //Utility.hideLoading()
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                }
                 Utility.showToast(message: "Something went wrong!")
             }
         })
@@ -192,17 +194,23 @@ class OrganizationOverviewViewController: UIViewController {
         //Utility.showLoading()
         ApiManager.shared.getOrganizationEmployees(id: organizationID, callback: { (employees, error) in
             if(error == nil){
-                //Utility.hideLoading()
                 self.employees = employees!
                 self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                }
             }else{
-                //Utility.hideLoading()
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                }
                 Utility.showToast(message: "Something went wrong!")
             }
         })
     }
     
     @IBAction func handleCall(_ sender: Any){
+        print(organizationDetails.phone)
+        organizationDetails.phone = organizationDetails.phone.replacingOccurrences(of: " " , with: "-")
         if let phoneCallURL = URL(string: "tel://\(organizationDetails.phone)") {
             let application:UIApplication = UIApplication.shared
             if (application.canOpenURL(phoneCallURL)) {
@@ -212,7 +220,20 @@ class OrganizationOverviewViewController: UIViewController {
     }
     
     @IBAction func handleMap(_ sender: Any){
+        if (UIApplication.shared.canOpenURL(NSURL(string:"comgooglemaps://")! as URL)) {
+            UIApplication.shared.open(NSURL(string:
+                "comgooglemaps://?center=40.765819,-73.975866&zoom=14&views=traffic")! as URL, options: [:] , completionHandler: nil)
+            
+        } else {
+            if (UIApplication.shared.canOpenURL(NSURL(string:"http://maps.apple.com")! as URL)) {
+                UIApplication.shared.open(NSURL(string:
+                    "http://maps.apple.com/?daddr=San+Francisco,+CA&saddr=cupertino")! as URL, options: [:], completionHandler: nil)
+                
+            }
+        }
         
+
+       
     }
     
     @IBAction func handleWebsite(_ sender: Any){

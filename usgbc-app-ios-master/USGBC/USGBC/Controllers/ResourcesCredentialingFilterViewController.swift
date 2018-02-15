@@ -66,7 +66,7 @@ class ResourcesCredentialingFilterViewController: UIViewController {
         print(filter)
         ApiManager.shared.getResourcesCount(category: filter, parameter: parameter) { count, error in
             if(error == nil){
-                if(parameter == ""){
+                if(parameter == "%28field_res_type:%28%22Candidate%20Handbooks%22%20OR%20%22Certificates%22%20OR%20%22Study%20guides%22%29%29"){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) resources"
@@ -75,7 +75,6 @@ class ResourcesCredentialingFilterViewController: UIViewController {
     }
     
     @IBAction func handleClearFilter(_ sender: Any) {
-        if(self.filter != "7456+5048+2016/all/all/all/all/all"){
             filter = "7456+5048+2016/all/all/all/all/all"
             type = "7456+5048+2016"
             format = ""
@@ -102,7 +101,7 @@ class ResourcesCredentialingFilterViewController: UIViewController {
             self.accessarray = []
             self.languagearray = []
             loadResourcesLeedCount()
-        }
+        
     }
     
     @IBAction func handleDone(_ sender: Any){

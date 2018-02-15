@@ -21,7 +21,7 @@ class DirectoryOrganizationFilterViewController: UIViewController {
     fileprivate var selectedIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: OrganizationFilterDelegate?
     var totalCount = 0
-    var selectedfilter : [String] = ["","","","","",""]
+    var selectedfilter : [String] = ["all","","","","",""]
     var all = 0, education = 0, homes = 0, roundtable = 0, members = 0, regions = 0
     @IBOutlet weak var clearFilterButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
@@ -102,6 +102,10 @@ class DirectoryOrganizationFilterViewController: UIViewController {
     @IBAction func handleDone(_ sender: Any){
         if(filterChanged){
             if let delegate = self.delegate {
+                var t = ["","","","","",""]
+                if(t == selectedfilter){
+                    selectedfilter = ["all","","","","",""]
+                }
                 delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"), selfilter : selectedfilter)
             }
         }
@@ -163,11 +167,17 @@ extension DirectoryOrganizationFilterViewController: UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(selectedfilter[indexPath.row] == ""){
             selectedfilter[indexPath.row] = filters[indexPath.row].name
+            if(indexPath.row == 0){
+                selectedfilter = ["all","","","","",""]
+            }
         }else{
             selectedfilter[indexPath.row] = ""
         }
-        selectedIndexPath = indexPath
         
+        if(indexPath.row > 0){
+            selectedfilter[0] = ""
+        }
+        selectedIndexPath = indexPath        
         filter = filters[indexPath.row].name
         filterChanged = true
         self.tableView.reloadData()

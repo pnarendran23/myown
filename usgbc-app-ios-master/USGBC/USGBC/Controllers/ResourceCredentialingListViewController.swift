@@ -189,8 +189,23 @@ class ResourceCredentialingListViewController: UIViewController, UIPopoverContro
                     }else{
                         self.nodata.isHidden = true
                     }
+                    self.pageNumber += resources!.count
+                    DispatchQueue.main.async {
+                        if(resources!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(resources!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
+                    
                     print(self.resources.count)
                 }else{
+                    self.pageNumber += resources!.count
                     if(resources!.count > 0){
                     self.resources.append(contentsOf: resources!)
                     self.lastRecordsCount = resources!.count
@@ -333,6 +348,11 @@ extension ResourceCredentialingListViewController: UISearchBarDelegate {
         searchText = ""
         searchBar.resignFirstResponder()
         hideSearch()
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        self.loadResources(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

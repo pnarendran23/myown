@@ -176,7 +176,6 @@ class ResourceAdvAndPolicyListViewController: UIViewController, UIPopoverControl
         }
         ApiManager.shared.getResources(category: category, parameter: parameter , size : 50, search: search, page: page, callback: { (resources:[Resource]?, error:NSError?) in
             if(error == nil){
-                Utility.hideLoading()
                 if(loadType == "init"){
                     self.resources = resources!
                     self.lastRecordsCount = resources!.count
@@ -188,8 +187,22 @@ class ResourceAdvAndPolicyListViewController: UIViewController, UIPopoverControl
                     }else{
                         self.nodata.isHidden = true
                     }
+                    DispatchQueue.main.async {
+                        if(resources!.count < 50){
+                            self.loading = true
+                            Utility.hideLoading()
+                            if(resources!.count > 0){
+                                Utility.showToast(message: "That was all")
+                            }
+                        }else{
+                            Utility.hideLoading()
+                            self.loading = false
+                        }
+                    }
+                    self.pageNumber += resources!.count
                     print(self.resources.count)
                 }else{
+                    self.pageNumber += resources!.count
                     if(resources!.count > 0){
                     self.resources.append(contentsOf: resources!)
                     self.lastRecordsCount = resources!.count
@@ -205,6 +218,10 @@ class ResourceAdvAndPolicyListViewController: UIViewController, UIPopoverControl
                         self.loading = true
                         Utility.showToast(message: "That was all")
                     }
+                    DispatchQueue.main.async {
+                            Utility.hideLoading()
+                    }
+                    
                     print(self.filterResources.count)
                 }
             }else{
@@ -332,6 +349,11 @@ extension ResourceAdvAndPolicyListViewController: UISearchBarDelegate {
         searchText = ""
         searchBar.resignFirstResponder()
         hideSearch()
+        self.loading = true
+        DispatchQueue.main.async {
+            Utility.showLoading()
+        }
+        self.loadResources(category: self.category, search: self.searchText, page: self.pageNumber, loadType: self.loadType)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

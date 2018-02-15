@@ -87,6 +87,10 @@ class CreditFilterViewController: UIViewController {
     @IBAction func handleDone(){
         if(filterChanged){
             if let delegate = self.delegate {
+                var t = ["","","","","","","","","","","","","",""]
+                if(t == selectedfilter){
+                    selectedfilter = ["all","","","","","","","","","","","","",""]
+                }
                 delegate.userDidSelectedFilter(filter: (filter.lowercased()).replacingOccurrences(of: " ", with: "-"), totalCount: totalCount, category : category, selfiter:  self.selectedfilter )
             }
         }
@@ -127,11 +131,17 @@ extension CreditFilterViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(selectedfilter[indexPath.row] == ""){
             selectedfilter[indexPath.row] = filters[indexPath.row].name
+            if(indexPath.row == 0){
+                selectedfilter = ["all","","","","","","","","","","","","",""]
+            }
         }else{
             selectedfilter[indexPath.row] = ""
         }
-        selectedIndexPath = indexPath
         
+        if(indexPath.row > 0){
+            selectedfilter[0] = ""
+        }
+        selectedIndexPath = indexPath
         filter = filters[indexPath.row].name
         filterChanged = true
         self.tableView.reloadData()

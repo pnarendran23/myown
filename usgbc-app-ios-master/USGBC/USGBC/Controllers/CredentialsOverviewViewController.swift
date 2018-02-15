@@ -19,9 +19,13 @@ class CredentialsOverviewViewController: UIViewController {
     var selected_array = CEActivity()
     var bdcApprovedHours: Float = 0.0
     var ceActivities: [CEActivity] = []
-    
+    var credentials = Credentials()
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.main.async {
+            Utility.showLoading()
+            self.getCredentials()
+        }
         initViews()
         
     }
@@ -51,6 +55,28 @@ class CredentialsOverviewViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     //MARK: Load JSON from file
+    func getCredentials(){
+        Utility.showLoading()
+        ApiManager.shared.getCredentials(email: Utility().getUserDetail(), callback: { (credentials, error) in
+            if(error == nil){
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                if(credentials != nil){
+                    self.credentials = credentials!
+                    
+                }else{
+                    
+                }
+                }
+            }else{
+                DispatchQueue.main.async {
+                    Utility.hideLoading()
+                    Utility.showToast(message: "Something went wrong!")
+                }
+            }
+        })
+    }
+    
     func loadCredentials(){
         Utility.showLoading()
         ApiManager.shared.getCEActivities(email: Utility().getUserDetail()) { (ceActivities, error) in
@@ -112,7 +138,7 @@ extension CredentialsOverviewViewController: UITableViewDelegate, UITableViewDat
             }else if(self.ceActivities[indexPath.row].field_ce_act_type_value.lowercased().contains("education")){
                 self.selectedOption = "ReportCeHourEducationViewController"
             }else if(self.ceActivities[indexPath.row].field_ce_act_type_value.lowercased().contains("project experience")){
-                self.selectedOption = "ReportCeHourProjectExperienceViewController"
+                //self.selectedOption = "ReportCeHourProjectExperienceViewController"
             }else if(self.ceActivities[indexPath.row].field_ce_act_type_value.lowercased().contains("volunteer work")){
                 self.selectedOption = "ReportCEHourVolunteerWorkViewController"
             }
@@ -140,6 +166,7 @@ extension CredentialsOverviewViewController: UITableViewDelegate, UITableViewDat
             v.ceReport.description = self.selected_array.field_ce_course_desc_value
             v.ceReport.url = self.selected_array.field_ce_url_value
             v.ceReport.Nid = self.selected_array.Nid
+            v.cred_specific_record = credentials.cred_specific_record
         }else if(segue.identifier == "ReportCeHourEducationViewController"){
             var v = segue.destination as! ReportCeHourEducationViewController
             v.edit = true
@@ -152,6 +179,7 @@ extension CredentialsOverviewViewController: UITableViewDelegate, UITableViewDat
             v.ceReport.description = self.selected_array.field_ce_course_desc_value
             v.ceReport.url = self.selected_array.field_ce_url_value
             v.ceReport.Nid = self.selected_array.Nid
+            v.cred_specific_record = credentials.cred_specific_record
         }else if(segue.identifier == "ReportCEHourVolunteerWorkViewController"){
             var v = segue.destination as! ReportCEHourVolunteerWorkViewController
             v.edit = true
@@ -164,6 +192,7 @@ extension CredentialsOverviewViewController: UITableViewDelegate, UITableViewDat
             v.ceReport.description = self.selected_array.field_ce_course_desc_value
             v.ceReport.url = self.selected_array.field_ce_url_value
             v.ceReport.Nid = self.selected_array.Nid
+            v.cred_specific_record = credentials.cred_specific_record
         }
     }
     
@@ -178,7 +207,14 @@ extension CredentialsOverviewViewController: UITableViewDelegate, UITableViewDat
         cell.dateLabel.text = ceActivities[indexPath.row].field_ce_course_from_date_value + " : " + ceActivities[indexPath.row].field_ce_act_type_value
         cell.titleLabel.text = ceActivities[indexPath.row].field_ce_course_title_value.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.earnedLabel.text = ceActivities[indexPath.row].field_ce_hours_reported_value
+        cell.earnedLabel.layer.cornerRadius = cell.earnedLabel.layer.bounds.size.width/2
+        cell.earnedLabel.layer.masksToBounds = true
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
