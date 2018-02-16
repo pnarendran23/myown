@@ -1,0 +1,26 @@
+{
+    "organization_details": {
+        "overview": {
+            "title": "Verizon",
+            "logo": "https://www.usgbc.org/sites/default/files/imagecache/max-both_125-125/Verizon%20Logo.jpg",
+            "org_level": "Platinum",
+            "body": "Verizon Communications Inc. (NYSE, Nasdaq: VZ), headquartered in New York City, has a diverse workforce of nearly 162,700 and generated nearly $132 billion in 2015 revenues. Verizon operates America’s most reliable wireless network, with 113.2 million retail connections nationwide. The company also provides communications and entertainment services over mobile broadband and the nation’s premiere all-fiber network, and delivers integrated business solutions to customers worldwide.",
+            "summary": "“The benefits of USGBC membership go beyond just certifications. It provides us access to resources and other LEED professionals to improve our overall LEED building program.” - Verizon",
+            "image": "https://www.usgbc.org/sites/default/files/imagecache/fixed_708-280/Verizon_feature.jpg",
+            "address": {
+                "address_line_one": "295 Coolidge Drive",
+                "city": "Folsom",
+                "state": "CA 95630"
+            },
+            "map_link":"httpss://www.google.com/maps?q=295+Coolidge+Drive+++Folsom,+CA+95630+United+States",
+            "member_since": "2008",
+            "url": "https://www.verizon.com/",
+            "telephone": "916-357-3244",
+            "org_details": {
+                "locations": "22 manufacturing locations",
+                "employees": "5000",
+                "leed_aps_staff": "5"
+            }
+        }
+    }
+}

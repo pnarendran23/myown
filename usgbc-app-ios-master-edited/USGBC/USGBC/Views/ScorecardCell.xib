@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="ScorecardCell" customModule="USGBC" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="51.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xlK-Ab-SNA">
+                        <rect key="frame" x="16" y="9" width="272" height="34"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUSTAINABLE SITES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F2Z-WN-Zqn">
+                                <rect key="frame" x="8" y="10" width="120.5" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.88235294117647056" green="0.88235294117647056" blue="0.88235294117647056" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="34" id="Aym-bp-VP7"/>
+                            <constraint firstItem="F2Z-WN-Zqn" firstAttribute="leading" secondItem="xlK-Ab-SNA" secondAttribute="leading" constant="8" id="TVt-uP-p6c"/>
+                            <constraint firstItem="F2Z-WN-Zqn" firstAttribute="centerY" secondItem="xlK-Ab-SNA" secondAttribute="centerY" id="hSS-Ba-Y11"/>
+                        </constraints>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ss" translatesAutoresizingMaskIntoConstraints="NO" id="IPY-D7-uZ0">
+                        <rect key="frame" x="264" y="4" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="Eay-E9-d5y"/>
+                            <constraint firstAttribute="width" constant="44" id="V6c-tB-SeA"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13 OF 17" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ddz-6A-UgD">
+                        <rect key="frame" x="208" y="18.5" width="49.5" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="xlK-Ab-SNA" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="1gY-7D-5go"/>
+                    <constraint firstAttribute="trailing" secondItem="IPY-D7-uZ0" secondAttribute="trailing" constant="12" id="9HL-37-BbL"/>
+                    <constraint firstAttribute="trailing" secondItem="xlK-Ab-SNA" secondAttribute="trailing" constant="32" id="Jb5-r5-RcZ"/>
+                    <constraint firstItem="IPY-D7-uZ0" firstAttribute="leading" secondItem="ddz-6A-UgD" secondAttribute="trailing" constant="6" id="bMS-HY-Hvt"/>
+                    <constraint firstItem="xlK-Ab-SNA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="pFI-Y5-SxH"/>
+                    <constraint firstItem="IPY-D7-uZ0" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="uYU-8D-Bpd"/>
+                    <constraint firstItem="ddz-6A-UgD" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ufO-nG-rzm"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="containerView" destination="xlK-Ab-SNA" id="VuU-oe-N8P"/>
+                <outlet property="scoreImageView" destination="IPY-D7-uZ0" id="Ocp-uU-dvo"/>
+                <outlet property="scoreLabel" destination="ddz-6A-UgD" id="kGV-9e-ts2"/>
+                <outlet property="titleLabel" destination="F2Z-WN-Zqn" id="jdg-91-7CN"/>
+            </connections>
+            <point key="canvasLocation" x="-10" y="-47"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ss" width="31" height="30"/>
+    </resources>
+</document>

@@ -1,0 +1,18 @@
+{
+    "data-reporting": [{
+                       "name": "Energy",
+                       "status": true
+                      }, {
+                       "name": "Water",
+                       "status": false
+                      }, {
+                       "name": "Transportation",
+                       "status": true
+                      }, {
+                       "name": "Waste",
+                       "status": true
+                      }, {
+                       "name": "Human Experience",
+                       "status": false
+                      }]
+}

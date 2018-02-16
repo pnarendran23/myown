@@ -1,0 +1,153 @@
+{
+    "usgbc_courses": [{
+                      "usgbc_course": {
+                      "courseid": "10856485",
+                      "title": "Using National Green Building Standard for Multifamily Success",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/using-national-green-building-standard-multifamily-success-10856485",
+                      "published_date": "March 22, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/course_image_option_1_0.png",
+                      "course_name": "Using National Green Building Standard for Multifamily Success",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/GHI_LOGO_rgb.jpg",
+                      "provider_name": "GreenHome Institute",
+                      "price": "45",
+                      "star_rating": "4"
+                      }
+                      },{
+                      "usgbc_course": {
+                      "courseid": "10883094",
+                      "title": "IAQ Construction Management Advanced",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/iaq-construction-management-advanced-10883094",
+                      "published_date": "April 06, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/Picture1_36.png",
+                      "course_name": "IAQ Construction Management Advanced",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/McCarthy%20Dude%20Logo.png",
+                      "provider_name": "McCarthy Building Companies, Inc.",
+                      "price": "45",
+                      "star_rating": "0.15"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10867102",
+                      "title": "Fair Play: Social Equity Within The Project Team",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/fair-play-social-equity-within-project-team-10867102",
+                      "published_date": "April 03, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/0o1a3138-954.jpg",
+                      "course_name": "Fair Play: Social Equity Within The Project Team",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/gce_square.gif",
+                      "provider_name": "GreenCE, Inc.",
+                      "price": "45",
+                      "star_rating": "4.166665"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10855997",
+                      "title": "5 Ways to Green Your Home: Groceries and Supplies",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/5-ways-green-your-home-groceries-and-supplies-10855997",
+                      "published_date": "March 31, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/Groceries.jpg",
+                      "course_name": "5 Ways to Green Your Home: Groceries and Supplies",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/GBRI%20circle%20Website%20logo.png",
+                      "provider_name": "Green Building Research Institute (GBRI)",
+                      "price": "45",
+                      "star_rating": "3.25"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10880394",
+                      "title": "What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/what-fire-and-safety-engineers-have-learned-mgm-grand-fire-and-present-day-fire-c",
+                      "published_date": "March 31, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/Picture1_35.png",
+                      "course_name": "What Fire and Safety Engineers Have Learned Since the MGM Grand Fire and Present Day Fire Codes",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/imagefield_default_images\/company_placeholder.png",
+                      "provider_name": "ASHRAE",
+                      "price": "45",
+                      "star_rating": "4.57143"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10465677",
+                      "title": "MN LEED Lunch & Learn Video:  Alexandria Area High School: The Road to LEED Silver",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/mn-leed-lunch-learn-video-alexandria-area-high-school-road-leed-silver-10465677",
+                      "published_date": "March 29, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/Alexandriahspic.JPG",
+                      "course_name": "MN LEED Lunch & Learn Video:  Alexandria Area High School: The Road to LEED Silver",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/imagefield_default_images\/logo%402x.png",
+                      "provider_name": "USGBC Minnesota",
+                      "price": "45",
+                      "star_rating": "4.285715"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10853823",
+                      "title": "From ABCs to STEM: Biophilic Design in Schools",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/abcs-stem-biophilic-design-schools-10853823",
+                      "published_date": "March 28, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/From%20ABCs%20to%20STEM-%20Biophilic%20Design%20for%20Schools%20Part%201.jpg",
+                      "course_name": "From ABCs to STEM: Biophilic Design in Schools",
+                      "type": "Parent",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/GBRI%20circle%20Website%20logo.png",
+                      "provider_name": "Green Building Research Institute (GBRI)",
+                      "price": "80",
+                      "star_rating": "0.05"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10874018",
+                      "title": "Programming Buildings for Health: WELL, Fitwel, and Beyond",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/programming-buildings-health-well-fitwel-and-beyond-10874018",
+                      "published_date": "March 27, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/09-PW-Vancouver-800px_0.jpg",
+                      "course_name": "Programming Buildings for Health: WELL, Fitwel, and Beyond",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/New%20BG%20Logo.png",
+                      "provider_name": "BuildingGreen, Inc.",
+                      "price": "45",
+                      "star_rating": "4.57143"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10353103",
+                      "title": "National Action Plan for Educating for Sustainability",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/national-action-plan-educating-sustainability-10353103",
+                      "published_date": "March 24, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/National%20Action%20Plan%20for%20Educating%20for%20Sustainability.png",
+                      "course_name": "National Action Plan for Educating for Sustainability",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/profile\/org\/10665104_824050610962962_2091762307035222057_n.png",
+                      "provider_name": "U.S. Green Building Council",
+                      "price": "45",
+                      "star_rating": "3.857145"
+                      }
+                      }, {
+                      "usgbc_course": {
+                      "courseid": "10867215",
+                      "title": "REALIZE: A New Model for Mass Customizable Net Zero Retrofits",
+                      "path": "https:\/\/www.usgbc.org\/education\/sessions\/realize-new-model-mass-customizable-net-zero-retrofits-10867215",
+                      "published_date": "March 23, 2017",
+                      "image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_476_268\/776a59387ec28bd2cef72188c35e7603.png",
+                      "course_name": "REALIZE: A New Model for Mass Customizable Net Zero Retrofits",
+                      "type": "Session",
+                      "subscription": "included",
+                      "provider_image": "https:\/\/www.usgbc.org\/sites\/default\/files\/imagecache\/fixed_218_134\/GHI_LOGO_rgb.jpg",
+                      "provider_name": "GreenHome Institute",
+                      "price": "45",
+                      "star_rating": "4.4"
+                      }
+                      }]
+}

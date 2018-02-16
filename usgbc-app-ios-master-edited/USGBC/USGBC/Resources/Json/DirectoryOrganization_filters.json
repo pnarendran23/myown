@@ -1,0 +1,15 @@
+{
+    "filters": [{
+                "name": "All"
+                }, {
+                "name": "Regions"
+                }, {
+                "name": "Members"
+                }, {
+                "name": "Education partners"
+                }, {
+                "name": "Homes providers"
+                }, {
+                "name": "LEED International Roundtable Member"
+                }]
+}

@@ -1,0 +1,84 @@
+{
+    "credits": [{
+                "credit": {
+                "title": "Integrative process",
+                "image": "https://in.usgbc.org/sites/default/files/ipc.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "1",
+                "category": "Integrative process credits"
+                }
+                },
+                {
+                "credit": {
+                "title": "LEED for Neighborhood Development location",
+                "image": "https://in.usgbc.org/sites/default/files/ll-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "16",
+                "category": "Location & transportation"
+                }
+                },
+                {
+                "credit": {
+                "title": "Construction activity pollution prevention",
+                "image": "https://in.usgbc.org/sites/default/files/ss-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Sustainable sites"
+                }
+                },
+                {
+                "credit": {
+                "title": "Outdoor water use reduction",
+                "image": "https://in.usgbc.org/sites/default/files/we-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Water efficiency"
+                }
+                },
+                {
+                "credit": {
+                "title": "Fundamental commissioning and verification",
+                "image": "https://in.usgbc.org/sites/default/files/ea-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Energy & atmosphere"
+                }
+                },
+                {
+                "credit": {
+                "title": "Storage and collection of recyclables",
+                "image": "https://in.usgbc.org/sites/default/files/mr-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Material & resources"
+                }
+                },
+                {
+                "credit": {
+                "title": "Environmental tobacco smoke control",
+                "image": "https://in.usgbc.org/sites/default/files/eq-blank_0.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Indoor environmental quality"
+                }
+                },
+                {
+                "credit": {
+                "title": "Environmental tobacco smoke control",
+                "image": "https://in.usgbc.org/sites/default/files/eq-blank_0.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "Required",
+                "category": "Indoor environmental quality"
+                }
+                },
+                {
+                "credit": {
+                "title": "Innovation",
+                "image": "https://in.usgbc.org/sites/default/files/id-blank.png",
+                "leed_version": "LEED BD+C: New Construction | v4 - LEED v4",
+                "credit_points": "5",
+                "category": "Innovation"
+                }
+                }
+                ]
+}

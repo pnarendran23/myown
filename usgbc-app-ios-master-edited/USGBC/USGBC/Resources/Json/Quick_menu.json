@@ -1,0 +1,35 @@
+{
+    "quick_menus": [{
+                    "name": "My Accounts",
+                    "controller": "MyAccountTabViewController",
+                    "image": "myaccount-new"
+                    }, {
+                    "name": "Credentials",
+                    "controller": "CredentialsTabViewController",
+                    "image": "credentials-new"
+                    }, {
+                    "name": "Articles",
+                    "controller": "ArticleListViewController",
+                    "image": "article-new"
+                    }, {
+                    "name": "Education",
+                    "controller": "CourseListViewController",
+                    "image": "education-new"
+                    }, {
+                    "name": "Publications",
+                    "controller": "PublicationTabViewController",
+                    "image": "publication-new"
+                    }, {
+                    "name": "Resources",
+                    "controller": "ResourcesTabViewController",
+                    "image": "resources-new"
+                    }, {
+                    "name": "Directory",
+                    "controller": "DirectoryTabViewController",
+                    "image": "directory-new"
+                    }, {
+                    "name": "Credits",
+                    "controller": "CreditListViewController",
+                    "image": "credits-new"
+                    }]
+}

@@ -1,0 +1,27 @@
+{
+    "settings": [{
+                "name": "Notification",
+                "sub-settings": [{
+                                "name": "Notifications"
+                                }]
+                }, {
+                "name": "Quick menu",
+                "sub-settings": [{
+                                "name": "My Accounts"
+                                }, {
+                                "name": "Credentials"
+                                }, {
+                                "name": "Articles"
+                                }, {
+                                "name": "Education"
+                                }, {
+                                "name": "Publications"
+                                }, {
+                                "name": "Resources"
+                                }, {
+                                "name": "Directory"
+                                }, {
+                                "name": "Credits"
+                                }]
+                }]
+}

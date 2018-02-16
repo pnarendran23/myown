@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="PublicationCompactCell" customModule="USGBC" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tRj-ZW-HOu">
+                        <rect key="frame" x="16" y="12" width="76" height="76"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="tRj-ZW-HOu" secondAttribute="height" multiplier="1:1" id="6u0-uj-GVt"/>
+                            <constraint firstAttribute="height" constant="76" id="Qw8-ts-Piu"/>
+                            <constraint firstAttribute="width" constant="76" id="g9Y-ZP-grM"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Green Retail Guide: Integrating LEED Into Your Leasing Process" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NvQ-9x-0K2">
+                        <rect key="frame" x="100" y="12" width="204" height="31.5"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Integration guides" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdz-bK-fvK">
+                        <rect key="frame" x="100" y="51.5" width="204" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eGP-jC-sDP">
+                        <rect key="frame" x="16" y="92" width="288" height="3"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="3" id="Mdl-le-6I1"/>
+                        </constraints>
+                        <color key="progressTintColor" red="0.098039215690000001" green="0.58039215690000001" blue="0.84313725490000002" alpha="1" colorSpace="calibratedRGB"/>
+                    </progressView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4YC-Cc-xIL">
+                        <rect key="frame" x="8" y="99" width="304" height="1"/>
+                        <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.29999999999999999" id="NFy-Dg-p0V"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="eGP-jC-sDP" secondAttribute="trailing" constant="16" id="1PC-xV-wvu"/>
+                <constraint firstAttribute="bottom" secondItem="4YC-Cc-xIL" secondAttribute="bottom" id="1jY-hF-c9Q"/>
+                <constraint firstItem="eGP-jC-sDP" firstAttribute="top" secondItem="tRj-ZW-HOu" secondAttribute="bottom" constant="4" id="EjI-tg-5ox"/>
+                <constraint firstAttribute="trailing" secondItem="NvQ-9x-0K2" secondAttribute="trailing" constant="16" id="Lft-NL-n8B"/>
+                <constraint firstItem="jdz-bK-fvK" firstAttribute="leading" secondItem="tRj-ZW-HOu" secondAttribute="trailing" constant="8" id="MMz-wT-5kK"/>
+                <constraint firstAttribute="trailing" secondItem="jdz-bK-fvK" secondAttribute="trailing" constant="16" id="SHC-iJ-8Nh"/>
+                <constraint firstItem="tRj-ZW-HOu" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="SZg-xq-8Un"/>
+                <constraint firstAttribute="trailing" secondItem="4YC-Cc-xIL" secondAttribute="trailing" constant="8" id="Zt6-XT-Lfd"/>
+                <constraint firstItem="4YC-Cc-xIL" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="eK3-oO-dkz"/>
+                <constraint firstItem="tRj-ZW-HOu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="12" id="hCU-WJ-fFh"/>
+                <constraint firstItem="eGP-jC-sDP" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="iDw-wp-HjW"/>
+                <constraint firstItem="NvQ-9x-0K2" firstAttribute="leading" secondItem="tRj-ZW-HOu" secondAttribute="trailing" constant="8" id="maf-dC-gRz"/>
+                <constraint firstItem="jdz-bK-fvK" firstAttribute="top" secondItem="NvQ-9x-0K2" secondAttribute="bottom" constant="8" id="p0B-6N-o0l"/>
+                <constraint firstItem="NvQ-9x-0K2" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="12" id="xQ4-gs-LQ8"/>
+            </constraints>
+            <connections>
+                <outlet property="categoryLabel" destination="jdz-bK-fvK" id="9wg-vo-xTp"/>
+                <outlet property="imageView" destination="tRj-ZW-HOu" id="8Ta-lY-o9g"/>
+                <outlet property="progressView" destination="eGP-jC-sDP" id="dHa-pM-aV1"/>
+                <outlet property="separatorView" destination="4YC-Cc-xIL" id="39U-Un-pf1"/>
+                <outlet property="titleLabel" destination="NvQ-9x-0K2" id="ZOg-pL-hUd"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

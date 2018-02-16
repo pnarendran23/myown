@@ -1,0 +1,32 @@
+{
+    "notifications": [{
+                      "category": "Article",
+                      "title": "New article available in Community, Meet the volunteers of USGBC National Capital Region",
+                      "date": "24 Aug 2017 8:10 PM "
+                      },
+                      {
+                      "category": "Account",
+                      "title": "Your subscription to Education has expired",
+                      "date": "24 Aug 2017 8:10 PM"
+                      },
+                      {
+                      "category": "Account",
+                      "title": "Your USGBC Ohio chapter membership has expired",
+                      "date": "24 Aug 2017 8:10 PM"
+                      },
+                      {
+                      "category": "Article",
+                      "title": "New article available in Education, 3 courses about the LEED rating system",
+                      "date": "24 Aug 2017 8:10 PM"
+                      },
+                      {
+                      "category": "Account",
+                      "title": "Your organization's membership is currently pending receipt of payment",
+                      "date": "24 Aug 2017 8:10 PM"
+                      },
+                      {
+                      "category": "Article",
+                      "title": "New article available in Community, LEED Link: The LEED project directory",
+                      "date": "24 Aug 2017 8:10 PM"
+                      }]
+}
