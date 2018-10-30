@@ -1,0 +1,6 @@
+framework module Pods_Placer {
+  umbrella header "Pods-Placer-umbrella.h"
+
+  export *
+  module * { export * }
+}

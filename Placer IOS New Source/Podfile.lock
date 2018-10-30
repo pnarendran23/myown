@@ -1,0 +1,72 @@
+PODS:
+  - Alamofire (4.5.0)
+  - BRYXBanner (0.7.3)
+  - DropDown (2)
+  - Firebase/Core (4.0.2):
+    - FirebaseAnalytics (= 4.0.1)
+    - FirebaseCore (= 4.0.2)
+  - Firebase/Messaging (4.0.2):
+    - Firebase/Core
+    - FirebaseMessaging (= 2.0.0)
+  - FirebaseAnalytics (4.0.1):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseCore (4.0.2):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseInstanceID (2.0.0):
+    - FirebaseCore (~> 4.0)
+  - FirebaseMessaging (2.0.0):
+    - FirebaseAnalytics (~> 4.0)
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - Protobuf (~> 3.1)
+  - GoogleMaps (2.3.1):
+    - GoogleMaps/Maps (= 2.3.1)
+  - GoogleMaps/Base (2.3.1)
+  - GoogleMaps/Maps (2.3.1):
+    - GoogleMaps/Base
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/Logger (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - Protobuf (3.3.0)
+  - ReachabilitySwift (3)
+  - SearchTextField (1.1.2)
+  - SwiftyJSON (3.1.4)
+  - TTGSnackbar (1.5.2)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.4)
+  - BRYXBanner
+  - DropDown
+  - Firebase/Core
+  - Firebase/Messaging
+  - GoogleMaps
+  - ReachabilitySwift
+  - SearchTextField
+  - SwiftyJSON
+  - TTGSnackbar
+
+SPEC CHECKSUMS:
+  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
+  BRYXBanner: bd26a91cb8a5826a8bc7687891043d287dd3ee53
+  DropDown: 744784d9c9aa505100e942c16acd05430cbb2f0a
+  Firebase: c7ad0731eab26d18a3fc547dd048b0f7cd9c63ae
+  FirebaseAnalytics: 4d7040fefc3cd8b291cde35f12cf063d7963f15d
+  FirebaseCore: 1a8bf6c795ad07d2918278657954ffd2552e9c17
+  FirebaseInstanceID: 9fbf536668f4d3f0880e7438456dabd1376e294b
+  FirebaseMessaging: 227406c05b0dc9290702d2e9f18ab5528f0c2cf2
+  GoogleMaps: c66a71058b9b1294bcdd5463a68e357fa50c079f
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  Protobuf: d582fecf68201eac3d79ed61369ef45734394b9c
+  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
+  SearchTextField: 98d9d9577ab9cbf0a306e300911224d28c4c43f5
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  TTGSnackbar: ca69045c72188fef27f575581052d72aff15abe2
+
+PODFILE CHECKSUM: 148e71291c46d22858e27f86d83cb1baa50f32b1
+
+COCOAPODS: 1.2.1
